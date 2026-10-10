@@ -45,6 +45,34 @@ Example:
         "url": "...",
         "sha256": "..."
       }
+    },
+    "v1.1.0": {
+      "windows": {
+        "url": "...",
+        "sha256": "..."
+      },
+      "macos": {
+        "url": "...",
+        "sha256": "..."
+      },
+      "linux": {
+        "url": "...",
+        "sha256": "..."
+      }
+    },
+    "v1.2.0": {
+      "windows": {
+        "url": "...",
+        "sha256": "..."
+      },
+      "macos": {
+        "url": "...",
+        "sha256": "..."
+      },
+      "linux": {
+        "url": "...",
+        "sha256": "..."
+      }
     }
   }
 }
@@ -432,6 +460,34 @@ Consumers should ignore unrecognised fields.
 
       "linux": {
         "url": "https://example/linux.zip",
+        "sha256": "..."
+      }
+    },
+    "v1.1.0": {
+      "windows": {
+        "url": "https://example/windows-v1.1.0.zip",
+        "sha256": "..."
+      },
+      "macos": {
+        "url": "https://example/macos-v1.1.0.zip",
+        "sha256": "..."
+      },
+      "linux": {
+        "url": "https://example/linux-v1.1.0.zip",
+        "sha256": "..."
+      }
+    },
+    "v1.2.0": {
+      "windows": {
+        "url": "https://example/windows-v1.2.0.zip",
+        "sha256": "..."
+      },
+      "macos": {
+        "url": "https://example/macos-v1.2.0.zip",
+        "sha256": "..."
+      },
+      "linux": {
+        "url": "https://example/linux-v1.2.0.zip",
         "sha256": "..."
       }
     }

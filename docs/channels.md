@@ -251,6 +251,9 @@ Using channels provides:
 
 ## Example Metadata
 
+This abbreviated example focuses on channel-to-release references;
+platform artifact details are omitted.
+
 ```json
 {
   "channels": {
