@@ -146,6 +146,57 @@ git show v1.0.0
 Release history forms part of the project's long-term operational record
 and should be maintained with meaningful release descriptions.
 
+### 2.3 Create Release Notes
+
+Each release should include a release note document.
+
+Template:
+
+```text
+docs/releases/release-note-example.md
+```
+
+Recommended location:
+
+```text
+docs/releases/v1.0.0.md
+docs/releases/v1.0.1.md
+docs/releases/v1.1.0.md
+```
+
+Release notes should be prepared before creating a release tag and should describe:
+
+- The purpose of the release.
+- Significant dependency updates.
+- Platform support.
+- Validation performed.
+- Known issues and limitations.
+- Channel recommendations.
+
+Example workflow:
+
+```text
+Create release notes
+    ↓
+Create annotated tag
+    ↓
+Publish release
+```
+
+Release notes form part of the project's permanent release history and should provide sufficient information for future maintainers to understand why a release was created and what changed.
+
+The release note document should be referenced by the release tag annotation where practical.
+
+Example:
+
+```text
+Release v1.0.0
+
+See docs/releases/v1.0.0.md
+```
+
+Historical release notes should be retained as part of the repository documentation and should not be modified after publication except to correct factual errors.
+
 ### 3. Verify Release Build
 
 The release workflow should:
