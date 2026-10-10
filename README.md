@@ -271,6 +271,7 @@ docs/architecture.md
 docs/release-process.md
 docs/channels.md
 docs/development-workflow.md
+releases.json.md
 docs/adr/
 ```
 
