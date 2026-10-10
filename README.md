@@ -143,7 +143,9 @@ A release that is undergoing validation before promotion.
 
 A release intended for active development and experimentation.
 
-Publishing a release does not automatically change channel assignments.
+Publishing a release automatically advances the `development` channel to
+that release. The `testing` and `stable` channels change only through
+promotion after validation.
 
 ## Release Publication and Promotion
 

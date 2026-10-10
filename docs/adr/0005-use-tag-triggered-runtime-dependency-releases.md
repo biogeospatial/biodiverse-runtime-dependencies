@@ -56,7 +56,7 @@ Create GitHub Release
     ↓
 Upload release assets
     ↓
-Update releases.json
+Update releases.json and development channel
 ```
 
 Tags are the authoritative source of runtime dependency release versions.
@@ -95,6 +95,7 @@ Only tagged commits generate runtime dependency releases.
 - Release versions are easy to identify and audit.
 - Release workflows can update metadata automatically.
 - Release metadata remains synchronized with published artifacts.
+- The development channel always points to the newest published release.
 
 ### Negative
 

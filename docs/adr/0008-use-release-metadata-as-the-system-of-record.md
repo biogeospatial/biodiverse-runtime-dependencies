@@ -151,10 +151,12 @@ Create GitHub Release
     ↓
 Update releases.json
     ↓
-Assign channel
+Automatically assign development channel
 ```
 
 Only metadata determines which published release belongs to a channel.
+Publication automatically advances `development`; `testing` and `stable`
+are changed through promotion.
 
 ## Promotion
 

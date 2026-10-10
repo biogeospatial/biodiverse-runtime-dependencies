@@ -9,12 +9,17 @@ Accepted
 Runtime dependency releases require validation before they become the default dependency stack used by consumers.
 
 Publishing a release and recommending a release are different activities.
+Publication automatically advances the `development` channel so active
+development can consume the newest release, but does not promote that
+release to `testing` or `stable`.
 
-Automatically promoting every new release increases the risk of distributing unvalidated dependency changes.
+Automatically promoting every new release to `stable` increases the risk
+of distributing unvalidated dependency changes.
 
 ## Decision
 
-Release publication and release promotion are separate actions.
+Publishing a release automatically advances the `development` channel.
+Promoting a release to `testing` or `stable` is a separate action.
 
 Publishing:
 
@@ -22,12 +27,14 @@ Publishing:
 Create release
     ↓
 Add release metadata
+    ↓
+Set development channel to new release
 ```
 
 Promotion:
 
 ```text
-Move channel pointer
+Move testing or stable channel pointer
 ```
 
 Example:
@@ -36,18 +43,20 @@ Example:
 {
   "channels": {
     "stable": "v1.0.0",
-    "testing": "v1.1.0"
+    "testing": "v1.1.0",
+    "development": "v1.2.0"
   }
 }
 ```
 
 In this example:
 
-- `v1.1.0` is published.
+- `v1.2.0` is the newest published release.
 - `v1.1.0` is under test.
 - `v1.0.0` remains the stable release.
+- `v1.2.0` is assigned to development automatically on publication.
 
-Promotion occurs only after validation.
+Testing and stable promotion occur only after validation.
 
 ## Rationale
 
@@ -61,9 +70,11 @@ This approach:
 Preferred workflow:
 
 ```text
-Create release
+Publish release
     ↓
-Assign to testing
+Automatically assign to development
+    ↓
+Promote to testing
     ↓
 Validate
     ↓
@@ -78,6 +89,7 @@ Promote to stable
 - Better testing workflows.
 - Easier recovery from regressions.
 - Clear release lifecycle.
+- New releases are immediately available through the development channel.
 
 ### Negative
 

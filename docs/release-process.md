@@ -47,7 +47,7 @@ Create GitHub Release
     ↓
 Upload release assets
     ↓
-Update releases.json
+Update releases.json and development channel
     ↓
 Commit metadata updates
 ```
@@ -245,7 +245,9 @@ Add runtime release to releases.json
 
 ### 6. Verify Channel Assignment
 
-Confirm that release channels reference the expected versions.
+Confirm that the newly published release is assigned automatically to
+`development`, and that `testing` and `stable` still reference the
+expected versions.
 
 Example:
 
@@ -259,7 +261,9 @@ Example:
 }
 ```
 
-Publishing a release does not automatically change channel assignments.
+Publishing a release automatically advances the `development` channel.
+It does not change `testing` or `stable`; those channels are updated
+separately after validation.
 
 ### 7. Promote the Release
 

@@ -65,6 +65,10 @@ The metadata file contains two top-level sections:
 
 Maps channel names to release versions.
 
+When a release is published, the release workflow automatically sets
+`development` to the new version. `testing` and `stable` are changed only
+through promotion.
+
 Example:
 
 ```json
