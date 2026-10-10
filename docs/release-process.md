@@ -327,6 +327,63 @@ Before promoting a release to the `stable` channel, verify that:
 - GitHub Release assets are available.
 - `releases.json` was updated correctly.
 
+## CI Artifacts vs Release Assets
+
+CI artifacts and release assets serve different purposes.
+
+### CI Artifacts
+
+Generated during development and CI validation workflows.
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_macos_arm64_d2ddf75
+biodiverse-runtime-dependencies_windows_x64_d2ddf75
+```
+
+CI artifacts are identified using the source commit SHA and are intended
+for development, testing and traceability.
+
+CI artifacts should not be considered published releases.
+
+### Release Assets
+
+Generated from version tags.
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_v1.0.0.zip
+biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
+biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
+```
+
+Release assets are published through GitHub Releases and are referenced
+by `releases.json`.
+
+Release assets are intended for consumption by BiodiverseR runtime
+packaging workflows.
+
+### Relationship
+
+```text
+Commit
+    ↓
+CI Artifact
+```
+
+```text
+Tag
+    ↓
+Release Asset
+```
+
+CI artifacts provide validation of development changes.
+
+Release assets represent published dependency releases.
+
+
 ## Related Documentation
 
 - `README.md`
