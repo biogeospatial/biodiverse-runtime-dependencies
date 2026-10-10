@@ -24,7 +24,7 @@ Runtime dependency releases are created from Git tags.
 Example:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0 -m "Runtime dependency release v1.0.0"
 git push origin v1.0.0
 ```
 

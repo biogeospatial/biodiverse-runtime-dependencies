@@ -26,12 +26,12 @@ Options considered included:
 
 ## Decision
 
-Runtime dependency releases will be triggered by Git tags.
+Runtime dependency releases will be triggered by annotated Git tags.
 
 Example:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0 -m "Runtime dependency release v1.0.0"
 git push origin v1.0.0
 ```
 
@@ -92,6 +92,7 @@ Only tagged commits generate runtime dependency releases.
 
 - Release generation is fully automated.
 - Every release is associated with a unique Git reference.
+- Annotated tags record release descriptions alongside version identifiers.
 - Release versions are easy to identify and audit.
 - Release workflows can update metadata automatically.
 - Release metadata remains synchronized with published artifacts.
