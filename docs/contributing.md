@@ -147,7 +147,7 @@ Recommended sections:
 
 ```text
 Summary
-Motivation
+Reason
 Tasks
 Validation Requirements
 Success Criteria
