@@ -1,0 +1,339 @@
+# Release Process
+
+This document describes the process used to publish runtime dependency releases.
+
+## Overview
+
+Runtime dependency releases are published through GitHub Releases and
+described in `releases.json`.
+
+Each release may contain platform-specific dependency artifacts,
+including:
+
+- Windows x64
+- macOS ARM64
+- Linux x64
+
+Release metadata is generated automatically as part of the release
+workflow.
+
+## Release Workflow
+
+Runtime dependency releases are created from Git tags.
+
+Example:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+The release workflow performs the following steps:
+
+```text
+Tag release
+    ↓
+Build Windows dependencies
+    ↓
+Build macOS dependencies
+    ↓
+Build Linux dependencies
+    ↓
+Run validation tests
+    ↓
+Generate checksums
+    ↓
+Create GitHub Release
+    ↓
+Upload release assets
+    ↓
+Update releases.json
+    ↓
+Commit metadata updates
+```
+
+## Release Procedure
+
+### 1. Ensure CI Is Passing
+
+Confirm that all relevant dependency build workflows are succeeding.
+
+Current workflows include:
+
+- Windows
+- macOS
+- Linux
+
+### 2. Create a Release Tag
+
+Create and push a version tag:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+### 2.1 Use Annotated Tags
+
+Runtime dependency releases should be created using annotated Git tags.
+
+Annotated tags allow release-specific information to be recorded alongside the release version and provide a permanent release history.
+
+Example:
+
+```bash
+git tag -a v1.0.0 -m "Initial runtime dependency release"
+git push origin v1.0.0
+```
+
+For larger releases, create the tag without a message argument and provide a multi-line description:
+
+```bash
+git tag -a v1.0.0
+```
+
+Example tag message:
+
+```text
+Initial runtime dependency release
+
+Platforms:
+- macOS ARM64
+
+Components:
+- Perl 5.40.2
+- Geo::GDAL::FFI
+- Alien::gdal
+- Alien::proj
+- Alien::geos::af
+```
+
+The tag description becomes part of the release history and should describe:
+
+- The purpose of the release.
+- Major dependency changes.
+- Platform support.
+- Notable fixes or improvements.
+
+### 2.2 Maintain Release History
+
+Every runtime dependency release should have a corresponding annotated tag.
+
+The release history is intended to provide a record of:
+
+- Runtime dependency versions.
+- Dependency upgrades.
+- Platform support changes.
+- Significant fixes.
+- Channel promotion candidates.
+
+Review release history using:
+
+```bash
+git tag -n99
+```
+
+or:
+
+```bash
+git show v1.0.0
+```
+
+Release history forms part of the project's long-term operational record and should be maintained with meaningful release descriptions.
+
+### 3. Verify Release Build
+
+The release workflow should:
+
+- Build dependency artifacts.
+- Run validation tests.
+- Package release archives.
+- Generate release metadata.
+- Generate SHA256 checksums.
+
+### 4. Verify GitHub Release
+
+Confirm that a GitHub Release has been created and that the expected
+artifacts have been attached.
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_v1.0.0.zip
+biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
+biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
+```
+
+### 5. Verify Automatic Metadata Updates
+
+The release workflow automatically:
+
+- Generates release metadata.
+- Generates SHA256 checksums.
+- Updates `releases.json`.
+- Commits metadata updates back to the repository.
+
+Verify that the workflow successfully:
+
+1. Creates or updates the GitHub Release.
+2. Uploads the expected release assets.
+3. Updates `releases.json` with the new release entry.
+4. Creates a metadata commit.
+
+Example:
+
+```text
+github-actions[bot]
+Add runtime release to releases.json
+```
+
+### 6. Verify Channel Assignment
+
+Confirm that release channels reference the expected versions.
+
+Example:
+
+```json
+{
+  "channels": {
+    "stable": "v1.0.0",
+    "testing": "v1.1.0",
+    "development": "v1.2.0"
+  }
+}
+```
+
+Publishing a release does not automatically change channel assignments.
+
+### 7. Promote the Release
+
+After validation, update the appropriate channel.
+
+Example:
+
+Before:
+
+```json
+{
+  "channels": {
+    "stable": "v1.0.0",
+    "testing": "v1.1.0"
+  }
+}
+```
+
+After promotion:
+
+```json
+{
+  "channels": {
+    "stable": "v1.1.0",
+    "testing": "v1.1.0"
+  }
+}
+```
+
+Promotion is a separate action from publication.
+
+## Release Metadata
+
+Runtime dependency metadata is stored in:
+
+```text
+releases.json
+```
+
+Example:
+
+```json
+{
+  "channels": {
+    "stable": "v1.0.0",
+    "testing": "v1.1.0",
+    "development": "v1.2.0"
+  },
+
+  "releases": {
+    "v1.0.0": {
+      "windows": {
+        "url": "...",
+        "sha256": "..."
+      },
+
+      "macos": {
+        "url": "...",
+        "sha256": "..."
+      },
+
+      "linux": {
+        "url": "...",
+        "sha256": "..."
+      }
+    }
+  }
+}
+```
+
+## Channel Definitions
+
+### Stable
+
+The recommended dependency release for general use.
+
+### Testing
+
+A release undergoing validation before promotion.
+
+### Development
+
+A release intended for active development and experimentation.
+
+## Artifact Naming
+
+Runtime dependency artifacts use the following naming convention:
+
+```text
+biodiverse-runtime-dependencies___.zip
+```
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_v1.0.0.zip
+biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
+biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
+```
+
+The version component must exactly match the Git tag used to create the
+release.
+
+## Checksums
+
+Every published artifact must have an associated SHA256 checksum.
+
+Checksums are generated automatically as part of the release workflow and
+published in `releases.json`.
+
+Consumers must verify downloaded artifacts before use.
+
+## Validation
+
+Before promoting a release to the `stable` channel, verify that:
+
+- Dependency artifacts were built successfully.
+- Validation tests passed.
+- Metadata was generated successfully.
+- Checksums were generated successfully.
+- GitHub Release assets are available.
+- `releases.json` was updated correctly.
+
+## Related Documentation
+
+- `README.md`
+- `docs/architecture.md`
+- `docs/adr/0001-use-shared-cross-platform-runtime-dependency-repository.md`
+- `docs/adr/0002-use-runtime-dependency-release-channels.md`
+- `docs/adr/0003-separate-release-publication-from-promotion.md`
+- `docs/adr/0004-use-metadata-driven-runtime-dependency-selection.md`
+- `docs/adr/0005-use-tag-triggered-runtime-dependency-releases.md`
+- `docs/adr/0006-use-consistent-runtime-dependency-artifact-naming.md`

@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+
+  build-windows:
+    uses: ./.github/workflows/windows-runtime.yml
+    with:
+      build_type: release
+
+  build-macos:
+    uses: ./.github/workflows/macos-runtime.yml
+    with:
+      build_type: release
+
+  build-linux:
+    uses: ./.github/workflows/linux-runtime.yml
+    with:
+      build_type: release
+
+  update-releases-json:
+    needs:
+      - build-windows
+      - build-macos
+      - build-linux
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Set metadata variables
+        run: |
+          VERSION="${{ github.ref_name }}"
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+          echo "WINDOWS_FILENAME=${{ needs.build-windows.outputs.windows_filename }}" >> "$GITHUB_ENV"
+          echo "WINDOWS_SHA256=${{ needs.build-windows.outputs.windows_sha256 }}" >> "$GITHUB_ENV"
+
+          echo "MACOS_FILENAME=${{ needs.build-macos.outputs.macos_filename }}" >> "$GITHUB_ENV"
+          echo "MACOS_SHA256=${{ needs.build-macos.outputs.macos_sha256 }}" >> "$GITHUB_ENV"
+
+          echo "LINUX_FILENAME=${{ needs.build-linux.outputs.linux_filename }}" >> "$GITHUB_ENV"
+          echo "LINUX_SHA256=${{ needs.build-linux.outputs.linux_sha256 }}" >> "$GITHUB_ENV"
+
+      - name: Generate URLs
+        run: |
+          echo "WINDOWS_URL=https://github.com/${{ github.repository }}/releases/download/$VERSION/$WINDOWS_FILENAME" >> "$GITHUB_ENV"
+          echo "MACOS_URL=https://github.com/${{ github.repository }}/releases/download/$VERSION/$MACOS_FILENAME" >> "$GITHUB_ENV"
+          echo "LINUX_URL=https://github.com/${{ github.repository }}/releases/download/$VERSION/$LINUX_FILENAME" >> "$GITHUB_ENV"
+
+      - name: Update releases.json
+        run: |
+          python scripts/update_releases_json.py \
+            "$VERSION" \
+            "$WINDOWS_URL" \
+            "$WINDOWS_SHA256" \
+            "$MACOS_URL" \
+            "$MACOS_SHA256" \
+            "$LINUX_URL" \
+            "$LINUX_SHA256"
+
+      - name: Commit metadata update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add releases.json
+
+          if git diff --cached --quiet; then
+            echo "No metadata changes"
+          else
+            git commit -m "Add runtime dependency release $VERSION"
+            git push origin HEAD:main
+          fi
