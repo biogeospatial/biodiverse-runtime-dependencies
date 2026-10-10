@@ -18,9 +18,20 @@ Artifacts must be:
 
 A consistent naming convention is required so that release workflows, metadata generation and consuming repositories can reliably determine artifact names without platform-specific logic.
 
+The repository generates two distinct categories of artifacts:
+
+- CI Artifacts.
+- Release Assets.
+
+These artifacts serve different purposes and therefore use different naming conventions.
+
 ## Decision
 
 Runtime dependency artifacts will use a consistent platform-based naming convention.
+
+### Release Assets
+
+Release assets are generated from version tags and published through GitHub Releases.
 
 Format:
 
@@ -36,7 +47,7 @@ biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
 biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
 ```
 
-Artifact filenames must:
+Release asset filenames must:
 
 - Include the repository purpose.
 - Include the target platform.
@@ -55,6 +66,33 @@ Artifact:
 biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
 ```
 
+### CI Artifacts
+
+CI artifacts are generated from commits during development and validation workflows.
+
+Format:
+
+```text
+biodiverse-runtime-dependencies___
+```
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_d2ddf75
+biodiverse-runtime-dependencies_macos_arm64_d2ddf75
+biodiverse-runtime-dependencies_linux_x64_d2ddf75
+```
+
+CI artifacts are intended for:
+
+- Development.
+- Testing.
+- Validation.
+- Build traceability.
+
+CI artifacts are not considered published releases and are not referenced by `releases.json`.
+
 ## Rationale
 
 Consistent artifact naming:
@@ -71,7 +109,7 @@ Example:
 ```text
 Release tag
     ↓
-Artifact name
+Release asset name
     ↓
 Metadata generation
     ↓
@@ -79,6 +117,22 @@ Consumer download
 ```
 
 without requiring special handling for individual platforms.
+
+Separate naming conventions for CI artifacts and release assets also make it clear whether an artifact originated from:
+
+```text
+Commit
+    ↓
+CI Artifact
+```
+
+or:
+
+```text
+Tag
+    ↓
+Release Asset
+```
 
 ## Consequences
 
@@ -90,6 +144,7 @@ without requiring special handling for individual platforms.
 - Reduced workflow complexity.
 - Improved consistency across platforms.
 - Easier integration with consuming repositories.
+- Clear distinction between development artifacts and published releases.
 
 ### Negative
 
@@ -167,12 +222,20 @@ Example release:
 v1.2.0
 ```
 
-Generated artifacts:
+Generated release assets:
 
 ```text
 biodiverse-runtime-dependencies_windows_x64_v1.2.0.zip
 biodiverse-runtime-dependencies_macos_arm64_v1.2.0.zip
 biodiverse-runtime-dependencies_linux_x64_v1.2.0.zip
+```
+
+Generated CI artifacts:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_d2ddf75
+biodiverse-runtime-dependencies_macos_arm64_d2ddf75
+biodiverse-runtime-dependencies_linux_x64_d2ddf75
 ```
 
 Example metadata:
