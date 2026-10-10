@@ -69,7 +69,7 @@ Current workflows include:
 Create and push a version tag:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0
 git push origin v1.0.0
 ```
 
@@ -77,7 +77,8 @@ git push origin v1.0.0
 
 Runtime dependency releases should be created using annotated Git tags.
 
-Annotated tags allow release-specific information to be recorded alongside the release version and provide a permanent release history.
+Annotated tags allow release-specific information to be recorded alongside
+the release version and provide a permanent release history.
 
 Example:
 
@@ -86,7 +87,8 @@ git tag -a v1.0.0 -m "Initial runtime dependency release"
 git push origin v1.0.0
 ```
 
-For larger releases, create the tag without a message argument and provide a multi-line description:
+For larger releases, create the tag without a message argument and
+provide a multi-line description:
 
 ```bash
 git tag -a v1.0.0
@@ -108,7 +110,8 @@ Components:
 - Alien::geos::af
 ```
 
-The tag description becomes part of the release history and should describe:
+The tag description becomes part of the release history and should
+describe:
 
 - The purpose of the release.
 - Major dependency changes.
@@ -117,7 +120,8 @@ The tag description becomes part of the release history and should describe:
 
 ### 2.2 Maintain Release History
 
-Every runtime dependency release should have a corresponding annotated tag.
+Every runtime dependency release should have a corresponding annotated
+tag.
 
 The release history is intended to provide a record of:
 
@@ -139,7 +143,8 @@ or:
 git show v1.0.0
 ```
 
-Release history forms part of the project's long-term operational record and should be maintained with meaningful release descriptions.
+Release history forms part of the project's long-term operational record
+and should be maintained with meaningful release descriptions.
 
 ### 3. Verify Release Build
 
@@ -154,7 +159,7 @@ The release workflow should:
 ### 4. Verify GitHub Release
 
 Confirm that a GitHub Release has been created and that the expected
-artifacts have been attached.
+release assets have been attached.
 
 Examples:
 
@@ -209,6 +214,13 @@ Publishing a release does not automatically change channel assignments.
 
 After validation, update the appropriate channel.
 
+Promotion is performed separately from release publication.
+
+This may be done by:
+
+- Manually updating `releases.json`, or
+- Running a dedicated channel promotion workflow.
+
 Example:
 
 Before:
@@ -233,7 +245,7 @@ After promotion:
 }
 ```
 
-Promotion is a separate action from publication.
+Promotion does not require rebuilding or republishing release artifacts.
 
 ## Release Metadata
 
@@ -290,7 +302,17 @@ A release intended for active development and experimentation.
 
 ## Artifact Naming
 
-Runtime dependency artifacts use the following naming convention:
+The repository generates two categories of artifacts:
+
+- CI Artifacts
+- Release Assets
+
+### Release Assets
+
+Release assets are generated from version tags and published through
+GitHub Releases.
+
+Format:
 
 ```text
 biodiverse-runtime-dependencies___.zip
@@ -307,9 +329,47 @@ biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
 The version component must exactly match the Git tag used to create the
 release.
 
+Example:
+
+```text
+Tag: v1.0.0
+
+Release Asset:
+biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
+```
+
+### CI Artifacts
+
+CI artifacts are generated from source commits during development and
+validation workflows.
+
+Format:
+
+```text
+biodiverse-runtime-dependencies___
+```
+
+Examples:
+
+```text
+biodiverse-runtime-dependencies_windows_x64_d2ddf75
+biodiverse-runtime-dependencies_macos_arm64_d2ddf75
+biodiverse-runtime-dependencies_linux_x64_d2ddf75
+```
+
+CI artifacts are intended for:
+
+- Development.
+- Testing.
+- Validation.
+- Build traceability.
+
+CI artifacts are not considered published releases and are not
+referenced by `releases.json`.
+
 ## Checksums
 
-Every published artifact must have an associated SHA256 checksum.
+Every published release asset must have an associated SHA256 checksum.
 
 Checksums are generated automatically as part of the release workflow and
 published in `releases.json`.
@@ -333,64 +393,56 @@ CI artifacts and release assets serve different purposes.
 
 ### CI Artifacts
 
-Generated during development and CI validation workflows.
+Generated from source commits.
 
-Examples:
+Example:
 
 ```text
+Commit
+    ↓
 biodiverse-runtime-dependencies_macos_arm64_d2ddf75
-biodiverse-runtime-dependencies_windows_x64_d2ddf75
 ```
 
-CI artifacts are identified using the source commit SHA and are intended
-for development, testing and traceability.
+CI artifacts are intended for:
 
-CI artifacts should not be considered published releases.
+- Development.
+- Validation.
+- Troubleshooting.
+- Build verification.
 
 ### Release Assets
 
 Generated from version tags.
 
-Examples:
+Example:
 
 ```text
-biodiverse-runtime-dependencies_windows_x64_v1.0.0.zip
+Tag v1.0.0
+    ↓
 biodiverse-runtime-dependencies_macos_arm64_v1.0.0.zip
-biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
 ```
 
-Release assets are published through GitHub Releases and are referenced
-by `releases.json`.
+Release assets are:
 
-Release assets are intended for consumption by BiodiverseR runtime
-packaging workflows.
+- Published through GitHub Releases.
+- Referenced by `releases.json`.
+- Intended for consumption by BiodiverseR runtime packaging workflows.
 
-### Relationship
-
-```text
-Commit
-    ↓
-CI Artifact
-```
-
-```text
-Tag
-    ↓
-Release Asset
-```
-
-CI artifacts provide validation of development changes.
-
-Release assets represent published dependency releases.
-
+Release assets represent officially published runtime dependency
+releases.
 
 ## Related Documentation
 
 - `README.md`
 - `docs/architecture.md`
+- `docs/channels.md`
+- `docs/releases-json.md`
+- `docs/development-workflow.md`
 - `docs/adr/0001-use-shared-cross-platform-runtime-dependency-repository.md`
 - `docs/adr/0002-use-runtime-dependency-release-channels.md`
 - `docs/adr/0003-separate-release-publication-from-promotion.md`
 - `docs/adr/0004-use-metadata-driven-runtime-dependency-selection.md`
 - `docs/adr/0005-use-tag-triggered-runtime-dependency-releases.md`
 - `docs/adr/0006-use-consistent-runtime-dependency-artifact-naming.md`
+- `docs/adr/0007-use-shared-runtime-configuration-files.md`
+- `docs/adr/0008-use-release-metadata-as-the-system-of-record.md`
