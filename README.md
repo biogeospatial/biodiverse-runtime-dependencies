@@ -291,6 +291,8 @@ Current ADRs:
 - ADR-0004: Use Metadata-Driven Runtime Dependency Selection
 - ADR-0005: Use Tag-Triggered Runtime Dependency Releases
 - ADR-0006: Use Consistent Runtime Dependency Artifact Naming
+- ADR-0007: Use Shared Runtime Configuration Files
+- ADR-0008: Use Release Metadata as the System of Record
 
 ## Relationship to BiodiverseR
 
