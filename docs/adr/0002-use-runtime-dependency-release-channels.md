@@ -44,6 +44,10 @@ Channels reference releases rather than containing release metadata.
 
 Releases remain uniquely identified by version tags.
 
+When a release is published, the release workflow automatically assigns
+it to the `development` channel. The `testing` and `stable` channels are
+updated separately through promotion.
+
 ## Rationale
 
 Channels provide:

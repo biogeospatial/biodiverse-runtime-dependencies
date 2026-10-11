@@ -24,7 +24,7 @@ Runtime dependency releases are created from Git tags.
 Example:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0 -m "Runtime dependency release v1.0.0"
 git push origin v1.0.0
 ```
 
@@ -47,7 +47,7 @@ Create GitHub Release
     ↓
 Upload release assets
     ↓
-Update releases.json
+Update releases.json and development channel
     ↓
 Commit metadata updates
 ```
@@ -245,7 +245,9 @@ Add runtime release to releases.json
 
 ### 6. Verify Channel Assignment
 
-Confirm that release channels reference the expected versions.
+Confirm that the newly published release is assigned automatically to
+`development`, and that `testing` and `stable` still reference the
+expected versions.
 
 Example:
 
@@ -259,7 +261,9 @@ Example:
 }
 ```
 
-Publishing a release does not automatically change channel assignments.
+Publishing a release automatically advances the `development` channel.
+It does not change `testing` or `stable`; those channels are updated
+separately after validation.
 
 ### 7. Promote the Release
 
@@ -306,7 +310,8 @@ Runtime dependency metadata is stored in:
 releases.json
 ```
 
-Example:
+Abbreviated example; platform artifact details are omitted. See
+[the metadata schema](releases-json.md) for the complete structure.
 
 ```json
 {
@@ -317,22 +322,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```

@@ -46,7 +46,7 @@ Runtime dependency releases are created from Git tags.
 Example:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0 -m "Runtime dependency release v1.0.0"
 git push origin v1.0.0
 ```
 
@@ -85,7 +85,7 @@ The metadata contains:
 - Platform-specific download URLs.
 - SHA256 checksums.
 
-Example:
+Abbreviated example; platform artifact details are omitted:
 
 ```json
 {
@@ -96,22 +96,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```
@@ -143,7 +130,9 @@ A release that is undergoing validation before promotion.
 
 A release intended for active development and experimentation.
 
-Publishing a release does not automatically change channel assignments.
+Publishing a release automatically advances the `development` channel to
+that release. The `testing` and `stable` channels change only through
+promotion after validation.
 
 ## Release Publication and Promotion
 
@@ -231,7 +220,7 @@ Runtime dependency releases are created from Git tags.
 Example:
 
 ```bash
-git tag v1.0.0
+git tag -a v1.0.0 -m "Runtime dependency release v1.0.0"
 git push origin v1.0.0
 ```
 
@@ -248,13 +237,16 @@ The automated release workflow:
 
 ## Current Status
 
-- Windows dependency build: planned
-- macOS ARM64 dependency build: planned
-- Linux dependency build: planned
-- Automated release workflow: planned
-- Automated GitHub Release publication: planned
-- Automated SHA256 generation: planned
-- Automated `releases.json` updates: planned
+The release workflow is partially implemented but is not yet runnable end
+to end.
+
+- Release-tag trigger and cross-platform orchestration: defined in
+  `.github/workflows/release.yml`
+- Release metadata updater: implemented in
+  `scripts/update_releases_json.py`
+- Windows, macOS ARM64, and Linux build workflows: not yet implemented
+- End-to-end artifact build, validation, and release publication: pending
+  the platform workflows
 
 ## Documentation
 
@@ -271,7 +263,7 @@ docs/architecture.md
 docs/release-process.md
 docs/channels.md
 docs/development-workflow.md
-docs/releases.json
+docs/releases-json.md
 docs/releases/
 docs/adr/
 ```

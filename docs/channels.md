@@ -2,8 +2,9 @@
 
 Runtime dependency releases are managed using channels.
 
-Channels provide stable references to runtime dependency releases and
-allow release publication and release promotion to occur independently.
+Channels provide stable references to runtime dependency releases.
+Publication automatically advances `development`, while promotion to
+`testing` and `stable` remains separate.
 
 A channel references a release version rather than containing release
 metadata directly.
@@ -120,9 +121,9 @@ Releases assigned to this channel should not be considered stable.
 The preferred release lifecycle is:
 
 ```text
-Create release
+Publish release
     ↓
-Assign to development
+Automatically assign to development
     ↓
 Validate
     ↓
@@ -138,14 +139,15 @@ before becoming the recommended version.
 
 ## Release Publication
 
-Publishing a release and promoting a release are separate actions.
+Publishing a release automatically assigns it to the `development`
+channel. Promotion to `testing` or `stable` remains a separate action.
 
 Publishing:
 
 ```text
-Create release
+Create release and metadata entry
     ↓
-Add to releases.json
+Set development channel to the new release
 ```
 
 Promotion:
@@ -177,7 +179,8 @@ After publishing:
 }
 ```
 
-The release exists but has not yet been promoted.
+The release is available through `development`; it has not yet been
+promoted to `testing` or `stable`.
 
 ## Promotion Example
 
@@ -247,6 +250,9 @@ Using channels provides:
 - Simplified consumer configuration.
 
 ## Example Metadata
+
+This abbreviated example focuses on channel-to-release references;
+platform artifact details are omitted.
 
 ```json
 {

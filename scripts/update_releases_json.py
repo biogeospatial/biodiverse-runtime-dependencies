@@ -56,12 +56,11 @@ data["releases"][version] = {
     },
 }
 
-# First release automatically becomes the development release.
-if not data["channels"].get("development"):
-    data["channels"]["development"] = version
+# Every published release becomes the current development release.
+data["channels"]["development"] = version
 
 with releases_file.open("w") as f:
     json.dump(data, f, indent=2)
     f.write("\n")
 
-print(f"Added release {version}")
+print(f"Updated release metadata for {version}")

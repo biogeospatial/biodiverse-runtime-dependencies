@@ -75,14 +75,15 @@ development
 
 ### 5. Create a Development Release
 
-Create a release candidate from the development branch.
+After feature PRs are merged into `development`, create a release from
+the development branch.
 
 Example:
 
 ```bash
 git checkout development
 
-git tag v1.2.0
+git tag -a v1.2.0 -m "Runtime dependency release v1.2.0"
 
 git push origin v1.2.0
 ```
@@ -94,10 +95,15 @@ Build dependencies
     ↓
 Create release
     ↓
-Update releases.json
+Add release metadata and update development channel
 ```
 
-### 6. Assign to Development Channel
+### 6. Verify Automatic Development Assignment
+
+When the release workflow publishes the tag, it automatically updates
+the `development` channel to reference the new release. Confirm that
+`releases.json` contains the new release and that the channel points to
+it.
 
 Example:
 

@@ -19,7 +19,8 @@ Runtime dependency metadata is stored in:
 releases.json
 ```
 
-Example:
+Abbreviated example; platform artifact details are omitted. Platform
+artifact fields are described below.
 
 ```json
 {
@@ -30,22 +31,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```
@@ -64,6 +52,10 @@ The metadata file contains two top-level sections:
 ### channels
 
 Maps channel names to release versions.
+
+When a release is published, the release workflow automatically sets
+`development` to the new version. `testing` and `stable` are changed only
+through promotion.
 
 Example:
 
@@ -403,34 +395,3 @@ Potential examples include:
 ```
 
 Consumers should ignore unrecognised fields.
-
-## Example Complete Metadata File
-
-```json
-{
-  "channels": {
-    "stable": "v1.0.0",
-    "testing": "v1.1.0",
-    "development": "v1.2.0"
-  },
-
-  "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "https://example/windows.zip",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "https://example/macos.zip",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "https://example/linux.zip",
-        "sha256": "..."
-      }
-    }
-  }
-}
-```
