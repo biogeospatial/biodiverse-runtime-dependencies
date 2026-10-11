@@ -76,12 +76,6 @@ jobs:
           brew update
           brew install "openssl@${OPENSSL_VERSION}" "gsl@${GSL_VERSION}" "sqlite@${SQLITE_VERSION}" "gdal@${GDAL_VERSION}" yq
 
-      name: Install toolchain helpers
-        shell: bash
-        run: |
-          brew update
-          brew install yp
-
       - name: Check required toolchain
         shell: bash
         run: |
