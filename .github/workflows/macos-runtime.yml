@@ -52,8 +52,8 @@ jobs:
           echo "SQLITE_VERSION=$(yq -r '.platforms.macos.system_dependencies.sqlite' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "GDAL_VERSION=$(yq -r '.platforms.macos.system_dependencies.gdal' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
-          OPENSSL_VERSION=$(yq -r '.platforms.macos.system_dependencies.openssl' .github/runtime-dependency-config.yml)
-          echo "OPENSSL_VERSION=${OPENSSL_VERSION}" >> "$GITHUB_ENV"
+          echo "OPENSSL_VERSION=$(yq -r '.platforms.macos.system_dependencies.openssl' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          # echo "OPENSSL_VERSION=${OPENSSL_VERSION}" >> "$GITHUB_ENV"
           echo "OPENSSL_PREFIX=/opt/homebrew/opt/openssl@${OPENSSL_VERSION}" >> "$GITHUB_ENV"
 
           echo "GSL_VERSION=$(yq -r '.platforms.macos.system_dependencies.gsl' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
