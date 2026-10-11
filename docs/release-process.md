@@ -310,7 +310,8 @@ Runtime dependency metadata is stored in:
 releases.json
 ```
 
-Example:
+Abbreviated example; platform artifact details are omitted. See
+[the metadata schema](releases-json.md) for the complete structure.
 
 ```json
 {
@@ -321,50 +322,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.1.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.2.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```

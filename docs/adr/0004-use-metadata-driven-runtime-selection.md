@@ -30,7 +30,7 @@ The metadata file will contain:
 - Platform-specific artifact metadata.
 - Checksums for runtime verification.
 
-Example:
+Abbreviated example; platform artifact details are omitted:
 
 ```json
 {
@@ -41,48 +41,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.1.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.2.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```

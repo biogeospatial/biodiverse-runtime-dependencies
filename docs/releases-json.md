@@ -19,7 +19,8 @@ Runtime dependency metadata is stored in:
 releases.json
 ```
 
-Example:
+Abbreviated example; platform artifact details are omitted. Platform
+artifact fields are described below.
 
 ```json
 {
@@ -30,50 +31,9 @@ Example:
   },
 
   "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.1.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    },
-    "v1.2.0": {
-      "windows": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "...",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "...",
-        "sha256": "..."
-      }
-    }
+    "v1.0.0": {},
+    "v1.1.0": {},
+    "v1.2.0": {}
   }
 }
 ```
@@ -435,62 +395,3 @@ Potential examples include:
 ```
 
 Consumers should ignore unrecognised fields.
-
-## Example Complete Metadata File
-
-```json
-{
-  "channels": {
-    "stable": "v1.0.0",
-    "testing": "v1.1.0",
-    "development": "v1.2.0"
-  },
-
-  "releases": {
-    "v1.0.0": {
-      "windows": {
-        "url": "https://example/windows.zip",
-        "sha256": "..."
-      },
-
-      "macos": {
-        "url": "https://example/macos.zip",
-        "sha256": "..."
-      },
-
-      "linux": {
-        "url": "https://example/linux.zip",
-        "sha256": "..."
-      }
-    },
-    "v1.1.0": {
-      "windows": {
-        "url": "https://example/windows-v1.1.0.zip",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "https://example/macos-v1.1.0.zip",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "https://example/linux-v1.1.0.zip",
-        "sha256": "..."
-      }
-    },
-    "v1.2.0": {
-      "windows": {
-        "url": "https://example/windows-v1.2.0.zip",
-        "sha256": "..."
-      },
-      "macos": {
-        "url": "https://example/macos-v1.2.0.zip",
-        "sha256": "..."
-      },
-      "linux": {
-        "url": "https://example/linux-v1.2.0.zip",
-        "sha256": "..."
-      }
-    }
-  }
-}
-```
