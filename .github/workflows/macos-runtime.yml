@@ -74,7 +74,7 @@ jobs:
         shell: bash
         run: |
           brew update
-          brew install "openssl@${OPENSSL_VERSION}" "gsl@${GSL_VERSION}" "sqlite@${SQLITE_VERSION}" "gdal@${GDAL_VERSION}" yq
+          brew install "openssl@${OPENSSL_VERSION}" "gsl "sqlite@${SQLITE_VERSION}" "gdal@${GDAL_VERSION}" yq
 
       - name: Check required toolchain
         shell: bash

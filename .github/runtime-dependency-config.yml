@@ -9,7 +9,7 @@ platforms:
     perl_version: "5.40.2"
     system_dependencies:
       openssl: "3"
-      gsl: "latest"
+      gsl: "gsl"
       sqlite: "3.44"
       gdal: "3.8"
 
