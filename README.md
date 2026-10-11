@@ -237,13 +237,16 @@ The automated release workflow:
 
 ## Current Status
 
-- Windows dependency build: planned
-- macOS ARM64 dependency build: planned
-- Linux dependency build: planned
-- Automated release workflow: planned
-- Automated GitHub Release publication: planned
-- Automated SHA256 generation: planned
-- Automated `releases.json` updates: planned
+The release workflow is partially implemented but is not yet runnable end
+to end.
+
+- Release-tag trigger and cross-platform orchestration: defined in
+  `.github/workflows/release.yml`
+- Release metadata updater: implemented in
+  `scripts/update_releases_json.py`
+- Windows, macOS ARM64, and Linux build workflows: not yet implemented
+- End-to-end artifact build, validation, and release publication: pending
+  the platform workflows
 
 ## Documentation
 
