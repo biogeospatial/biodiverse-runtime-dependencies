@@ -1,6 +1,10 @@
 name: macOS Runtime
 
 on:
+  push:
+    branches:
+      - development
+
   workflow_call:
     inputs:
       build_type:
@@ -49,6 +53,15 @@ jobs:
 
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
+      - name: Print environment snapshot
+        shell: bash
+        run: |
+          uname -m
+          sw_vers || true
+          xcode-select -p || true
+          which brew || true
+          brew --version || true
+
       - name: Install system dependencies
         shell: bash
         run: |
@@ -66,7 +79,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}
+          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}-${{ hashFiles('.github/runtime-dependency-config.yml') }}
 
       - name: Install perlbrew
         shell: bash
@@ -108,14 +121,28 @@ jobs:
           export CXXFLAGS="-I/opt/homebrew/include ${CXXFLAGS:-}"
           export ALIEN_GDAL_CMAKE_ARGS="-DGDAL_ENABLE_DRIVER_PDF:BOOL=OFF -DGDAL_USE_CURL=OFF -DBUILD_APPS=OFF"
 
-          cpanm --notest PDL
-          cpanm --notest PDL::GSL::CDF
-          cpanm --notest Alien::FFI
-          cpanm --notest FFI::Platypus
-          cpanm --notest Alien::gdal
-          cpanm --notest Geo::GDAL::FFI
-          cpanm --notest Alien::proj
-          cpanm --notest Alien::geos::af
+          install_module() {
+            local module="$1"
+            for attempt in 1 2 3; do
+              echo "Installing ${module} (attempt ${attempt})"
+              if cpanm --notest "${module}"; then
+                return 0
+              fi
+              echo "Retrying ${module} after failure"
+              sleep 15
+            done
+            echo "Failed to install ${module} after 3 attempts" >&2
+            return 1
+          }
+
+          install_module PDL
+          install_module PDL::GSL::CDF
+          install_module Alien::FFI
+          install_module FFI::Platypus
+          install_module Alien::gdal
+          install_module Geo::GDAL::FFI
+          install_module Alien::proj
+          install_module Alien::geos::af
 
       - name: Validate dependency installation
         shell: bash
@@ -155,6 +182,17 @@ jobs:
 
           echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
           echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Upload failure logs
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-runtime-failure-logs-${{ github.run_id }}
+          path: |
+            ~/.cpanm
+            ~/.cpanm/work
+            ~/perl5/perlbrew
+          if-no-files-found: ignore
 
       - name: Upload release asset
         if: ${{ inputs.build_type == 'release' }}
