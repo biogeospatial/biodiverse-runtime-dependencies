@@ -260,7 +260,7 @@ docs/architecture.md
 docs/release-process.md
 docs/channels.md
 docs/development-workflow.md
-docs/releases.json
+docs/releases-json.md
 docs/releases/
 docs/adr/
 ```
