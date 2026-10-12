@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Proposed
 
 ## Context
 
@@ -11,17 +11,6 @@ The `biodiverse-runtime-dependencies` repository produces platform-specific runt
 - Linux x64
 - macOS ARM64
 - Windows x64
-
-The repository follows the release and distribution architecture defined by:
-
-- ADR-0001: Use a Shared Cross-Platform Runtime Dependency Repository
-- ADR-0002: Use Runtime Dependency Release Channels
-- ADR-0003: Separate Release Publication from Promotion
-- ADR-0004: Use Metadata-Driven Runtime Dependency Selection
-- ADR-0005: Use Tag-Triggered Runtime Dependency Releases
-- ADR-0006: Use Consistent Runtime Dependency Artifact Naming
-- ADR-0007: Use Shared Runtime Configuration Files
-- ADR-0008: Use Release Metadata as the System of Record
 
 Historically, runtime builds have depended on external systems that change independently of the repository, including:
 
