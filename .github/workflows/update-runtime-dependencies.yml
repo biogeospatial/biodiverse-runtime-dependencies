@@ -1,0 +1,124 @@
+name: Update Runtime Dependencies
+
+on:
+  workflow_dispatch:
+    inputs:
+      macos_perl_version:
+        description: 'macOS Perl version'
+        required: false
+        default: ''
+        type: string
+      windows_perl_version:
+        description: 'Windows Perl version'
+        required: false
+        default: ''
+        type: string
+      linux_perl_version:
+        description: 'Linux Perl version'
+        required: false
+        default: ''
+        type: string
+      release_channel:
+        description: 'Release channel'
+        required: false
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - stable
+          - beta
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+        with:
+          ref: development
+          fetch-depth: 0
+      
+      - name: Create feature branch
+        run: |
+          BRANCH_NAME="feature/update-runtime-dependencies-${{ github.run_number }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+      
+      - name: Update configuration
+        run: |
+          python3 << 'EOF'
+          import yaml
+          
+          config_path = '.github/runtime-dependency-config.yml'
+          
+          # Read current configuration
+          with open(config_path, 'r') as f:
+              config = yaml.safe_load(f)
+          
+          # Update versions if provided
+          macos_perl = "${{ github.event.inputs.macos_perl_version }}".strip()
+          windows_perl = "${{ github.event.inputs.windows_perl_version }}".strip()
+          linux_perl = "${{ github.event.inputs.linux_perl_version }}".strip()
+          release_channel = "${{ github.event.inputs.release_channel }}".strip()
+          
+          if macos_perl:
+              config['platforms']['macos']['perl_version'] = macos_perl
+          
+          if windows_perl:
+              config['platforms']['windows']['perl_version'] = windows_perl
+          
+          if linux_perl:
+              config['platforms']['linux']['perl_version'] = linux_perl
+          
+          if release_channel:
+              config['globals']['release']['channel_on_release'] = release_channel
+          
+          # Write updated configuration
+          with open(config_path, 'w') as f:
+              yaml.dump(config, f, default_flow_style=False, sort_keys=False)
+          
+          print("Configuration updated successfully")
+          EOF
+      
+      - name: Commit changes
+        run: |
+          git add .github/runtime-dependency-config.yml
+          git commit -m "Update runtime dependencies
+
+          - macOS Perl: ${{ github.event.inputs.macos_perl_version || 'unchanged' }}
+          - Windows Perl: ${{ github.event.inputs.windows_perl_version || 'unchanged' }}
+          - Linux Perl: ${{ github.event.inputs.linux_perl_version || 'unchanged' }}
+          - Release channel: ${{ github.event.inputs.release_channel || 'unchanged' }}"
+      
+      - name: Push feature branch
+        run: |
+          git push origin "$BRANCH_NAME"
+      
+      - name: Create Pull Request
+        uses: actions/create-github-app-from-web-flow@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create PR using GitHub CLI
+        run: |
+          gh pr create \
+            --base development \
+            --head "$BRANCH_NAME" \
+            --title "Update runtime dependencies" \
+            --body "Automated runtime dependency update
+
+          **Changes:**
+          - macOS Perl: ${{ github.event.inputs.macos_perl_version || 'unchanged' }}
+          - Windows Perl: ${{ github.event.inputs.windows_perl_version || 'unchanged' }}
+          - Linux Perl: ${{ github.event.inputs.linux_perl_version || 'unchanged' }}
+          - Release channel: ${{ github.event.inputs.release_channel || 'unchanged' }}
+          
+          Triggered by: @${{ github.actor }}" \
+            --label "dependencies,automated"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
