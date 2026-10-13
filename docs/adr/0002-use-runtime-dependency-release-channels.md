@@ -105,6 +105,7 @@ Example:
 - Simple metadata structure.
 - Easy to implement.
 - Provides a single default release for consumers.
+- Matches structure of releases.json in `biodiverseR-perl-engine-builder`.
 
 #### Cons
 
