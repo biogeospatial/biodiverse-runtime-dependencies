@@ -12,7 +12,7 @@ The `biodiverse-runtime-dependencies` repository produces platform-specific runt
 - macOS ARM64
 - Windows x64
 
-Currently,runtime builds depend on external systems that change independently of the repository, including:
+Currently, runtime builds depend on external systems that change independently of the repository, including:
 
 - CPAN module releases.
 - Homebrew package updates.
