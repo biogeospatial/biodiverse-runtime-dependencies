@@ -85,6 +85,55 @@ Promote to stable
 
 ## Alternatives Considered
 
+### Single Current Release Pointer
+
+Example:
+
+```json
+{
+  "current": "v0.1.0-alpha",
+
+  "releases": {
+    "v0.1.0-alpha": {},
+    "v0.1.0-test32": {}
+  }
+}
+```
+
+#### Pros
+
+- Simple metadata structure.
+- Easy to implement.
+- Provides a single default release for consumers.
+
+#### Cons
+
+- Supports only a single release pointer.
+- No distinction between stable, testing and development releases.
+- No promotion model.
+- Requires changing the current pointer whenever a different release should be consumed.
+- Makes it difficult to support staged validation workflows.
+- Uses release URLs and release identifiers directly rather than channel-based version selection.
+- Consumers cannot easily determine whether a release is intended for development, testing or stable use.
+
+The channel-based approach was preferred because it allows multiple release states to coexist simultaneously:
+
+```text
+stable
+    ↓
+v1.0.0
+
+testing
+    ↓
+v1.1.0
+
+development
+    ↓
+v1.2.0
+```
+
+This supports validation, promotion and rollback workflows without requiring consumers to switch between explicit release versions.
+
 ### Version-only selection
 
 Pros:
