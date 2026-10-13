@@ -12,11 +12,16 @@ The `biodiverse-runtime-dependencies` repository produces platform-specific runt
 - macOS ARM64
 - Windows x64
 
-Currently, runtime builds depend on external systems that change independently of the repository, including:
+At present, platform support is not uniform.
+
+- The Windows runtime was produced as a one-off local build and is published for use by the BiodiverseR runtime.
+- No Linux runtime is currently available.
+- The macOS runtime is the primary actively maintained runtime build.
+
+The current macOS build process depends on external systems that evolve independently of the repository, including:
 
 - CPAN module releases.
 - Homebrew package updates.
-- Debian package updates.
 - GitHub Actions runner updates.
 - GDAL dependency updates.
 - OpenSSL updates.
