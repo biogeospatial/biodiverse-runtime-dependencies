@@ -12,11 +12,11 @@ The `biodiverse-runtime-dependencies` repository produces platform-specific runt
 - macOS ARM64
 - Windows x64
 
-At present, platform support is not uniform.
+At present, runtime dependency support varies by platform.
 
-- The Windows runtime was produced as a one-off local build and is published for use by the BiodiverseR runtime.
-- No Linux runtime is currently available.
-- The macOS runtime is the primary actively maintained runtime build.
+- The Windows runtime dependencies consist of a one-off locally generated build that has been published for use by the BiodiverseR runtime.
+- No Linux runtime dependency artifacts are currently produced.
+- The macOS runtime dependencies are rebuilt during each BiodiverseR runtime build and are the only platform with an active, automated dependency build process.
 
 The current macOS build process depends on external systems that evolve independently of the repository, including:
 
