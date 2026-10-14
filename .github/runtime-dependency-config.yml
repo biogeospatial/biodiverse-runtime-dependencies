@@ -6,7 +6,7 @@ globals:
 platforms:
 
   macos:
-    perl_version: "5.40.2"
+    perl_version: "5.38.4"
     system_dependencies:
       openssl: "3"
       gsl: "gsl"
@@ -17,4 +17,4 @@ platforms:
     perl_version: "5.38.4"
 
   linux:
-    perl_version: "5.40.2"
+    perl_version: "5.38.4"
