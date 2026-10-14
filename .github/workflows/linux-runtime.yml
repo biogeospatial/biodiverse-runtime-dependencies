@@ -1,0 +1,139 @@
+name: Linux Runtime
+
+on:
+  push:
+    branches:
+      - development
+
+  workflow_call:
+    inputs:
+      build_type:
+        required: true
+        type: string
+    outputs:
+      linux_filename:
+        value: ${{ jobs.runtime.outputs.linux_filename }}
+      linux_sha256:
+        value: ${{ jobs.runtime.outputs.linux_sha256 }}
+
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: Build type
+        required: true
+        default: development
+        type: choice
+        options:
+          - development
+          - release
+
+permissions:
+  contents: write
+
+jobs:
+  runtime:
+    runs-on: ubuntu-latest
+
+    outputs:
+      linux_filename: ${{ steps.metadata.outputs.filename }}
+      linux_sha256: ${{ steps.metadata.outputs.sha256 }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yq zip
+
+      - name: Determine build version
+        shell: bash
+        run: |
+          if [[ "${{ inputs.build_type }}" == "release" ]]; then
+            VERSION="${GITHUB_REF_NAME:-${GITHUB_SHA}}"
+          else
+            VERSION="${GITHUB_SHA::7}"
+          fi
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Load runtime configuration
+        shell: bash
+        run: |
+          echo "PERL_VERSION=$(yq -r '.platforms.linux.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+
+      - name: Generate BUILDINFO.txt
+        shell: bash
+        run: |
+          mkdir -p build
+
+          cat > build/BUILDINFO.txt <<EOF
+          Platform: Linux
+          Architecture: $(uname -m)
+
+          Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Git Commit: ${GITHUB_SHA}
+          Git Reference: ${GITHUB_REF_NAME}
+
+          Perl Baseline Version: ${PERL_VERSION}
+
+          Workflow: ${GITHUB_WORKFLOW}
+          Runner: ${RUNNER_OS}
+
+          Baseline File: BASELINE-linux.md
+
+          Status: Framework placeholder artifact
+          EOF
+
+      - name: Create runtime package
+        shell: bash
+        run: |
+          PACKAGE_DIR="${RUNNER_TEMP}/runtime-package"
+
+          mkdir -p "${PACKAGE_DIR}"
+
+          cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
+          cp runtime/BASELINE-linux.md "${PACKAGE_DIR}/"
+
+          cd "${PACKAGE_DIR}"
+
+          zip -r \
+            "${GITHUB_WORKSPACE}/biodiverse-runtime-dependencies_linux_x64_${VERSION}.zip" \
+            .
+
+      - name: Inspect package output
+        shell: bash
+        run: |
+          ls -lah "${GITHUB_WORKSPACE}"
+
+      - name: Generate release metadata
+        id: metadata
+        shell: bash
+        run: |
+          FILENAME="biodiverse-runtime-dependencies_linux_x64_${VERSION}.zip"
+
+          SHA=$(sha256sum "${GITHUB_WORKSPACE}/${FILENAME}" | awk '{print $1}')
+
+          echo "filename=${FILENAME}" >> "$GITHUB_OUTPUT"
+          echo "sha256=${SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload release asset
+        if: ${{ inputs.build_type == 'release' }}
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            biodiverse-runtime-dependencies_linux_x64_${{ env.VERSION }}.zip
+
+      - name: Upload release artifact
+        if: ${{ inputs.build_type == 'release' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: biodiverse-runtime-dependencies_linux_x64_${{ env.VERSION }}
+          path: biodiverse-runtime-dependencies_linux_x64_${{ env.VERSION }}.zip
+
+      - name: Upload CI artifact
+        if: ${{ inputs.build_type != 'release' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: biodiverse-runtime-dependencies_linux_x64_${{ env.VERSION }}
+          path: biodiverse-runtime-dependencies_linux_x64_${{ env.VERSION }}.zip
