@@ -12,9 +12,9 @@ on:
         type: string
     outputs:
       macos_filename:
-        value: ${{ jobs.perl.outputs.macos_filename }}
+        value: ${{ jobs.runtime.outputs.macos_filename }}
       macos_sha256:
-        value: ${{ jobs.perl.outputs.macos_sha256 }}
+        value: ${{ jobs.runtime.outputs.macos_sha256 }}
 
   workflow_dispatch:
     inputs:
@@ -31,8 +31,9 @@ permissions:
   contents: write
 
 jobs:
-  perl:
+  runtime:
     runs-on: macos-latest
+
     outputs:
       macos_filename: ${{ steps.metadata.outputs.filename }}
       macos_sha256: ${{ steps.metadata.outputs.sha256 }}
@@ -40,19 +41,13 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Load runtime configuration
+      - name: Install tools
+        run: |
+          brew install yq
+
+      - name: Determine build version
         shell: bash
         run: |
-          echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-
-          echo "OPENSSL_VERSION=$(yq -r '.platforms.macos.system_dependencies.openssl' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          # echo "OPENSSL_VERSION=${OPENSSL_VERSION}" >> "$GITHUB_ENV"
-          echo "OPENSSL_PREFIX=/opt/homebrew/opt/openssl@${OPENSSL_VERSION}" >> "$GITHUB_ENV"
-
-          echo "GSL_VERSION=$(yq -r '.platforms.macos.system_dependencies.gsl' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "SQLITE_VERSION=$(yq -r '.platforms.macos.system_dependencies.sqlite' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "GDAL_VERSION=$(yq -r '.platforms.macos.system_dependencies.gdal' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-
           if [[ "${{ inputs.build_type }}" == "release" ]]; then
             VERSION="${GITHUB_REF_NAME:-${GITHUB_SHA}}"
           else
@@ -61,146 +56,65 @@ jobs:
 
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
-      - name: Print environment snapshot
+      - name: Load runtime configuration
         shell: bash
         run: |
-          uname -m
-          sw_vers || true
-          xcode-select -p || true
-          which brew || true
-          brew --version || true
+          echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
-      - name: Install system dependencies
+      - name: Generate BUILDINFO.txt
         shell: bash
         run: |
-          brew update
-          brew install "openssl@${OPENSSL_VERSION}" gsl "sqlite@${SQLITE_VERSION}" "gdal@${GDAL_VERSION}" yq
+          mkdir -p build
 
-      - name: Check required toolchain
+          cat > build/BUILDINFO.txt <<EOF
+          Platform: macOS
+          Architecture: $(uname -m)
+
+          Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Git Commit: ${GITHUB_SHA}
+          Git Reference: ${GITHUB_REF_NAME}
+
+          Perl Baseline Version: ${PERL_VERSION}
+
+          Workflow: ${GITHUB_WORKFLOW}
+          Runner: ${RUNNER_OS}
+
+          Baseline File: BASELINE-macos.md
+
+          Status: Framework placeholder artifact
+          EOF
+
+      - name: Create runtime package
         shell: bash
         run: |
-          gdalinfo --version
-          sqlite3 --version
-          yq --version
+          PACKAGE_DIR="${RUNNER_TEMP}/runtime-package"
 
-      - name: Cache perlbrew
-        uses: actions/cache@v6
-        with:
-          path: ~/perl5/perlbrew
-          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}-${{ hashFiles('.github/runtime-dependency-config.yml') }}
+          mkdir -p "${PACKAGE_DIR}"
 
-      - name: Install perlbrew
-        shell: bash
-        run: |
-          curl -L https://install.perlbrew.pl | bash
+          cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
+          cp runtime/BASELINE-macos.md "${PACKAGE_DIR}/"
 
-      - name: Build Perl
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
+          cd "${PACKAGE_DIR}"
 
-          if ! perlbrew list | grep -q "perl-${PERL_VERSION}"; then
-            perlbrew install --notest perl-${PERL_VERSION}
-          fi
-
-          perlbrew use perl-${PERL_VERSION}
-          perl -v
-
-      - name: Install cpanminus
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          perl -MCPAN -e 'install App::cpanminus'
-          cpanm --version
-
-      - name: Install geospatial runtime dependencies
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          export ALIEN_INSTALL_TYPE=share
-          export PKG_CONFIG_PATH="/opt/homebrew/lib/pkgconfig:${PKG_CONFIG_PATH:-}"
-          export CMAKE_PREFIX_PATH="/opt/homebrew:${CMAKE_PREFIX_PATH:-}"
-          export CPPFLAGS="-I/opt/homebrew/include ${CPPFLAGS:-}"
-          export CFLAGS="-I/opt/homebrew/include ${CFLAGS:-}"
-          export CXXFLAGS="-I/opt/homebrew/include ${CXXFLAGS:-}"
-          export ALIEN_GDAL_CMAKE_ARGS="-DGDAL_ENABLE_DRIVER_PDF:BOOL=OFF -DGDAL_USE_CURL=OFF -DBUILD_APPS=OFF"
-
-          install_module() {
-            local module="$1"
-            for attempt in 1 2 3; do
-              echo "Installing ${module} (attempt ${attempt})"
-              if cpanm --notest "${module}"; then
-                return 0
-              fi
-              echo "Retrying ${module} after failure"
-              sleep 15
-            done
-            echo "Failed to install ${module} after 3 attempts" >&2
-            return 1
-          }
-
-          install_module PDL
-          install_module PDL::GSL::CDF
-          install_module Alien::FFI
-          install_module FFI::Platypus
-          install_module Alien::gdal
-          install_module Geo::GDAL::FFI
-          install_module Alien::proj
-          install_module Alien::geos::af
-
-      - name: Validate dependency installation
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          perl -MAlien::gdal -e 'print "Alien::gdal OK\n"; print Alien::gdal->dist_dir, "\n";'
-          perl -MGeo::GDAL::FFI -e 'print "Geo::GDAL::FFI OK\n";'
-          perl -MFFI::Platypus -e 'print "FFI::Platypus OK\n";'
-
-          gdalinfo --version
-
-      - name: Package Perl runtime dependency stack
-        shell: bash
-        run: |
-          BASE_DIR="${RUNNER_TEMP}/runtime-stack"
-          mkdir -p "$BASE_DIR/perl"
-
-          cp -a ~/perl5/perlbrew/perls/perl-${PERL_VERSION} "$BASE_DIR/perl/"
-
-          cd "$BASE_DIR"
-          zip -r "${GITHUB_WORKSPACE}/biodiverse-runtime-dependencies_macos_arm64_${VERSION}.zip" perl
+          zip -r \
+            "${GITHUB_WORKSPACE}/biodiverse-runtime-dependencies_macos_arm64_${VERSION}.zip" \
+            .
 
       - name: Inspect package output
         shell: bash
         run: |
           ls -lah "${GITHUB_WORKSPACE}"
-          file "${GITHUB_WORKSPACE}/biodiverse-runtime-dependencies_macos_arm64_${VERSION}.zip" || true
 
       - name: Generate release metadata
         id: metadata
         shell: bash
         run: |
           FILENAME="biodiverse-runtime-dependencies_macos_arm64_${VERSION}.zip"
-          SHA=$(shasum -a 256 "$GITHUB_WORKSPACE/$FILENAME" | awk '{print $1}')
 
-          echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
-          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          SHA=$(shasum -a 256 "${GITHUB_WORKSPACE}/${FILENAME}" | awk '{print $1}')
 
-      - name: Upload failure logs
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v7
-        with:
-          name: macos-runtime-failure-logs-${{ github.run_id }}
-          path: |
-            ~/.cpanm
-            ~/.cpanm/work
-            ~/perl5/perlbrew
-          if-no-files-found: ignore
+          echo "filename=${FILENAME}" >> "$GITHUB_OUTPUT"
+          echo "sha256=${SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Upload release asset
         if: ${{ inputs.build_type == 'release' }}
