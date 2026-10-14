@@ -117,4 +117,22 @@ jobs:
           echo "sha256=${SHA}" >> "$GITHUB_OUTPUT"
 
       - name: Upload release asset
-        if: ${{ inputs.build_type == 'release
+        if: ${{ inputs.build_type == 'release' }}
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            biodiverse-runtime-dependencies_macos_arm64_${{ env.VERSION }}.zip
+
+      - name: Upload release artifact
+        if: ${{ inputs.build_type == 'release' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: biodiverse-runtime-dependencies_macos_arm64_${{ env.VERSION }}
+          path: biodiverse-runtime-dependencies_macos_arm64_${{ env.VERSION }}.zip
+
+      - name: Upload CI artifact
+        if: ${{ inputs.build_type != 'release' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: biodiverse-runtime-dependencies_macos_arm64_${{ env.VERSION }}
+          path: biodiverse-runtime-dependencies_macos_arm64_${{ env.VERSION }}.zip
