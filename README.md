@@ -327,6 +327,7 @@ Current ADRs:
 - ADR-0006: Use Consistent Runtime Dependency Artifact Naming
 - ADR-0007: Use Shared Runtime Configuration Files
 - ADR-0008: Use Release Metadata as the System of Record
+- ADR-0009: Use Versioned and Reproducible Runtime Dependency Baselines
 
 ## Relationship to BiodiverseR
 
