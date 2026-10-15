@@ -34,6 +34,15 @@ As a result, the approved baseline is based on a known-working configuration rat
 
 Dependency updates require validation through the macOS runtime dependency build process before adoption.
 
+## Dependency Sources
+
+The macOS baseline is defined using:
+
+```text
+.github/runtime-dependency-config.yml
+runtime/Brewfile
+runtime/BASELINE-macos.md
+
 ## Build Environment
 
 Successful baseline build:

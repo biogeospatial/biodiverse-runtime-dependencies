@@ -43,7 +43,7 @@ jobs:
 
       - name: Install tools
         run: |
-          brew install yq
+          brew bundle --file runtime/Brewfile
 
       - name: Determine build version
         shell: bash
