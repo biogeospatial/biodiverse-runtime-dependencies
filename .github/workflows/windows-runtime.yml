@@ -61,11 +61,39 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          echo "PERL_INSTALLER_URL=$(yq -r '.platforms.windows.perl_installer_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Install Strawberry Perl
         shell: pwsh
         run: |
-          choco install strawberryperl -y
+          $installer = "$env:TEMP\strawberry-perl.msi"
+
+          Invoke-WebRequest `
+            -Uri $env:PERL_INSTALLER_URL `
+            -OutFile $installer
+
+          Start-Process msiexec.exe `
+            -ArgumentList "/i `"$installer`" /qn /norestart" `
+            -Wait
+
+          Remove-Item $installer
+
+          $env:Path = `
+            [System.Environment]::GetEnvironmentVariable("Path","Machine") +
+            ";" +
+            [System.Environment]::GetEnvironmentVariable("Path","User")
+
+      - name: Validate Perl Version
+        shell: pwsh
+        run: |
+          $installedVersion = (& perl -e 'print $^V').Trim()
+
+          Write-Host "Installed Perl: $installedVersion"
+          Write-Host "Expected Perl : v$env:PERL_VERSION"
+
+          if ($installedVersion -ne "v$env:PERL_VERSION") {
+            throw "Installed Perl version does not match configured version"
+          }
 
       - name: Refresh PATH
         shell: pwsh
@@ -81,8 +109,6 @@ jobs:
           where.exe perl
 
           perl -v
-
-          perl -e 'print "VERSION=$^V\n"'
 
       - name: Generate BUILDINFO.txt
         shell: pwsh
