@@ -254,6 +254,7 @@ Current release:
 
 ```text
 v0.1.0
+```
 
 ## Documentation
 
