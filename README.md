@@ -159,16 +159,17 @@ Example:
 {
   "channels": {
     "stable": "v1.0.0",
-    "testing": "v1.1.0"
+    "testing": "v1.1.0",
+    "development": "v1.2.0"
   }
 }
 ```
 
 In this example:
 
-- `v1.1.0` has been published.
-- `v1.1.0` is being tested.
-- `v1.0.0` remains the stable release.
+- v1.2.0 has been published and assigned to development.
+- v1.1.0 is undergoing validation in testing.
+- v1.0.0 remains the recommended stable release.
 
 Promotion occurs only after validation.
 
