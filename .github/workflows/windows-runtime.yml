@@ -67,33 +67,47 @@ jobs:
         run: |
           choco install strawberryperl -y
 
+      - name: Refresh PATH
+        shell: pwsh
+        run: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" +
+                      [System.Environment]::GetEnvironmentVariable("Path","User")
+
+          where.exe perl
+
       - name: Validate Perl
         shell: pwsh
         run: |
+          where.exe perl
+
           perl -v
+
+          perl -e "print qq(VERSION=$^V`n)"
 
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = perl -e "print $^V"
+          $perlVersion = & perl -e "print $^V"
 
-          @"
-          Platform: Windows
-          Architecture: x64
+          Write-Host "Perl Version: [$perlVersion]"
 
-          Build Date: $(Get-Date -Format o)
-          Git Commit: $env:GITHUB_SHA
-          Git Reference: $env:GITHUB_REF_NAME
-
-          Perl Version: $perlVersion
-
-          Workflow: $env:GITHUB_WORKFLOW
-          Runner: $env:RUNNER_OS
-
-          Baseline File: BASELINE-windows.md
-          "@ | Set-Content build/BUILDINFO.txt
+          @(
+            "Platform: Windows"
+            "Architecture: x64"
+            ""
+            "Build Date: $(Get-Date -Format o)"
+            "Git Commit: $env:GITHUB_SHA"
+            "Git Reference: $env:GITHUB_REF_NAME"
+            ""
+            "Perl Version: $perlVersion"
+            ""
+            "Workflow: $env:GITHUB_WORKFLOW"
+            "Runner: $env:RUNNER_OS"
+            ""
+            "Baseline File: BASELINE-windows.md"
+          ) | Set-Content build/BUILDINFO.txt
 
           Get-Content build/BUILDINFO.txt
 
