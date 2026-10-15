@@ -82,14 +82,14 @@ jobs:
 
           perl -v
 
-          perl -e "print qq(VERSION=$^V`n)"
+          perl -e 'print "VERSION=$^V\n"'
 
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = & perl -e "print $^V"
+          $perlVersion = & perl -e 'print "VERSION=$^V\n"'
 
           Write-Host "Perl Version: [$perlVersion]"
 
