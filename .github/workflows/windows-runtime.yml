@@ -83,6 +83,14 @@ jobs:
             ";" +
             [System.Environment]::GetEnvironmentVariable("Path","User")
 
+      - name: Refresh PATH
+        shell: pwsh
+        run: |
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" +
+                      [System.Environment]::GetEnvironmentVariable("Path","User")
+
+          where.exe perl
+
       - name: Validate Perl Version
         shell: pwsh
         run: |
@@ -94,14 +102,6 @@ jobs:
           if ($installedVersion -ne "v$env:PERL_VERSION") {
             throw "Installed Perl version does not match configured version"
           }
-
-      - name: Refresh PATH
-        shell: pwsh
-        run: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" +
-                      [System.Environment]::GetEnvironmentVariable("Path","User")
-
-          where.exe perl
 
       - name: Validate Perl
         shell: pwsh
