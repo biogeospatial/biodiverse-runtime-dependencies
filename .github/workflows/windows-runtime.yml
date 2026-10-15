@@ -81,21 +81,18 @@ jobs:
       - name: Configure Perl Runtime
         shell: pwsh
         run: |
-          Get-ChildItem "$env:RUNNER_TEMP\strawberry-perl"
+          $perlRoot = "$env:RUNNER_TEMP\strawberry-perl"
 
-          $perlRoot = Get-ChildItem `
-            "$env:RUNNER_TEMP\strawberry-perl" |
-            Select-Object -First 1
+          $perlExe = Join-Path $perlRoot "perl\bin\perl.exe"
 
-          Write-Host "PERL_ROOT=$($perlRoot.FullName)"
-
-          $perlExe = "$($perlRoot.FullName)\perl\bin\perl.exe"
+          Write-Host "PERL_ROOT=$perlRoot"
+          Write-Host "PERL_EXE=$perlExe"
 
           if (-not (Test-Path $perlExe)) {
             throw "Unable to locate perl.exe at $perlExe"
           }
 
-          "PERL_ROOT=$($perlRoot.FullName)" >> $env:GITHUB_ENV
+          "PERL_ROOT=$perlRoot" >> $env:GITHUB_ENV
           "PERL_EXE=$perlExe" >> $env:GITHUB_ENV
 
       - name: Validate Perl
