@@ -194,6 +194,39 @@ biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
 The version component must exactly match the Git tag used to create the
 release.
 
+## Build Information
+
+Runtime dependency artifacts include:
+
+```text
+BUILDINFO.txt
+```
+
+BUILDINFO.txt records information about the build environment and runtime
+dependencies used to generate an artifact.
+
+Examples include:
+
+- Build date.
+- Build platform.
+- Architecture.
+- Perl version.
+- Workflow information.
+- Runtime baseline reference.
+
+BUILDINFO.txt provides traceability between:
+
+```text
+Release Metadata
+        ↓
+Release Artifact
+        ↓
+Runtime Contents
+```
+
+and supports the auditing and reproducibility requirements defined by
+ADR-0009.
+
 ## Runtime Selection
 
 Consumers should resolve runtime dependency versions using release
