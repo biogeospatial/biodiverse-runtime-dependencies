@@ -238,16 +238,22 @@ The automated release workflow:
 
 ## Current Status
 
-The release workflow is partially implemented but is not yet runnable end
-to end.
+Implemented:
 
-- Release-tag trigger and cross-platform orchestration: defined in
-  `.github/workflows/release.yml`
-- Release metadata updater: implemented in
-  `scripts/update_releases_json.py`
-- Windows, macOS ARM64, and Linux build workflows: not yet implemented
-- End-to-end artifact build, validation, and release publication: pending
-  the platform workflows
+- Cross-platform runtime workflows.
+- Runtime dependency release framework.
+- Automated release generation.
+- Automated release metadata and checksum generation.
+- Runtime release channels.
+- BUILDINFO.txt generation.
+- Baseline documentation.
+- Shared runtime configuration.
+- Cross-platform Perl runtime support.
+
+Current release:
+
+```text
+v0.1.0
 
 ## Documentation
 
