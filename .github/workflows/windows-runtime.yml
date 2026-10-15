@@ -52,53 +52,76 @@ jobs:
 
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
+      - name: Install tools
+        shell: pwsh
+        run: |
+          choco install yq -y
+
       - name: Load runtime configuration
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
-      - name: Generate BUILDINFO.txt
-        shell: bash
+      - name: Install Strawberry Perl
+        shell: pwsh
         run: |
-          mkdir build
+          choco install strawberryperl -y
 
-          cat > build/BUILDINFO.txt <<EOF
+      - name: Validate Perl
+        shell: pwsh
+        run: |
+          perl -v
+
+      - name: Generate BUILDINFO.txt
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force build | Out-Null
+
+          $perlVersion = perl -e "print $^V"
+
+          @"
           Platform: Windows
           Architecture: x64
 
-          Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          Git Commit: ${GITHUB_SHA}
-          Git Reference: ${GITHUB_REF_NAME}
+          Build Date: $(Get-Date -Format o)
+          Git Commit: $env:GITHUB_SHA
+          Git Reference: $env:GITHUB_REF_NAME
 
-          Perl Baseline Version: ${PERL_VERSION}
+          Perl Version: $perlVersion
 
-          Workflow: ${GITHUB_WORKFLOW}
-          Runner: ${RUNNER_OS}
-          EOF
+          Workflow: $env:GITHUB_WORKFLOW
+          Runner: $env:RUNNER_OS
+
+          Baseline File: BASELINE-windows.md
+          "@ | Set-Content build/BUILDINFO.txt
+
+          Get-Content build/BUILDINFO.txt
 
       - name: Create runtime package
-        shell: bash
+        shell: pwsh
         run: |
-          mkdir runtime-package
+          New-Item -ItemType Directory -Force runtime-package
 
-          cp build/BUILDINFO.txt runtime-package/
-          cp runtime/BASELINE-windows.md runtime-package/
+          Copy-Item build/BUILDINFO.txt runtime-package/
+          Copy-Item runtime/BASELINE-windows.md runtime-package/
 
           cd runtime-package
 
-          powershell -Command \
-            "Compress-Archive -Path * -DestinationPath ../biodiverse-runtime-dependencies_windows_x64_${VERSION}.zip"
+          Compress-Archive -Path * `
+            -DestinationPath "../biodiverse-runtime-dependencies_windows_x64_$env:VERSION.zip"
 
       - name: Generate release metadata
         id: metadata
-        shell: bash
+        shell: pwsh
         run: |
-          FILENAME="biodiverse-runtime-dependencies_windows_x64_${VERSION}.zip"
+          $filename = "biodiverse-runtime-dependencies_windows_x64_$env:VERSION.zip"
 
-          SHA=$(sha256sum "$FILENAME" | awk '{print $1}')
+          $hash = Get-FileHash `
+            -Path $filename `
+            -Algorithm SHA256
 
-          echo "filename=$FILENAME" >> "$GITHUB_OUTPUT"
-          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+          "filename=$filename" >> $env:GITHUB_OUTPUT
+          "sha256=$($hash.Hash.ToLower())" >> $env:GITHUB_OUTPUT
 
       - name: Upload release asset
         if: ${{ inputs.build_type == 'release' }}

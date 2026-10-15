@@ -62,10 +62,49 @@ jobs:
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.linux.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Install Perl build dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+
+          sudo apt-get install -y \
+            build-essential \
+            curl \
+            patch \
+            perl \
+            zlib1g-dev
+
+      - name: Cache perlbrew
+        uses: actions/cache@v6
+        with:
+          path: ~/perl5/perlbrew
+          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}
+
+      - name: Install perlbrew
+        shell: bash
+        run: |
+          curl -L https://install.perlbrew.pl | bash
+
+      - name: Build Perl
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+
+          if ! perlbrew list | grep -q "perl-${PERL_VERSION}"; then
+            perlbrew install --notest perl-${PERL_VERSION}
+          fi
+
+          perlbrew use perl-${PERL_VERSION}
+
+          perl -v
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
           mkdir -p build
+
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
 
           cat > build/BUILDINFO.txt <<EOF
           Platform: Linux
@@ -75,15 +114,15 @@ jobs:
           Git Commit: ${GITHUB_SHA}
           Git Reference: ${GITHUB_REF_NAME}
 
-          Perl Baseline Version: ${PERL_VERSION}
+          Perl Version: $(perl -e 'print $^V')
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
 
           Baseline File: BASELINE-linux.md
-
-          Status: Framework placeholder artifact
           EOF
+
+          cat build/BUILDINFO.txt
 
       - name: Create runtime package
         shell: bash
@@ -94,6 +133,11 @@ jobs:
 
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
           cp runtime/BASELINE-linux.md "${PACKAGE_DIR}/"
+
+          mkdir -p "${PACKAGE_DIR}/perl"
+
+          cp -a ~/perl5/perlbrew/perls/perl-${PERL_VERSION} \
+            "${PACKAGE_DIR}/perl/"
 
           cd "${PACKAGE_DIR}"
 
