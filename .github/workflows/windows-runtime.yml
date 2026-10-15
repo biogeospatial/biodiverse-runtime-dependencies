@@ -61,63 +61,68 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "PERL_INSTALLER_URL=$(yq -r '.platforms.windows.perl_installer_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Install Strawberry Perl
         shell: pwsh
         run: |
-          $installer = "$env:TEMP\strawberry-perl.msi"
+          $zipFile = "$env:TEMP\strawberry-perl.zip"
 
           Invoke-WebRequest `
-            -Uri $env:PERL_INSTALLER_URL `
-            -OutFile $installer
+            -Uri $env:PERL_PORTABLE_URL `
+            -OutFile $zipFile
 
-          Start-Process msiexec.exe `
-            -ArgumentList "/i `"$installer`" /qn /norestart" `
-            -Wait
+          Expand-Archive `
+            -Path $zipFile `
+            -DestinationPath "$env:RUNNER_TEMP\strawberry-perl"
 
-          Remove-Item $installer
+          Remove-Item $zipFile
 
-          $env:Path = `
-            [System.Environment]::GetEnvironmentVariable("Path","Machine") +
-            ";" +
-            [System.Environment]::GetEnvironmentVariable("Path","User")
-
-      - name: Refresh PATH
+      - name: Configure Perl Runtime
         shell: pwsh
         run: |
-          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" +
-                      [System.Environment]::GetEnvironmentVariable("Path","User")
+          Get-ChildItem "$env:RUNNER_TEMP\strawberry-perl"
 
-          where.exe perl
+          $perlRoot = Get-ChildItem `
+            "$env:RUNNER_TEMP\strawberry-perl" |
+            Select-Object -First 1
 
-      - name: Validate Perl Version
-        shell: pwsh
-        run: |
-          $installedVersion = (& perl -e 'print $^V').Trim()
+          Write-Host "PERL_ROOT=$($perlRoot.FullName)"
 
-          Write-Host "Installed Perl: $installedVersion"
-          Write-Host "Expected Perl : v$env:PERL_VERSION"
+          $perlExe = "$($perlRoot.FullName)\perl\bin\perl.exe"
 
-          if ($installedVersion -ne "v$env:PERL_VERSION") {
-            throw "Installed Perl version does not match configured version"
+          if (-not (Test-Path $perlExe)) {
+            throw "Unable to locate perl.exe at $perlExe"
           }
+
+          "PERL_ROOT=$($perlRoot.FullName)" >> $env:GITHUB_ENV
+          "PERL_EXE=$perlExe" >> $env:GITHUB_ENV
 
       - name: Validate Perl
         shell: pwsh
         run: |
-          where.exe perl
+          Write-Host "Using: $env:PERL_EXE"
 
-          perl -v
+          & $env:PERL_EXE -v
+
+      - name: Validate Perl Version
+        shell: pwsh
+        run: |
+          $installedVersion = (& $env:PERL_EXE -e 'print $^V').Trim()
+
+          Write-Host "Installed Perl: $installedVersion"
+          Write-Host "Configured Perl: $env:PERL_VERSION"
+
+          if ($installedVersion -ne "v$env:PERL_VERSION") {
+            throw "Installed Perl version does not match configured version"
+          }
 
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = (& perl -e 'print $^V').Trim()
-
-          Write-Host "Perl Version: [$perlVersion]"
+          $perlVersion = (& $env:PERL_EXE -e 'print $^V').Trim()
 
           @(
             "Platform: Windows"
@@ -140,14 +145,20 @@ jobs:
       - name: Create runtime package
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force runtime-package
+          New-Item -ItemType Directory -Force runtime-package | Out-Null
 
           Copy-Item build/BUILDINFO.txt runtime-package/
           Copy-Item runtime/BASELINE-windows.md runtime-package/
 
-          cd runtime-package
+          Copy-Item `
+            -Path $env:PERL_ROOT `
+            -Destination runtime-package/perl `
+            -Recurse
 
-          Compress-Archive -Path * `
+          Set-Location runtime-package
+
+          Compress-Archive `
+            -Path * `
             -DestinationPath "../biodiverse-runtime-dependencies_windows_x64_$env:VERSION.zip"
 
       - name: Generate release metadata
@@ -183,4 +194,3 @@ jobs:
         with:
           name: biodiverse-runtime-dependencies_windows_x64_${{ env.VERSION }}
           path: biodiverse-runtime-dependencies_windows_x64_${{ env.VERSION }}.zip
- 
