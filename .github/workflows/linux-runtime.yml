@@ -107,20 +107,20 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cat > build/BUILDINFO.txt <<EOF
-Platform: Linux
-Architecture: $(uname -m)
+          Platform: Linux
+          Architecture: $(uname -m)
 
-Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
-Git Commit: ${GITHUB_SHA}
-Git Reference: ${GITHUB_REF_NAME}
+          Build Date: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          Git Commit: ${GITHUB_SHA}
+          Git Reference: ${GITHUB_REF_NAME}
 
-Perl Version: $(perl -e 'print $^V')
+          Perl Version: $(perl -e 'print $^V')
 
-Workflow: ${GITHUB_WORKFLOW}
-Runner: ${RUNNER_OS}
+          Workflow: ${GITHUB_WORKFLOW}
+          Runner: ${RUNNER_OS}
 
-Baseline File: BASELINE-linux.md
-EOF
+          Baseline File: BASELINE-linux.md
+          EOF
 
           cat build/BUILDINFO.txt
 

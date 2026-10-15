@@ -80,20 +80,20 @@ jobs:
           $perlVersion = perl -e "print $^V"
 
           @"
-Platform: Windows
-Architecture: x64
+          Platform: Windows
+          Architecture: x64
 
-Build Date: $(Get-Date -Format o)
-Git Commit: $env:GITHUB_SHA
-Git Reference: $env:GITHUB_REF_NAME
+          Build Date: $(Get-Date -Format o)
+          Git Commit: $env:GITHUB_SHA
+          Git Reference: $env:GITHUB_REF_NAME
 
-Perl Version: $perlVersion
+          Perl Version: $perlVersion
 
-Workflow: $env:GITHUB_WORKFLOW
-Runner: $env:RUNNER_OS
+          Workflow: $env:GITHUB_WORKFLOW
+          Runner: $env:RUNNER_OS
 
-Baseline File: BASELINE-windows.md
-"@ | Set-Content build/BUILDINFO.txt
+          Baseline File: BASELINE-windows.md
+          "@ | Set-Content build/BUILDINFO.txt
 
           Get-Content build/BUILDINFO.txt
 
