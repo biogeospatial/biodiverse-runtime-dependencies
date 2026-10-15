@@ -2,7 +2,22 @@
   "channels": {
     "stable": "",
     "testing": "",
-    "development": ""
+    "development": "v0.1.0"
   },
-  "releases": {}
+  "releases": {
+    "v0.1.0": {
+      "windows": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.1.0/biodiverse-runtime-dependencies_windows_x64_v0.1.0.zip",
+        "sha256": "7fe476f24a11a3bc00f471defdf8c98cd56892a34e5464c82df18e89f860caf1"
+      },
+      "macos": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.1.0/biodiverse-runtime-dependencies_macos_arm64_v0.1.0.zip",
+        "sha256": "e46fbd76882982ab594b9847dcbf47ca79ff57652723dac6b231070b7dadd512"
+      },
+      "linux": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.1.0/biodiverse-runtime-dependencies_linux_x64_v0.1.0.zip",
+        "sha256": "ce13a3a6465e51b2c0a9ca54e43eb471145bc5268f4f1253a1706faebbdaf59d"
+      }
+    }
+  }
 }
