@@ -89,7 +89,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = & perl -e 'print "VERSION=$^V\n"'
+          $perlVersion = (& perl -e 'print $^V').Trim()
 
           Write-Host "Perl Version: [$perlVersion]"
 
