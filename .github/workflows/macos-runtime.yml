@@ -95,6 +95,9 @@ jobs:
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
           mkdir -p build
 
           cat > build/BUILDINFO.txt <<EOF
