@@ -141,9 +141,9 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-        $cpanmVersion = (
-         c& $env:PERL_EXE -MApp::cpanminus -e "print \$App::cpanminus::VERSION"
-        ).Trim()
+          $cpanmVersion = (
+            & $env:PERL_EXE -MApp::cpanminus -e "print \$App::cpanminus::VERSION"
+          ).Trim()
 
           $cpanmVersion = cpanm --version | Select-Object -First 1
 
