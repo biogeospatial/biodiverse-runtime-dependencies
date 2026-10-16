@@ -146,6 +146,7 @@ jobs:
 
           Copy-Item build/BUILDINFO.txt runtime-package/
           Copy-Item runtime/BASELINE-windows.md runtime-package/
+          Copy-Item runtime/cpanfile runtime-package/
 
           Copy-Item `
             -Path $env:PERL_ROOT `

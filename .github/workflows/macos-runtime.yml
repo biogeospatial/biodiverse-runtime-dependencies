@@ -125,6 +125,7 @@ jobs:
 
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
           cp runtime/BASELINE-macos.md "${PACKAGE_DIR}/"
+          cp runtime/cpanfile "${PACKAGE_DIR}/"
 
           mkdir -p "${PACKAGE_DIR}/perl"
 
