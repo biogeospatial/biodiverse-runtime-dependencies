@@ -143,6 +143,12 @@ jobs:
 
           where.exe perl
           where.exe cpanm
+          where.exe gcc
+          where.exe g++
+          where.exe ld
+
+          & "$env:PERL_ROOT\c\bin\gcc.exe" --version
+          & "$env:PERL_ROOT\c\bin\g++.exe" --version
 
           & $env:PERL_EXE -e "print qq(Using: $^X`n)"
 
