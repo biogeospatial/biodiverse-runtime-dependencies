@@ -115,7 +115,6 @@ jobs:
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
-          cpanmVersion=$(cpanm --version | head -n 1)
           CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
 
           mkdir -p build
@@ -136,6 +135,8 @@ jobs:
 
           Baseline File: BASELINE-macos.md
           EOF
+
+          cat build/BUILDINFO.txt
 
       - name: Create runtime package
         shell: bash
