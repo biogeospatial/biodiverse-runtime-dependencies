@@ -129,6 +129,7 @@ jobs:
 
           Perl Version: $(perl -e 'print $^V')
           cpanm Version: ${CPANM_VERSION}
+          Dependency Definition File: cpanfile
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
@@ -147,6 +148,7 @@ jobs:
 
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
           cp runtime/BASELINE-macos.md "${PACKAGE_DIR}/"
+          cp runtime/cpanfile "${PACKAGE_DIR}/"
 
           mkdir -p "${PACKAGE_DIR}/perl"
 
