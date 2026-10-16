@@ -156,6 +156,7 @@ jobs:
           Perl Version: $(perl -e 'print $^V')
           cpanm Version: ${CPANM_VERSION}
           Dependency Definition File: cpanfile
+
           PDL Version: ${PDL_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
