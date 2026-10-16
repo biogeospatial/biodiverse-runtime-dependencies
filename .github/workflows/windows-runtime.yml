@@ -141,6 +141,21 @@ jobs:
 
           $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
 
+          Get-ChildItem `
+            -Path "$env:PERL_ROOT\c" `
+            -Recurse `
+            -Filter gcc.exe
+
+          Get-ChildItem `
+            -Path "$env:PERL_ROOT\c" `
+            -Recurse `
+            -Filter g++.exe
+
+          Get-ChildItem `
+            -Path "$env:PERL_ROOT\c" `
+            -Recurse `
+            -Filter ld.exe
+
           where.exe perl
           where.exe cpanm
           where.exe gcc
