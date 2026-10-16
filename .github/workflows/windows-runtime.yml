@@ -138,6 +138,14 @@ jobs:
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
+
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
+
+          where.exe perl
+          where.exe cpanm
+
+          & $env:PERL_EXE -e "print qq(Using: $^X`n)"
+
           Push-Location runtime
 
           cpanm -v --installdeps .
