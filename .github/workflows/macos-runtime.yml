@@ -92,11 +92,30 @@ jobs:
 
           perl -e 'print "$^V\n"'
 
+      - name: Install cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          curl -L https://cpanmin.us | perl - App::cpanminus
+
+          cpanm --version
+
+      - name: Validate cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cpanm --version
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
+          CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
 
           mkdir -p build
 
@@ -109,12 +128,15 @@ jobs:
           Git Reference: ${GITHUB_REF_NAME}
 
           Perl Version: $(perl -e 'print $^V')
+          cpanm Version: ${CPANM_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
 
           Baseline File: BASELINE-macos.md
           EOF
+
+          cat build/BUILDINFO.txt
 
       - name: Create runtime package
         shell: bash

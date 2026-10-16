@@ -114,12 +114,41 @@ jobs:
             throw "Installed Perl version does not match configured version"
           }
 
+      - name: Install cpanminus
+        shell: pwsh
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://cpanmin.us" `
+            -OutFile cpanm-installer
+
+          & $env:PERL_EXE cpanm-installer App::cpanminus
+
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+      - name: Validate cpanminus
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+          cpanm --version
+
+          where.exe cpanm
+          cpanm --version
+
+
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = (& $env:PERL_EXE -e 'print $^V').Trim()
+          $perlVersion = (
+            & $env:PERL_EXE -e 'print $^V'
+          ).Trim()
+
+          $cpanmVersion = (
+            & $env:PERL_EXE -MApp::cpanminus -e 'print "$App::cpanminus::VERSION"'
+          ).Trim()
+
 
           @(
             "Platform: Windows"
@@ -130,6 +159,7 @@ jobs:
             "Git Reference: $env:GITHUB_REF_NAME"
             ""
             "Perl Version: $perlVersion"
+            "cpanm Version: $cpanmVersion"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"

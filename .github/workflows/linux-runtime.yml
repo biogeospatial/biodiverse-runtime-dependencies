@@ -98,6 +98,24 @@ jobs:
 
           perl -v
 
+      - name: Install cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          curl -L https://cpanmin.us | perl - App::cpanminus
+
+          cpanm --version
+
+      - name: Validate cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cpanm --version
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
@@ -105,6 +123,7 @@ jobs:
 
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
+          CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
 
           cat > build/BUILDINFO.txt <<EOF
           Platform: Linux
@@ -115,6 +134,7 @@ jobs:
           Git Reference: ${GITHUB_REF_NAME}
 
           Perl Version: $(perl -e 'print $^V')
+          cpanm Version: ${CPANM_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
