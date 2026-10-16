@@ -1,0 +1,22 @@
+name: Runtime CI
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+
+jobs:
+  windows:
+    uses: ./.github/workflows/windows-runtime.yml
+    with:
+      build_type: development
+
+  macos:
+    uses: ./.github/workflows/macos-runtime.yml
+    with:
+      build_type: development
+
+  linux:
+    uses: ./.github/workflows/linux-runtime.yml
+    with:
+      build_type: development
