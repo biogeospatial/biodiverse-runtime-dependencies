@@ -139,7 +139,18 @@ jobs:
         shell: pwsh
         run: |
           Push-Location runtime
-          cpanm --installdeps .
+
+          cpanm -v --installdeps .
+
+          if ($LASTEXITCODE -ne 0) {
+              Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
+                  ForEach-Object {
+                      Write-Host "==== $($_.FullName) ===="
+                      Get-Content $_.FullName
+                  }
+              exit 1
+          }
+
           Pop-Location
 
       - name: Validate PDL
