@@ -116,6 +116,7 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
           cpanmVersion=$(cpanm --version | head -n 1)
+          CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
 
           mkdir -p build
 
@@ -128,7 +129,7 @@ jobs:
           Git Reference: ${GITHUB_REF_NAME}
 
           Perl Version: $(perl -e 'print $^V')
-          cpanm Version: $cpanmVersion
+          cpanm Version: ${CPANM_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
