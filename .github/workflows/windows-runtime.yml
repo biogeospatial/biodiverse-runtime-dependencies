@@ -160,6 +160,7 @@ jobs:
             ""
             "Perl Version: $perlVersion"
             "cpanm Version: $cpanmVersion"
+            "Dependency Definition File: cpanfile"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"
