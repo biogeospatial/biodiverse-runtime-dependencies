@@ -114,6 +114,24 @@ jobs:
             throw "Installed Perl version does not match configured version"
           }
 
+      - name: Install cpanminus
+        shell: pwsh
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://cpanmin.us" `
+            -OutFile cpanm-installer
+
+          & $env:PERL_EXE cpanm-installer App::cpanminus
+
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+      - name: Validate cpanminus
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+          cpanm --version
+
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |

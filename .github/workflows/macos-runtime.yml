@@ -92,6 +92,24 @@ jobs:
 
           perl -e 'print "$^V\n"'
 
+      - name: Install cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          curl -L https://cpanmin.us | perl - App::cpanminus
+
+          cpanm --version
+
+      - name: Validate cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cpanm --version
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
