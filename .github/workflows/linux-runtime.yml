@@ -123,6 +123,7 @@ jobs:
 
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
+          cpanmVersion=$(cpanm --version | head -n 1)
 
           cat > build/BUILDINFO.txt <<EOF
           Platform: Linux
@@ -133,6 +134,7 @@ jobs:
           Git Reference: ${GITHUB_REF_NAME}
 
           Perl Version: $(perl -e 'print $^V')
+          cpanm Version: $cpanmVersion
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}

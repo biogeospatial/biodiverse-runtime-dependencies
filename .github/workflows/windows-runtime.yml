@@ -132,12 +132,17 @@ jobs:
 
           cpanm --version
 
+          where.exe cpanm
+          cpanm --version
+
+
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
           $perlVersion = (& $env:PERL_EXE -e 'print $^V').Trim()
+          $cpanmVersion = cpanm --version | Select-Object -First 1
 
           @(
             "Platform: Windows"
@@ -148,6 +153,7 @@ jobs:
             "Git Reference: $env:GITHUB_REF_NAME"
             ""
             "Perl Version: $perlVersion"
+            "cpanm Version: $cpanmVersion"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"
