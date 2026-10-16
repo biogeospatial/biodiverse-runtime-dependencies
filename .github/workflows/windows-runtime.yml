@@ -141,27 +141,6 @@ jobs:
 
           $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
-          Get-ChildItem `
-            -Path "$env:PERL_ROOT\c" `
-            -Recurse `
-            -Filter gcc.exe
-
-          Get-ChildItem `
-            -Path "$env:PERL_ROOT\c" `
-            -Recurse `
-            -Filter g++.exe
-
-          Get-ChildItem `
-            -Path "$env:PERL_ROOT\c" `
-            -Recurse `
-            -Filter ld.exe
-
-          where.exe perl
-          where.exe cpanm
-          where.exe gcc
-          where.exe g++
-          where.exe ld
-
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
 
@@ -202,6 +181,9 @@ jobs:
             & $env:PERL_EXE -MApp::cpanminus -e 'print "$App::cpanminus::VERSION"'
           ).Trim()
 
+          $pdlVersion = (
+            & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
+          ).Trim()
 
           @(
             "Platform: Windows"
@@ -214,6 +196,8 @@ jobs:
             "Perl Version: $perlVersion"
             "cpanm Version: $cpanmVersion"
             "Dependency Definition File: cpanfile"
+            ""
+            "PDL Version: $pdlVersion"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"
