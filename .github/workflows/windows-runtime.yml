@@ -139,7 +139,7 @@ jobs:
         shell: pwsh
         run: |
 
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
           Get-ChildItem `
             -Path "$env:PERL_ROOT\c" `
