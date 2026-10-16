@@ -159,16 +159,17 @@ Example:
 {
   "channels": {
     "stable": "v1.0.0",
-    "testing": "v1.1.0"
+    "testing": "v1.1.0",
+    "development": "v1.2.0"
   }
 }
 ```
 
 In this example:
 
-- `v1.1.0` has been published.
-- `v1.1.0` is being tested.
-- `v1.0.0` remains the stable release.
+- v1.2.0 has been published and assigned to development.
+- v1.1.0 is undergoing validation in testing.
+- v1.0.0 remains the recommended stable release.
 
 Promotion occurs only after validation.
 
@@ -192,6 +193,39 @@ biodiverse-runtime-dependencies_linux_x64_v1.0.0.zip
 
 The version component must exactly match the Git tag used to create the
 release.
+
+## Build Information
+
+Runtime dependency artifacts include:
+
+```text
+BUILDINFO.txt
+```
+
+BUILDINFO.txt records information about the build environment and runtime
+dependencies used to generate an artifact.
+
+Examples include:
+
+- Build date.
+- Build platform.
+- Architecture.
+- Perl version.
+- Workflow information.
+- Runtime baseline reference.
+
+BUILDINFO.txt provides traceability between:
+
+```text
+Release Metadata
+        ↓
+Release Artifact
+        ↓
+Runtime Contents
+```
+
+and supports the auditing and reproducibility requirements defined by
+ADR-0009.
 
 ## Runtime Selection
 
@@ -237,16 +271,23 @@ The automated release workflow:
 
 ## Current Status
 
-The release workflow is partially implemented but is not yet runnable end
-to end.
+Implemented:
 
-- Release-tag trigger and cross-platform orchestration: defined in
-  `.github/workflows/release.yml`
-- Release metadata updater: implemented in
-  `scripts/update_releases_json.py`
-- Windows, macOS ARM64, and Linux build workflows: not yet implemented
-- End-to-end artifact build, validation, and release publication: pending
-  the platform workflows
+- Cross-platform runtime workflows.
+- Runtime dependency release framework.
+- Automated release generation.
+- Automated release metadata and checksum generation.
+- Runtime release channels.
+- BUILDINFO.txt generation.
+- Baseline documentation.
+- Shared runtime configuration.
+- Cross-platform Perl runtime support.
+
+Current release:
+
+```text
+v0.1.0
+```
 
 ## Documentation
 
@@ -286,6 +327,7 @@ Current ADRs:
 - ADR-0006: Use Consistent Runtime Dependency Artifact Naming
 - ADR-0007: Use Shared Runtime Configuration Files
 - ADR-0008: Use Release Metadata as the System of Record
+- ADR-0009: Use Versioned and Reproducible Runtime Dependency Baselines
 
 ## Relationship to BiodiverseR
 
