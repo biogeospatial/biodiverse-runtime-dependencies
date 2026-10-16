@@ -135,6 +135,17 @@ jobs:
           where.exe cpanm
           cpanm --version
 
+      - name: Install Perl Dependencies
+        shell: pwsh
+        run: |
+          cpanm --installdeps runtime
+
+      - name: Validate PDL
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MPDL -e 1
+
+          & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
 
       - name: Generate BUILDINFO.txt
         shell: pwsh

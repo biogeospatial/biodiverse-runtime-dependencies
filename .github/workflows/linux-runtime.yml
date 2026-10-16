@@ -116,6 +116,24 @@ jobs:
 
           cpanm --version
 
+      - name: Install Perl Dependencies
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cpanm --installdeps runtime
+
+      - name: Validate PDL
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          perl -MPDL -e 1
+
+          perl -MPDL -e 'print "$PDL::VERSION\n"'
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
@@ -124,6 +142,7 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
           CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
+          PDL_VERSION=$(perl -MPDL -e 'print $PDL::VERSION')
 
           cat > build/BUILDINFO.txt <<EOF
           Platform: Linux
@@ -136,6 +155,7 @@ jobs:
           Perl Version: $(perl -e 'print $^V')
           cpanm Version: ${CPANM_VERSION}
           Dependency Definition File: cpanfile
+          PDL Version: ${PDL_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
