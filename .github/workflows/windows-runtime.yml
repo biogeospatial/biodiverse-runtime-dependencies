@@ -135,6 +135,38 @@ jobs:
           where.exe cpanm
           cpanm --version
 
+      - name: Install Perl Dependencies
+        shell: pwsh
+        run: |
+
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+
+          & "$env:PERL_ROOT\c\bin\gcc.exe" --version
+          & "$env:PERL_ROOT\c\bin\g++.exe" --version
+
+          & $env:PERL_EXE -e "print qq(Using: $^X`n)"
+
+          Push-Location runtime
+
+          cpanm -v --installdeps .
+
+          if ($LASTEXITCODE -ne 0) {
+              Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
+                  ForEach-Object {
+                      Write-Host "==== $($_.FullName) ===="
+                      Get-Content $_.FullName
+                  }
+              exit 1
+          }
+
+          Pop-Location
+
+      - name: Validate PDL
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MPDL -e 1
+
+          & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
 
       - name: Generate BUILDINFO.txt
         shell: pwsh
@@ -149,6 +181,9 @@ jobs:
             & $env:PERL_EXE -MApp::cpanminus -e 'print "$App::cpanminus::VERSION"'
           ).Trim()
 
+          $pdlVersion = (
+            & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
+          ).Trim()
 
           @(
             "Platform: Windows"
@@ -161,6 +196,8 @@ jobs:
             "Perl Version: $perlVersion"
             "cpanm Version: $cpanmVersion"
             "Dependency Definition File: cpanfile"
+            ""
+            "PDL Version: $pdlVersion"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"
