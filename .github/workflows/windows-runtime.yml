@@ -146,8 +146,9 @@ jobs:
           ).Trim()
 
           $cpanmVersion = (
-            & $env:PERL_EXE -MApp::cpanminus -e "print \$App::cpanminus::VERSION"
+            & $env:PERL_EXE -MApp::cpanminus -e 'print "$App::cpanminus::VERSION"'
           ).Trim()
+
 
           @(
             "Platform: Windows"
