@@ -116,7 +116,8 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          cpanm --installdeps runtime
+          cd runtime
+          cpanm --installdeps .
 
       - name: Validate PDL
         shell: bash

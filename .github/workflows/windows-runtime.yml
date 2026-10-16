@@ -138,7 +138,9 @@ jobs:
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
-          cpanm --installdeps runtime
+          Push-Location runtime
+          cpanm --installdeps .
+          Pop-Location
 
       - name: Validate PDL
         shell: pwsh
