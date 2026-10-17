@@ -10,6 +10,19 @@ on:
       build_type:
         required: true
         type: string
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       linux_filename:
         value: ${{ jobs.runtime.outputs.linux_filename }}
@@ -26,6 +39,18 @@ on:
         options:
           - development
           - release
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write

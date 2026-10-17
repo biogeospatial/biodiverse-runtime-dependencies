@@ -10,6 +10,17 @@ on:
       build_type:
         required: true
         type: string
+
+      reset_cache:
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}
@@ -26,6 +37,18 @@ on:
         options:
           - development
           - release
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
