@@ -1,4 +1,4 @@
-name: Windows Runtime
+name: '🔧 Internal: Windows Package Build'
 
 on:
   push:
