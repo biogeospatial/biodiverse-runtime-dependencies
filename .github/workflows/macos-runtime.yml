@@ -1,4 +1,4 @@
-name: macOS Runtime
+name: '🔧 Internal: macOS Package Build'
 
 on:
   push:
