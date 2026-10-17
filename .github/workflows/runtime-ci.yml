@@ -1,4 +1,4 @@
-name: 📦 Build: Runtime Packages
+name: "📦 Build: Runtime Packages"
 
 on:
   workflow_dispatch:
