@@ -14,14 +14,14 @@ on:
       reset_cache:
         description: Force runtime cache refresh
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
       verbose_logging:
         description: Enable verbose logging
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
     outputs:
       windows_filename:

@@ -13,13 +13,13 @@ on:
 
       reset_cache:
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
  
       verbose_logging:
         required: false
-        default: false
-        type: boolean
+        default: 'false'
+        type: string
 
     outputs:
       macos_filename:
