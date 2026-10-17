@@ -10,6 +10,19 @@ on:
       build_type:
         required: true
         type: string
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
@@ -26,6 +39,18 @@ on:
         options:
           - development
           - release
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -114,12 +139,76 @@ jobs:
             throw "Installed Perl version does not match configured version"
           }
 
+      - name: Install cpanminus
+        shell: pwsh
+        run: |
+          Invoke-WebRequest `
+            -Uri "https://cpanmin.us" `
+            -OutFile cpanm-installer
+
+          & $env:PERL_EXE cpanm-installer App::cpanminus
+
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+      - name: Validate cpanminus
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
+
+          cpanm --version
+
+          where.exe cpanm
+          cpanm --version
+
+      - name: Install Perl Dependencies
+        shell: pwsh
+        run: |
+
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+
+          & "$env:PERL_ROOT\c\bin\gcc.exe" --version
+          & "$env:PERL_ROOT\c\bin\g++.exe" --version
+
+          & $env:PERL_EXE -e "print qq(Using: $^X`n)"
+
+          Push-Location runtime
+
+          cpanm -v --installdeps .
+
+          if ($LASTEXITCODE -ne 0) {
+              Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
+                  ForEach-Object {
+                      Write-Host "==== $($_.FullName) ===="
+                      Get-Content $_.FullName
+                  }
+              exit 1
+          }
+
+          Pop-Location
+
+      - name: Validate PDL
+        shell: pwsh
+        run: |
+          & $env:PERL_EXE -MPDL -e 1
+
+          & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
+
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $perlVersion = (& $env:PERL_EXE -e 'print $^V').Trim()
+          $perlVersion = (
+            & $env:PERL_EXE -e 'print $^V'
+          ).Trim()
+
+          $cpanmVersion = (
+            & $env:PERL_EXE -MApp::cpanminus -e 'print "$App::cpanminus::VERSION"'
+          ).Trim()
+
+          $pdlVersion = (
+            & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
+          ).Trim()
 
           @(
             "Platform: Windows"
@@ -130,6 +219,10 @@ jobs:
             "Git Reference: $env:GITHUB_REF_NAME"
             ""
             "Perl Version: $perlVersion"
+            "cpanm Version: $cpanmVersion"
+            "Dependency Definition File: cpanfile"
+            ""
+            "PDL Version: $pdlVersion"
             ""
             "Workflow: $env:GITHUB_WORKFLOW"
             "Runner: $env:RUNNER_OS"
@@ -146,6 +239,7 @@ jobs:
 
           Copy-Item build/BUILDINFO.txt runtime-package/
           Copy-Item runtime/BASELINE-windows.md runtime-package/
+          Copy-Item runtime/cpanfile runtime-package/
 
           Copy-Item `
             -Path $env:PERL_ROOT `

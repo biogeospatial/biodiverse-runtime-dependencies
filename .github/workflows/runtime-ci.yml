@@ -1,0 +1,45 @@
+name: "📦 Build: Runtime Packages"
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform to build
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - windows
+          - macos
+          - linux
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
+
+  pull_request:
+
+jobs:
+  windows:
+    uses: ./.github/workflows/windows-runtime.yml
+    with:
+      build_type: development
+
+  macos:
+    uses: ./.github/workflows/macos-runtime.yml
+    with:
+      build_type: development
+
+  linux:
+    uses: ./.github/workflows/linux-runtime.yml
+    with:
+      build_type: development

@@ -10,6 +10,17 @@ on:
       build_type:
         required: true
         type: string
+
+      reset_cache:
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}
@@ -26,6 +37,18 @@ on:
         options:
           - development
           - release
+
+      reset_cache:
+        description: Force runtime cache refresh
+        required: false
+        default: false
+        type: boolean
+
+      verbose_logging:
+        description: Enable verbose logging
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -92,11 +115,50 @@ jobs:
 
           perl -e 'print "$^V\n"'
 
+      - name: Install cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          curl -L https://cpanmin.us | perl - App::cpanminus
+
+          cpanm --version
+
+      - name: Validate cpanminus
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cpanm --version
+
+      - name: Install Perl Dependencies
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cd runtime
+          cpanm --installdeps .
+
+      - name: Validate PDL
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          perl -MPDL -e 1
+
+          perl -MPDL -e 'print "$PDL::VERSION\n"'
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
+          CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
+          PDL_VERSION=$(perl -MPDL -e 'print $PDL::VERSION')
 
           mkdir -p build
 
@@ -109,12 +171,18 @@ jobs:
           Git Reference: ${GITHUB_REF_NAME}
 
           Perl Version: $(perl -e 'print $^V')
+          cpanm Version: ${CPANM_VERSION}
+          Dependency Definition File: cpanfile
+
+          PDL Version: ${PDL_VERSION}
 
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
 
           Baseline File: BASELINE-macos.md
           EOF
+
+          cat build/BUILDINFO.txt
 
       - name: Create runtime package
         shell: bash
@@ -125,6 +193,7 @@ jobs:
 
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
           cp runtime/BASELINE-macos.md "${PACKAGE_DIR}/"
+          cp runtime/cpanfile "${PACKAGE_DIR}/"
 
           mkdir -p "${PACKAGE_DIR}/perl"
 
