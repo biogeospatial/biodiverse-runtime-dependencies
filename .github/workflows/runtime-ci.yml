@@ -15,7 +15,7 @@ on:
           - linux
 
       reset_cache:
-        description: Force runtime cache refresh
+        description: Force cache refresh
         required: false
         default: false
         type: boolean
@@ -30,16 +30,31 @@ on:
 
 jobs:
   windows:
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'windows' }}
     uses: ./.github/workflows/windows-runtime.yml
     with:
       build_type: development
+      reset_cache: ${{ inputs.reset_cache }}
+      verbose_logging: ${{ inputs.verbose_logging }}
 
   macos:
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'macos' }}
     uses: ./.github/workflows/macos-runtime.yml
     with:
       build_type: development
+      reset_cache: ${{ inputs.reset_cache }}
+      verbose_logging: ${{ inputs.verbose_logging }}
 
   linux:
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'linux' }}
     uses: ./.github/workflows/linux-runtime.yml
     with:
       build_type: development
+      reset_cache: ${{ inputs.reset_cache }}
+      verbose_logging: ${{ inputs.verbose_logging }}

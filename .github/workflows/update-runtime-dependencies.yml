@@ -1,4 +1,4 @@
-name: Update Runtime Dependencies
+name: '⚙️ Manage: Runtime Settings'
 
 on:
   workflow_dispatch:
