@@ -90,7 +90,7 @@ jobs:
 
       - name: Cache Strawberry Perl runtime
         id: runtime-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}\strawberry-perl
           key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}
