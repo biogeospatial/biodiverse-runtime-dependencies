@@ -84,11 +84,21 @@ jobs:
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Generate cache suffix
+        id: cache
+        shell: bash
+        run: |
+          if [ "${{ inputs.reset_cache }}" = "true" ]; then
+            echo "suffix=-$(date +%s)" >> "$GITHUB_OUTPUT"
+          else
+            echo "suffix=" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Cache perlbrew
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}${{ steps.cache.outputs.suffix }}
 
       - name: Install perlbrew
         shell: bash

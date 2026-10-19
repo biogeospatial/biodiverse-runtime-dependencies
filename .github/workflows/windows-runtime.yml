@@ -88,12 +88,23 @@ jobs:
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Generate cache suffix
+        id: cache
+        shell: pwsh
+        run: |
+          if ("${{ inputs.reset_cache }}" -eq "true") {
+            "suffix=-$(Get-Date -Format yyyyMMddHHmmss)" >> $env:GITHUB_OUTPUT
+          }
+          else {
+            "suffix=" >> $env:GITHUB_OUTPUT
+          }
+
       - name: Cache Strawberry Perl runtime
         id: runtime-cache
         uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}\strawberry-perl
-          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}${{ steps.cache.outputs.suffix }}
 
       - name: Install Strawberry Perl
         if: steps.runtime-cache.outputs.cache-hit != 'true'
