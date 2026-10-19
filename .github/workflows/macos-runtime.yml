@@ -88,7 +88,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
       - name: Install perlbrew
         shell: bash
