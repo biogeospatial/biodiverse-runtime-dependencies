@@ -23,6 +23,10 @@ on:
         default: false
         type: boolean
 
+      cache_generation:
+        required: true
+        type: string
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
@@ -41,7 +45,7 @@ on:
           - release
 
       reset_cache:
-        description: Force runtime cache refresh
+        description: Force cache refresh
         required: false
         default: false
         type: boolean
@@ -88,7 +92,15 @@ jobs:
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Cache Strawberry Perl runtime
+        id: runtime-cache
+        uses: actions/cache@v6
+        with:
+          path: ${{ runner.temp }}\strawberry-perl
+          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+
       - name: Install Strawberry Perl
+        if: steps.runtime-cache.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
           $zipFile = "$env:TEMP\strawberry-perl.zip"

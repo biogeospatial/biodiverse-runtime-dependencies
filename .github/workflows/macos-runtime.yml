@@ -21,6 +21,10 @@ on:
         default: false
         type: boolean
 
+      cache_generation:
+        required: true
+        type: string
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}
@@ -39,7 +43,7 @@ on:
           - release
 
       reset_cache:
-        description: Force runtime cache refresh
+        description: Force cache refresh
         required: false
         default: false
         type: boolean
@@ -88,7 +92,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
       - name: Install perlbrew
         shell: bash
