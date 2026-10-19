@@ -86,6 +86,7 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.linux.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          echo "CACHE_GENERATION=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Install Perl build dependencies
         shell: bash

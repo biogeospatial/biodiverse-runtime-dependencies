@@ -83,6 +83,7 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          echo "CACHE_GENERATION=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Generate cache suffix
         id: cache
