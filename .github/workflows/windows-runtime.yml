@@ -102,13 +102,6 @@ jobs:
           path: ${{ runner.temp }}\strawberry-perl
           key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
-      - name: Cache Strawberry Perl runtime
-        id: runtime-cache
-        uses: actions/cache@v6
-        with:
-          path: ${{ runner.temp }}\strawberry-perl
-          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
-
       - name: Install Strawberry Perl
         if: steps.runtime-cache.outputs.cache-hit != 'true'
         shell: pwsh
