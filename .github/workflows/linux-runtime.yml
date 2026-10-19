@@ -12,7 +12,7 @@ on:
         type: string
 
       reset_cache:
-        description: Force runtime cache refresh
+        description: Force cache refresh
         required: false
         default: false
         type: boolean
@@ -22,6 +22,10 @@ on:
         required: false
         default: false
         type: boolean
+
+      cache_generation:
+        required: true
+        type: string
 
     outputs:
       linux_filename:
@@ -103,7 +107,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ env.PERL_VERSION }}-${{ runner.os }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
       - name: Install perlbrew
         shell: bash
