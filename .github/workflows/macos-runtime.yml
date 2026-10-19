@@ -85,16 +85,6 @@ jobs:
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "CACHE_GENERATION=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
-      - name: Generate cache suffix
-        id: cache
-        shell: bash
-        run: |
-          if [ "${{ inputs.reset_cache }}" = "true" ]; then
-            echo "suffix=-$(date +%s)" >> "$GITHUB_OUTPUT"
-          else
-            echo "suffix=" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Cache perlbrew
         uses: actions/cache@v6
         with:

@@ -89,17 +89,6 @@ jobs:
           echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "CACHE_GENERATION=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
-      - name: Generate cache suffix
-        id: cache
-        shell: pwsh
-        run: |
-          if ("${{ inputs.reset_cache }}" -eq "true") {
-            "suffix=-$(Get-Date -Format yyyyMMddHHmmss)" >> $env:GITHUB_OUTPUT
-          }
-          else {
-            "suffix=" >> $env:GITHUB_OUTPUT
-          }
-
       - name: Cache Strawberry Perl runtime
         id: runtime-cache
         uses: actions/cache@v6
