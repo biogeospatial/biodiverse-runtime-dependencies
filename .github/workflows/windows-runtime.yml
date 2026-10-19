@@ -88,7 +88,15 @@ jobs:
           echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Cache Strawberry Perl runtime
+        id: runtime-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}\strawberry-perl
+          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}
+
       - name: Install Strawberry Perl
+        if: steps.runtime-cache.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
           $zipFile = "$env:TEMP\strawberry-perl.zip"
