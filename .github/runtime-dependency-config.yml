@@ -1,12 +1,10 @@
 globals:
-
   release:
     channel_on_release: development
 
-  cache_generation: 1
+    cache_generation: 2
 
 platforms:
-
   macos:
     perl_version: "5.38.4"
     system_dependencies:
@@ -14,10 +12,8 @@ platforms:
       gsl: "gsl"
       sqlite: "3.44"
       gdal: "3.8"
-
   windows:
     perl_version: "5.38.4"
     perl_portable_url: "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_53841_64bit/strawberry-perl-5.38.4.1-64bit-portable.zip"
-
   linux:
     perl_version: "5.38.4"
