@@ -87,10 +87,13 @@ jobs:
           choco install yq -y
 
       - name: Load runtime configuration
-        shell: bash
+        shell: pwsh
         run: |
-          echo "PERL_VERSION=$(yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "PERL_PORTABLE_URL=$(yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          $perlVersion = yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml
+          $perlPortableUrl = yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml
+
+          "PERL_VERSION=$perlVersion" >> $env:GITHUB_ENV
+          "PERL_PORTABLE_URL=$perlPortableUrl" >> $env:GITHUB_ENV
 
       - name: Cache Strawberry Perl runtime
         id: runtime-cache
