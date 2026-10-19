@@ -29,32 +29,103 @@ on:
   pull_request:
 
 jobs:
+  prepare-build:
+    runs-on: ubuntu-24.04
+
+    outputs:
+      cache_generation: ${{ steps.cache.outputs.generation }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Validate cache reset request
+        if: ${{ inputs.reset_cache }}
+        shell: bash
+        run: |
+          if [ "${{ inputs.platform }}" != "all" ]; then
+            echo "Reset Cache requires platform=all"
+            exit 1
+          fi
+
+      - id: cache
+        shell: bash
+        run: |
+          CURRENT=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)
+
+          if [ "${{ inputs.reset_cache }}" = "true" ]; then
+            NEXT=$((CURRENT + 1))
+          else
+            NEXT=$CURRENT
+          fi
+
+          echo "generation=$NEXT" >> "$GITHUB_OUTPUT"
+
   windows:
+    needs: prepare-build
     if: ${{ github.event_name != 'workflow_dispatch' ||
             inputs.platform == 'all' ||
             inputs.platform == 'windows' }}
     uses: ./.github/workflows/windows-runtime.yml
     with:
       build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
 
   macos:
+    needs: prepare-build
     if: ${{ github.event_name != 'workflow_dispatch' ||
             inputs.platform == 'all' ||
             inputs.platform == 'macos' }}
     uses: ./.github/workflows/macos-runtime.yml
     with:
       build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
 
   linux:
+    needs: prepare-build
     if: ${{ github.event_name != 'workflow_dispatch' ||
             inputs.platform == 'all' ||
             inputs.platform == 'linux' }}
     uses: ./.github/workflows/linux-runtime.yml
     with:
       build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+
+  persist-cache-generation:
+    if: ${{ inputs.reset_cache }}
+    needs:
+      - prepare-build
+      - windows
+      - macos
+      - linux
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Persist cache generation
+        shell: bash
+        run: |
+          GENERATION="${{ needs.prepare-build.outputs.cache_generation }}"
+
+          yq -i ".globals.cache_generation = ${GENERATION}" \
+            .github/runtime-dependency-config.yml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add .github/runtime-dependency-config.yml
+
+          if git diff --cached --quiet; then
+            echo "No cache generation change"
+          else
+            git commit -m "Reset runtime cache generation to ${GENERATION}"
+            git push
+          fi

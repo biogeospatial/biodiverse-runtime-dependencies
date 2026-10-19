@@ -21,6 +21,10 @@ on:
         default: false
         type: boolean
 
+      cache_generation:
+        required: true
+        type: string
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}
@@ -83,13 +87,12 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "CACHE_GENERATION=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Cache perlbrew
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ env.CACHE_GENERATION }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
       - name: Install perlbrew
         shell: bash
