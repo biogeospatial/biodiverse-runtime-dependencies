@@ -3,6 +3,8 @@ globals:
   release:
     channel_on_release: development
 
+  cache_generation: 1
+
 platforms:
 
   macos:
