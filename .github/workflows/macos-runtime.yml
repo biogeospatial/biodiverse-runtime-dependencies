@@ -43,7 +43,7 @@ on:
           - release
 
       reset_cache:
-        description: Force runtime cache refresh
+        description: Force cache refresh
         required: false
         default: false
         type: boolean
