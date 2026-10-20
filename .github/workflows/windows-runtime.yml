@@ -27,6 +27,11 @@ on:
         required: true
         type: string
 
+      save_debug_artifacts:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
@@ -256,6 +261,13 @@ jobs:
           ) | Set-Content build/BUILDINFO.txt
 
           Get-Content build/BUILDINFO.txt
+
+      - name: Upload cpanm diagnostics
+        if: ${{ failure() || inputs.save_debug_artifacts }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpanm-diagnostics-windows
+          path: ~/.cpanm
 
       - name: Create runtime package
         shell: pwsh

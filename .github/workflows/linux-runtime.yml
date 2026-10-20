@@ -27,6 +27,11 @@ on:
         required: true
         type: string
 
+      save_debug_artifacts:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       linux_filename:
         value: ${{ jobs.runtime.outputs.linux_filename }}
@@ -204,6 +209,13 @@ jobs:
           EOF
 
           cat build/BUILDINFO.txt
+
+      - name: Upload cpanm diagnostics
+        if: ${{ failure() || inputs.save_debug_artifacts }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpanm-diagnostics-linux
+          path: ~/.cpanm
 
       - name: Create runtime package
         shell: bash

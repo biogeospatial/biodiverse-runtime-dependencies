@@ -26,6 +26,12 @@ on:
         default: false
         type: boolean
 
+      save_debug_artifacts:
+        description: Upload build diagnostics and logs
+        required: false
+        default: false
+        type: boolean
+
   pull_request:
 
 jobs:
@@ -71,6 +77,7 @@ jobs:
       cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
 
   macos:
     needs: prepare-build
@@ -83,6 +90,7 @@ jobs:
       cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
 
   linux:
     needs: prepare-build
@@ -95,6 +103,7 @@ jobs:
       cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
 
   persist-cache-generation:
     if: ${{ inputs.reset_cache }}
