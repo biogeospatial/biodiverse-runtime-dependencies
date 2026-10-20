@@ -58,7 +58,19 @@ jobs:
             NEXT=$CURRENT
           fi
 
+          echo "CURRENT=$CURRENT"
+          echo "NEXT=$NEXT"
+
           echo "generation=$NEXT" >> "$GITHUB_OUTPUT"
+
+  debug-generation:
+    needs: prepare-build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Show cache generation
+        run: |
+          echo "cache_generation=[${{ needs.prepare-build.outputs.cache_generation }}]"
 
   windows:
     needs: prepare-build
