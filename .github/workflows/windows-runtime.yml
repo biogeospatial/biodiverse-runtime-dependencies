@@ -98,7 +98,7 @@ jobs:
       - name: Configure verbosity
         shell: pwsh
         run: |
-          if (${{ inputs.verbose_logging }}) {
+          if ("${{ inputs.verbose_logging }}" -eq "true") {
             "VERBOSE_FLAG=-v" >> $env:GITHUB_ENV
           }
           else {
