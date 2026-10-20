@@ -382,6 +382,59 @@ Branch from main
 
 This keeps maintenance releases small and prevents unreleased development work from accidentally being included in production fixes.
 
+## Runtime Caching
+
+Runtime dependency builds use cached Perl runtimes to reduce build times across Windows, macOS, and Linux.
+
+Cache keys include:
+
+- Platform
+- Perl version
+- Cache generation
+- Runtime configuration hash
+- Dependency definition hash
+
+### Reset Cache
+
+The **📦 Build: Runtime Packages** workflow provides a:
+
+```text
+Reset Cache
+```
+
+option.
+
+When enabled:
+
+1. A new cache generation is calculated.
+2. All platform runtimes are rebuilt using the new cache generation.
+3. The new cache generation is persisted.
+4. Future builds use the new cache generation as the active cache baseline.
+
+### Cache Generation
+
+The current cache generation is stored in:
+
+```text
+.github/runtime-dependency-config.yml
+```
+
+Example:
+
+```yaml
+globals:
+  cache_generation: 2
+```
+
+### When to Use Reset Cache
+
+Use **Reset Cache** when:
+
+- Runtime caches are suspected to be invalid
+- Runtime build behaviour appears inconsistent
+- A fresh cache baseline is required following runtime dependency changes
+
+Cache resets apply to all supported platform runtimes and therefore require building all platforms.
 
 ## Principles
 

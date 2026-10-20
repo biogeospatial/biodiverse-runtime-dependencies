@@ -1,7 +1,12 @@
 globals:
   release:
     channel_on_release: development
-  cache_generation: 2
+
+    # Runtime cache generation.
+    # Incremented automatically when a cache reset is performed.
+    # Forms part of all runtime cache keys
+    cache_generation: 2
+
 platforms:
   macos:
     perl_version: "5.38.4"
