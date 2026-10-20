@@ -95,6 +95,16 @@ jobs:
           "PERL_VERSION=$perlVersion" >> $env:GITHUB_ENV
           "PERL_PORTABLE_URL=$perlPortableUrl" >> $env:GITHUB_ENV
 
+      - name: Configure verbosity
+        shell: pwsh
+        run: |
+          if ("${{ inputs.verbose_logging }}" -eq "true") {
+            "VERBOSE_FLAG=-v" >> $env:GITHUB_ENV
+          }
+          else {
+            "VERBOSE_FLAG=" >> $env:GITHUB_ENV
+          }
+
       - name: Cache Strawberry Perl runtime
         id: runtime-cache
         uses: actions/cache@v6
@@ -188,7 +198,7 @@ jobs:
 
           Push-Location runtime
 
-          cpanm -v --installdeps .
+          cpanm $env:VERBOSE_FLAG --installdeps .
 
           if ($LASTEXITCODE -ne 0) {
               Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
