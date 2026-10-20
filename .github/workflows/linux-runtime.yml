@@ -91,6 +91,15 @@ jobs:
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.linux.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
+      - name: Configure verbosity
+        shell: bash
+        run: |
+          if [ "${{ inputs.verbose_logging }}" = "true" ]; then
+            echo "VERBOSE_FLAG=-v" >> "$GITHUB_ENV"
+          else
+            echo "VERBOSE_FLAG=" >> "$GITHUB_ENV"
+          fi
+
       - name: Install Perl build dependencies
         shell: bash
         run: |
@@ -152,7 +161,7 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cd runtime
-          cpanm --installdeps .
+          cpanm $VERBOSE_FLAG --installdeps .
 
       - name: Validate PDL
         shell: bash

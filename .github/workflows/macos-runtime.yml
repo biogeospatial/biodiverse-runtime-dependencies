@@ -94,6 +94,15 @@ jobs:
           path: ~/perl5/perlbrew
           key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
+      - name: Configure verbosity
+        shell: bash
+        run: |
+          if [ "${{ inputs.verbose_logging }}" = "true" ]; then
+            echo "VERBOSE_FLAG=-v" >> "$GITHUB_ENV"
+          else
+            echo "VERBOSE_FLAG=" >> "$GITHUB_ENV"
+          fi
+
       - name: Install perlbrew
         shell: bash
         run: |
@@ -144,7 +153,7 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cd runtime
-          cpanm --installdeps .
+          cpanm $VERBOSE_FLAG --installdeps .
 
       - name: Validate PDL
         shell: bash
