@@ -328,6 +328,8 @@ Current ADRs:
 - ADR-0007: Use Shared Runtime Configuration Files
 - ADR-0008: Use Release Metadata as the System of Record
 - ADR-0009: Use Versioned and Reproducible Runtime Dependency Baselines
+- ADR-0010: Generation-based Runtime Cache Management
+- ADR-0012: Build Runtime Packages is the Primary Workflow Entry Point
 
 ## Relationship to BiodiverseR
 
