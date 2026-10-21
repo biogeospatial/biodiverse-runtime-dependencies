@@ -299,7 +299,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-windows
-          path: ${{ env.CPANM_HOME }}
+          path: C:\Users\runneradmin\.cpanm\build.log
           
 
       - name: Create runtime package
