@@ -145,6 +145,9 @@ jobs:
 
           echo "CPANM=$CPANM" >> "$GITHUB_ENV"
 
+          CPANM_HOME=$(dirname "$CPANM")/../.cpanm
+          echo "CPANM_HOME=$CPANM_HOME" >> "$GITHUB_ENV"
+
           "$CPANM" --version
 
       - name: Validate cpanminus
@@ -154,6 +157,9 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           "$CPANM" --version
+
+          echo "CPANM=$CPANM"
+          find "$HOME" -type d -name ".cpanm" 2>/dev/null
 
       - name: Install Perl Dependencies
         shell: bash
@@ -211,7 +217,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux
-          path: ~/.cpanm
+          path: ${{ env.CPANM_HOME }}
 
       - name: Create runtime package
         shell: bash

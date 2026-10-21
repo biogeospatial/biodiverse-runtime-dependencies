@@ -172,32 +172,37 @@ jobs:
       - name: Install cpanminus
         shell: pwsh
         run: |
+
           Invoke-WebRequest `
             -Uri "https://cpanmin.us" `
             -OutFile cpanm-installer
 
           & $env:PERL_EXE cpanm-installer App::cpanminus
 
+          $cpanmPath = Join-Path $env:PERL_ROOT "perl\bin\cpanm.bat"
+
+          if (-not (Test-Path $cpanmPath)) {
+              throw "Unable to locate cpanm at $cpanmPath"
+          }
+
+          "CPANM=$cpanmPath" >> $env:GITHUB_ENV
+
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
       - name: Validate cpanminus
         shell: pwsh
         run: |
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
-
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          where.exe cpanm
+          Write-Host "CPANM=$env:CPANM"
 
-          cpanm --version
+          & $env:CPANM --version
 
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
 
           $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
-
-          $CPANM = "$env:PERL_ROOT\perl\bin\cpanm.bat"
 
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
@@ -206,7 +211,7 @@ jobs:
 
           Push-Location runtime
 
-          & $CPANM $env:VERBOSE_FLAG --installdeps .
+          & $env:CPANM $env:VERBOSE_FLAG --installdeps .
 
           if ($LASTEXITCODE -ne 0) {
               Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
