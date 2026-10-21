@@ -25,6 +25,11 @@ on:
         required: true
         type: string
 
+      save_debug_artifacts:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}
@@ -136,7 +141,14 @@ jobs:
 
           curl -L https://cpanmin.us | perl - App::cpanminus
 
-          cpanm --version
+          CPANM=$(command -v cpanm)
+
+          echo "CPANM=$CPANM" >> "$GITHUB_ENV"
+
+          CPANM_HOME="$HOME/.cpanm"
+          echo "CPANM_HOME=$CPANM_HOME" >> "$GITHUB_ENV"
+
+          "$CPANM" --version
 
       - name: Validate cpanminus
         shell: bash
@@ -144,7 +156,22 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          cpanm --version
+          "$CPANM" --version
+
+          echo "CPANM=$CPANM"
+          find "$HOME" -type d -name ".cpanm" 2>/dev/null
+
+          echo "CPANM_HOME=$CPANM_HOME"
+
+          if [ -d "$CPANM_HOME" ]; then
+              echo "Directory exists"
+
+              find "$CPANM_HOME" | head -100
+
+              du -sh "$CPANM_HOME"
+          else
+              echo "Directory missing"
+          fi
 
       - name: Install Perl Dependencies
         shell: bash
@@ -153,7 +180,8 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cd runtime
-          cpanm $VERBOSE_FLAG --installdeps .
+
+          "$CPANM" $VERBOSE_FLAG --installdeps .
 
       - name: Validate PDL
         shell: bash
@@ -196,6 +224,13 @@ jobs:
           EOF
 
           cat build/BUILDINFO.txt
+
+      - name: Upload cpanm diagnostics
+        if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpanm-diagnostics-linux
+          path: /Users/runner/.cpanm/build.log
 
       - name: Create runtime package
         shell: bash

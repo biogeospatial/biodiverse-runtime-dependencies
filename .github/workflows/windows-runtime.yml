@@ -27,6 +27,11 @@ on:
         required: true
         type: string
 
+      save_debug_artifacts:
+        required: false
+        default: false
+        type: boolean
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
@@ -167,11 +172,21 @@ jobs:
       - name: Install cpanminus
         shell: pwsh
         run: |
+
           Invoke-WebRequest `
             -Uri "https://cpanmin.us" `
             -OutFile cpanm-installer
 
           & $env:PERL_EXE cpanm-installer App::cpanminus
+
+          $cpanmPath = Join-Path $env:PERL_ROOT "perl\bin\cpanm.bat"
+
+          if (-not (Test-Path $cpanmPath)) {
+              throw "Unable to locate cpanm at $cpanmPath"
+          }
+
+          "CPANM=$cpanmPath" >> $env:GITHUB_ENV
+          "CPANM_HOME=$HOME\.cpanm" >> $env:GITHUB_ENV
 
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
@@ -180,10 +195,32 @@ jobs:
         run: |
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          cpanm --version
+          Write-Host "CPANM=$env:CPANM"
 
-          where.exe cpanm
-          cpanm --version
+          & $env:CPANM --version
+
+          Write-Host "CPANM=$env:CPANM"
+
+          Get-ChildItem `
+            -Path $HOME `
+            -Directory `
+            -Recurse `
+            -Filter ".cpanm" `
+            -ErrorAction SilentlyContinue |
+              Select-Object -ExpandProperty FullName
+
+
+          Write-Host "CPANM_HOME=$env:CPANM_HOME"
+
+          if (Test-Path $env:CPANM_HOME) {
+              Write-Host "Directory exists"
+
+              Get-ChildItem $env:CPANM_HOME -Recurse |
+                  Select-Object -First 100
+
+          } else {
+              Write-Host "Directory missing"
+          }
 
       - name: Install Perl Dependencies
         shell: pwsh
@@ -198,7 +235,7 @@ jobs:
 
           Push-Location runtime
 
-          cpanm $env:VERBOSE_FLAG --installdeps .
+          & $env:CPANM $env:VERBOSE_FLAG --installdeps .
 
           if ($LASTEXITCODE -ne 0) {
               Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
@@ -256,6 +293,14 @@ jobs:
           ) | Set-Content build/BUILDINFO.txt
 
           Get-Content build/BUILDINFO.txt
+
+      - name: Upload cpanm diagnostics
+        if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: cpanm-diagnostics-windows
+          path: C:\Users\runneradmin\.cpanm\build.log
+          
 
       - name: Create runtime package
         shell: pwsh
