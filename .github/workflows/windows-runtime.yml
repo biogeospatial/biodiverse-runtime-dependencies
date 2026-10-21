@@ -198,6 +198,17 @@ jobs:
 
           & $env:CPANM --version
 
+          Write-Host "CPANM=$env:CPANM"
+
+          Get-ChildItem `
+            -Path $HOME `
+            -Directory `
+            -Recurse `
+            -Filter ".cpanm" `
+            -ErrorAction SilentlyContinue |
+              Select-Object -ExpandProperty FullName
+
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |

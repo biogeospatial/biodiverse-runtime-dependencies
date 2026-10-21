@@ -145,7 +145,7 @@ jobs:
 
           echo "CPANM=$CPANM" >> "$GITHUB_ENV"
 
-          CPANM_HOME=$(dirname "$CPANM")/../.cpanm
+          CPANM_HOME="$HOME/.cpanm"
           echo "CPANM_HOME=$CPANM_HOME" >> "$GITHUB_ENV"
 
           "$CPANM" --version
