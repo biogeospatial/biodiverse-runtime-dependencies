@@ -186,6 +186,7 @@ jobs:
           }
 
           "CPANM=$cpanmPath" >> $env:GITHUB_ENV
+          "CPANM_HOME=$HOME\.cpanm" >> $env:GITHUB_ENV
 
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
@@ -286,7 +287,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-windows
-          path: ~/.cpanm
+          path: path: ${{ env.CPANM_HOME }}
+          
 
       - name: Create runtime package
         shell: pwsh
