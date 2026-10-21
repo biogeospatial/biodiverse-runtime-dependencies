@@ -229,7 +229,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux
-          path: ${{ env.CPANM_HOME }}/**
+          path: ${{ env.CPANM_HOME }}
 
       - name: Create runtime package
         shell: bash
