@@ -215,6 +215,10 @@ jobs:
 
           perl -MPDL -e 'print "$PDL::VERSION\n"'
 
+          perl -MPDL::GSL::CDF -e 1
+
+          perl -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION\n"'
+
       - name: Generate BUILDINFO.txt
         shell: bash
         run: |

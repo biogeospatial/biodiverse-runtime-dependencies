@@ -255,6 +255,10 @@ jobs:
 
           & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
 
+          & $env:PERL_EXE -MPDL::GSL::CDF -e 1
+
+          & $env:PERL_EXE -MPDL::GSL::CDF -e 'print $PDL::VERSION'
+
       - name: Generate BUILDINFO.txt
         shell: pwsh
         run: |
