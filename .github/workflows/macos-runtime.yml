@@ -161,6 +161,18 @@ jobs:
           echo "CPANM=$CPANM"
           find "$HOME" -type d -name ".cpanm" 2>/dev/null
 
+          echo "CPANM_HOME=$CPANM_HOME"
+
+          if [ -d "$CPANM_HOME" ]; then
+              echo "Directory exists"
+
+              find "$CPANM_HOME" | head -100
+
+              du -sh "$CPANM_HOME"
+          else
+              echo "Directory missing"
+          fi
+
       - name: Install Perl Dependencies
         shell: bash
         run: |
@@ -217,7 +229,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux
-          path: ${{ env.CPANM_HOME }}
+          path: ${{ env.CPANM_HOME }}/**
 
       - name: Create runtime package
         shell: bash
