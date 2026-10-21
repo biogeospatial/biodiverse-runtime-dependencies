@@ -222,6 +222,11 @@ jobs:
               Write-Host "Directory missing"
           }
 
+      - name: Install GSL
+        shell: pwsh
+        run: |
+          vcpkg install gsl:x64-windows
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |

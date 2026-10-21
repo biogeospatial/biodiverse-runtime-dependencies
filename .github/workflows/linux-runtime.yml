@@ -193,10 +193,6 @@ jobs:
 
           "$CPANM" $VERBOSE_FLAG --installdeps .
 
-          cd runtime
-
-          cpanm $VERBOSE_FLAG --installdeps .
-
           if [ $? -ne 0 ]; then
             find "$HOME/.cpanm/work" -name build.log -exec sh -c '
               echo "==== $1 ===="
