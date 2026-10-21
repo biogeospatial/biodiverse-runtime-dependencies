@@ -4,7 +4,7 @@ globals:
   # Runtime cache generation.
   # Incremented automatically when a cache reset is performed.
   # Forms part of all runtime cache keys
-  cache_generation: 4
+  cache_generation: 5
 platforms:
   macos:
     perl_version: "5.38.4"
