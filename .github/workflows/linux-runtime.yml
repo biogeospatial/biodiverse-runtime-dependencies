@@ -149,7 +149,11 @@ jobs:
 
           curl -L https://cpanmin.us | perl - App::cpanminus
 
-          cpanm --version
+          CPANM=$(command -v cpanm)
+
+          echo "CPANM=$CPANM" >> "$GITHUB_ENV"
+
+          "$CPANM" --version
 
       - name: Validate cpanminus
         shell: bash
@@ -157,7 +161,7 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          cpanm --version
+          "$CPANM" --version
 
       - name: Install Perl Dependencies
         shell: bash
@@ -166,7 +170,7 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cd runtime
-          cpanm $VERBOSE_FLAG --installdeps .
+          "$CPANM" $VERBOSE_FLAG --installdeps .
 
       - name: Validate PDL
         shell: bash
@@ -211,7 +215,7 @@ jobs:
           cat build/BUILDINFO.txt
 
       - name: Upload cpanm diagnostics
-        if: ${{ failure() || inputs.save_debug_artifacts }}
+        if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux

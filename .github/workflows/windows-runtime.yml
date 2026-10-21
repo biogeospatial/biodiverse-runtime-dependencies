@@ -183,11 +183,12 @@ jobs:
       - name: Validate cpanminus
         shell: pwsh
         run: |
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
+
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          cpanm --version
-
           where.exe cpanm
+
           cpanm --version
 
       - name: Install Perl Dependencies
@@ -196,6 +197,8 @@ jobs:
 
           $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
+          $CPANM = "$env:PERL_ROOT\perl\bin\cpanm.bat"
+
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
 
@@ -203,7 +206,7 @@ jobs:
 
           Push-Location runtime
 
-          cpanm $env:VERBOSE_FLAG --installdeps .
+          & $CPANM $env:VERBOSE_FLAG --installdeps .
 
           if ($LASTEXITCODE -ne 0) {
               Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
@@ -263,7 +266,7 @@ jobs:
           Get-Content build/BUILDINFO.txt
 
       - name: Upload cpanm diagnostics
-        if: ${{ failure() || inputs.save_debug_artifacts }}
+        if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-windows
