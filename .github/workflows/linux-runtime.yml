@@ -238,7 +238,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux
-          path: /home/runner/.cpanm
+          path: /home/runner/.cpanm/build.log
 
       - name: Create runtime package
         shell: bash
