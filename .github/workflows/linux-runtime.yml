@@ -115,7 +115,8 @@ jobs:
             curl \
             patch \
             perl \
-            zlib1g-dev
+            zlib1g-dev \
+            libgsl-dev
 
       - name: Cache perlbrew
         uses: actions/cache@v6
