@@ -179,7 +179,12 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          "$CPANM" \
+          "$CPANM" Alien::Build
+          "$CPANM" Alien::Build::MM
+          "$CPANM" File::Find::Rule
+          "$CPANM" PkgConfig
+
+          "$CPANM" --notest \
             https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
 
       - name: Install Perl Dependencies
