@@ -231,7 +231,7 @@ jobs:
 
           where.exe gsl-config
 
-          gsl-config --version
+          Get-Command gsl-config -ErrorAction SilentlyContinue
 
           Get-ChildItem C:\vcpkg\packages\gsl_x64-windows -Recurse | Select-Object -First 100
 
