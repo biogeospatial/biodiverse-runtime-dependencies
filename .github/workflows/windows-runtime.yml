@@ -201,71 +201,25 @@ jobs:
 
           Write-Host "CPANM=$env:CPANM"
 
-#          Get-ChildItem `
-#            -Path $HOME `
-#            -Directory `
-#            -Recurse `
-#            -Filter ".cpanm" `
-#            -ErrorAction SilentlyContinue |
-#              Select-Object -ExpandProperty FullName
+          Get-ChildItem `
+            -Path $HOME `
+            -Directory `
+            -Recurse `
+            -Filter ".cpanm" `
+            -ErrorAction SilentlyContinue |
+              Select-Object -ExpandProperty FullName
 
 
-          Write-Host "CPANM_HOME=$env:CPANM_HOME"
 
-#         if (Test-Path $env:CPANM_HOME) {
-#              Write-Host "Directory exists"
-#
-#              Get-ChildItem $env:CPANM_HOME -Recurse |
-#                  Select-Object -First 100
-#
-#          } else {
-#              Write-Host "Directory missing"
-#          }
+         if (Test-Path $env:CPANM_HOME) {
+              Write-Host "Directory exists"
 
-#      - name: Install GSL
-#        shell: pwsh
-#        run: |
-#          vcpkg install gsl:x64-windows
-#
-#      - name: Create gsl-config wrapper
-#        shell: pwsh
-#        run: |
-#          $wrapperDir = "$env:RUNNER_TEMP\gsl-config"
-#
-#          New-Item `
-#            -ItemType Directory `
-#            -Force `
-#            -Path $wrapperDir | Out-Null
-#
-#          Set-Content "$wrapperDir\gsl-config.bat" '@echo off'
-#          Add-Content "$wrapperDir\gsl-config.bat" ''
-#          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--version" ('
-#          Add-Content "$wrapperDir\gsl-config.bat" '  echo 2.8'
-#          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
-#          Add-Content "$wrapperDir\gsl-config.bat" ')'
-#          Add-Content "$wrapperDir\gsl-config.bat" ''
-#          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--cflags" ('
-#          Add-Content "$wrapperDir\gsl-config.bat" '  echo -IC:\vcpkg\installed\x64-windows\include'
-#          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
-#          Add-Content "$wrapperDir\gsl-config.bat" ')'
-#          Add-Content "$wrapperDir\gsl-config.bat" ''
-#          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--libs" ('
-#          Add-Content "$wrapperDir\gsl-config.bat" '  echo -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas'
-#          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
-#          Add-Content "$wrapperDir\gsl-config.bat" ')'
-#          Add-Content "$wrapperDir\gsl-config.bat" ''
-#          Add-Content "$wrapperDir\gsl-config.bat" 'exit /b 1'
-#
-#          "PATH=$wrapperDir;$env:PATH" >> $env:GITHUB_ENV
+              Get-ChildItem $env:CPANM_HOME -Recurse |
+                  Select-Object -First 100
 
-#      - name: Validate gsl-config wrapper
-#        shell: pwsh
-#        run: |
-#          where.exe gsl-config
-#
-#          gsl-config --version
-#          gsl-config --cflags
-#          gsl-config --libs
+          } else {
+              Write-Host "Directory missing"
+          }
 
       - name: Install Perl Dependencies
         shell: pwsh
