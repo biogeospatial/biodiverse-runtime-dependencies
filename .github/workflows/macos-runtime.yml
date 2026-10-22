@@ -173,20 +173,14 @@ jobs:
               echo "Directory missing"
           fi
 
-      - name: Check versioned CMake formulas
+      - name: Install forked Alien::geos::af
         shell: bash
         run: |
-          brew search cmake
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
 
-      - name: Install CMake 3
-        shell: bash
-        run: |
-          brew install cmake@3
-
-          export PATH="$(brew --prefix cmake@3)/bin:$PATH"
-
-          which cmake
-          cmake --version
+          "$CPANM" \
+            https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
 
       - name: Install Perl Dependencies
         shell: bash
