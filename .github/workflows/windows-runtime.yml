@@ -239,6 +239,48 @@ jobs:
 
           Get-ChildItem C:\vcpkg -Recurse -Filter gsl-config* -ErrorAction SilentlyContinue
 
+      - name: Create gsl-config wrapper
+        shell: pwsh
+        run: |
+          $wrapperDir = "$env:RUNNER_TEMP\gsl-config"
+
+          New-Item `
+            -ItemType Directory `
+            -Force `
+            -Path $wrapperDir | Out-Null
+
+          @'
+@echo off
+
+if "%1"=="--version" (
+  echo 2.8
+  exit /b 0
+)
+
+if "%1"=="--cflags" (
+  echo -IC:\vcpkg\installed\x64-windows\include
+  exit /b 0
+)
+
+if "%1"=="--libs" (
+  echo -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas
+  exit /b 0
+)
+
+exit /b 1
+'@ | Set-Content "$wrapperDir\gsl-config.bat"
+
+          "PATH=$wrapperDir;$env:PATH" >> $env:GITHUB_ENV
+
+      - name: Validate gsl-config wrapper
+        shell: pwsh
+        run: |
+          where.exe gsl-config
+
+          gsl-config --version
+          gsl-config --cflags
+          gsl-config --libs
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
