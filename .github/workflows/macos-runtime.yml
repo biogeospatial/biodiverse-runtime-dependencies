@@ -173,6 +173,17 @@ jobs:
               echo "Directory missing"
           fi
 
+      - name: Test Net::SSLeay 1.97_01
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          "$CPANM" $VERBOSE_FLAG \
+            https://cpan.metacpan.org/authors/id/C/CH/CHRISN/Net-SSLeay-1.97_01.tar.gz
+
+          perl -MNet::SSLeay -e 'print $Net::SSLeay::VERSION,"\n"'
+
       - name: Install forked Alien::geos::af
         shell: bash
         run: |
