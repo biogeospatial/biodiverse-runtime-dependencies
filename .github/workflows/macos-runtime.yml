@@ -173,13 +173,20 @@ jobs:
               echo "Directory missing"
           fi
 
-      - name: Check cmake
+      - name: Check versioned CMake formulas
         shell: bash
         run: |
+          brew search cmake
+
+      - name: Install CMake 3
+        shell: bash
+        run: |
+          brew install cmake@3
+
+          export PATH="$(brew --prefix cmake@3)/bin:$PATH"
+
           which cmake
           cmake --version
-
-          brew info cmake || true
 
       - name: Install Perl Dependencies
         shell: bash
