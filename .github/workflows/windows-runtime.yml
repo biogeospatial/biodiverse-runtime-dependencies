@@ -227,6 +227,12 @@ jobs:
         run: |
           vcpkg install gsl:x64-windows
 
+          Get-Command gsl-config -ErrorAction SilentlyContinue
+
+          where.exe gsl-config
+
+          gsl-config --version
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
