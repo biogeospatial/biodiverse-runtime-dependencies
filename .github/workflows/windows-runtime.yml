@@ -242,6 +242,13 @@ jobs:
             -Filter "*gsl*.dll" `
             -ErrorAction SilentlyContinue
 
+          Get-ChildItem `
+            "$env:PERL_ROOT" `
+            -Recurse `
+            -Filter "*gsl*.dll" `
+            -ErrorAction SilentlyContinue |
+              Select-Object FullName
+
           & $env:PERL_EXE -MPDL::GSL::CDF -e 1
           & $env:PERL_EXE -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION`n"'
 
