@@ -233,6 +233,12 @@ jobs:
 
           gsl-config --version
 
+          Get-ChildItem C:\vcpkg\packages\gsl_x64-windows -Recurse | Select-Object -First 100
+
+          Get-ChildItem C:\vcpkg\installed\x64-windows -Recurse | Select-Object -First 100
+
+          Get-ChildItem C:\vcpkg -Recurse -Filter gsl-config* -ErrorAction SilentlyContinue
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
