@@ -180,6 +180,14 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           "$CPANM" \
+            ExtUtils::MakeMaker \
+            Alien::Build \
+            Alien::Build::MM \
+            File::Find::Rule \
+            PkgConfig \
+            Sort::Versions
+
+          "$CPANM" \
             https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
 
       - name: Install Perl Dependencies
