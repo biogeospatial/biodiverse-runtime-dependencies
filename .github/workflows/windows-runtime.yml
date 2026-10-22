@@ -249,46 +249,24 @@ jobs:
             -Force `
             -Path $wrapperDir | Out-Null
 
-          @(
-            '@echo off',
-            '',
-            'if "%1"=="--version" (',
-            '  echo 2.8',
-            '  exit /b 0',
-            ')',
-            '',
-            'if "%1"=="--cflags" (',
-            '  echo -IC:\vcpkg\installed\x64-windows\include',
-            '  exit /b 0',
-            ')',
-            '',
-            'if "%1"=="--libs" (',
-            '  echo -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas',
-            '  exit /b 0',
-            ')',
-            '',
-            'exit /b 1'
-          ) | Set-Content "$wrapperDir\gsl-config.bat"
-
-          "PATH=$wrapperDir;$env:PATH" >> $env:GITHUB_ENV
-
-if "%1"=="--version" (
-  echo 2.8
-  exit /b 0
-)
-
-if "%1"=="--cflags" (
-  echo -IC:\vcpkg\installed\x64-windows\include
-  exit /b 0
-)
-
-if "%1"=="--libs" (
-  echo -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas
-  exit /b 0
-)
-
-exit /b 1
-'@ | Set-Content "$wrapperDir\gsl-config.bat"
+          Set-Content "$wrapperDir\gsl-config.bat" '@echo off'
+          Add-Content "$wrapperDir\gsl-config.bat" ''
+          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--version" ('
+          Add-Content "$wrapperDir\gsl-config.bat" '  echo 2.8'
+          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
+          Add-Content "$wrapperDir\gsl-config.bat" ')'
+          Add-Content "$wrapperDir\gsl-config.bat" ''
+          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--cflags" ('
+          Add-Content "$wrapperDir\gsl-config.bat" '  echo -IC:\vcpkg\installed\x64-windows\include'
+          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
+          Add-Content "$wrapperDir\gsl-config.bat" ')'
+          Add-Content "$wrapperDir\gsl-config.bat" ''
+          Add-Content "$wrapperDir\gsl-config.bat" 'if "%1"=="--libs" ('
+          Add-Content "$wrapperDir\gsl-config.bat" '  echo -LC:\vcpkg\installed\x64-windows\lib -lgsl -lgslcblas'
+          Add-Content "$wrapperDir\gsl-config.bat" '  exit /b 0'
+          Add-Content "$wrapperDir\gsl-config.bat" ')'
+          Add-Content "$wrapperDir\gsl-config.bat" ''
+          Add-Content "$wrapperDir\gsl-config.bat" 'exit /b 1'
 
           "PATH=$wrapperDir;$env:PATH" >> $env:GITHUB_ENV
 
