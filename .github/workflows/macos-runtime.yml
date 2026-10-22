@@ -173,20 +173,14 @@ jobs:
               echo "Directory missing"
           fi
 
-      - name: Install forked Alien::geos::af
+      - name: Install forked Alien::cmake3
         shell: bash
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          "$CPANM" Alien::Build
-          "$CPANM" Alien::Build::MM
-          "$CPANM" File::Find::Rule
-          "$CPANM" PkgConfig
-          "$CPANM" Sort::Versions
-
-          "$CPANM" --notest \
-            https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
+          "$CPANM" \
+            https://github.com/jmumbulla/Alien-cmake3/archive/refs/heads/main.tar.gz
 
       - name: Install Perl Dependencies
         shell: bash
