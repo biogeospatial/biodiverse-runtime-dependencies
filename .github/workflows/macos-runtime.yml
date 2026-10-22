@@ -173,6 +173,14 @@ jobs:
               echo "Directory missing"
           fi
 
+      - name: Check cmake
+        shell: bash
+        run: |
+          which cmake
+          cmake --version
+
+          brew info cmake || true
+
       - name: Install Perl Dependencies
         shell: bash
         run: |
