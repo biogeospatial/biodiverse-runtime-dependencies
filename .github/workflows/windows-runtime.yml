@@ -230,6 +230,9 @@ jobs:
       - name: Validate PDL
         shell: pwsh
         run: |
+
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+
           & $env:PERL_EXE -MPDL -e 1
           & $env:PERL_EXE -MPDL -e 'print "$PDL::VERSION`n"'
 
