@@ -183,6 +183,7 @@ jobs:
           "$CPANM" Alien::Build::MM
           "$CPANM" File::Find::Rule
           "$CPANM" PkgConfig
+          "$CPANM" Sort::Versions
 
           "$CPANM" --notest \
             https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
