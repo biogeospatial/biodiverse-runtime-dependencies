@@ -201,26 +201,6 @@ jobs:
 
           Write-Host "CPANM=$env:CPANM"
 
-          Get-ChildItem `
-            -Path $HOME `
-            -Directory `
-            -Recurse `
-            -Filter ".cpanm" `
-            -ErrorAction SilentlyContinue |
-              Select-Object -ExpandProperty FullName
-
-
-
-         if (Test-Path $env:CPANM_HOME) {
-              Write-Host "Directory exists"
-
-              Get-ChildItem $env:CPANM_HOME -Recurse |
-                  Select-Object -First 100
-
-          } else {
-              Write-Host "Directory missing"
-          }
-
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
