@@ -183,6 +183,14 @@ jobs:
 
           "$CPANM" $VERBOSE_FLAG --installdeps .
 
+          if [ $? -ne 0 ]; then
+            find "$HOME/.cpanm/work" -name build.log -exec sh -c '
+              echo "==== $1 ===="
+              cat "$1"
+            ' _ {} \;
+            exit 1
+          fi
+
       - name: Validate PDL
         shell: bash
         run: |
@@ -192,6 +200,10 @@ jobs:
           perl -MPDL -e 1
 
           perl -MPDL -e 'print "$PDL::VERSION\n"'
+
+          perl -MPDL::GSL::CDF -e 1
+
+          perl -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION\n"'
 
       - name: Generate BUILDINFO.txt
         shell: bash

@@ -201,27 +201,6 @@ jobs:
 
           Write-Host "CPANM=$env:CPANM"
 
-          Get-ChildItem `
-            -Path $HOME `
-            -Directory `
-            -Recurse `
-            -Filter ".cpanm" `
-            -ErrorAction SilentlyContinue |
-              Select-Object -ExpandProperty FullName
-
-
-          Write-Host "CPANM_HOME=$env:CPANM_HOME"
-
-          if (Test-Path $env:CPANM_HOME) {
-              Write-Host "Directory exists"
-
-              Get-ChildItem $env:CPANM_HOME -Recurse |
-                  Select-Object -First 100
-
-          } else {
-              Write-Host "Directory missing"
-          }
-
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
@@ -251,9 +230,30 @@ jobs:
       - name: Validate PDL
         shell: pwsh
         run: |
-          & $env:PERL_EXE -MPDL -e 1
 
-          & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+
+          & $env:PERL_EXE -MPDL -e 1
+          & $env:PERL_EXE -MPDL -e 'print "$PDL::VERSION`n"'
+
+          Get-ChildItem `
+            "$env:PERL_ROOT\perl\vendor\lib\auto\PDL\GSL\CDF"
+
+          Get-ChildItem `
+            "$env:PERL_ROOT" `
+            -Recurse `
+            -Filter "*gsl*.dll" `
+            -ErrorAction SilentlyContinue
+
+          Get-ChildItem `
+            "$env:PERL_ROOT" `
+            -Recurse `
+            -Filter "*gsl*.dll" `
+            -ErrorAction SilentlyContinue |
+              Select-Object FullName
+
+          & $env:PERL_EXE -MPDL::GSL::CDF -e 1
+          & $env:PERL_EXE -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION`n"'
 
       - name: Generate BUILDINFO.txt
         shell: pwsh

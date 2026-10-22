@@ -1,1 +1,2 @@
 brew "yq"
+brew "gsl"
