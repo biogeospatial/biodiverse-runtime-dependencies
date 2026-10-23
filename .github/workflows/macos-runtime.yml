@@ -75,7 +75,7 @@ jobs:
 
       - name: Generate dependency files
         run: |
-          perl script/generate_dependency_files.pl
+          perl scripts/generate_dependency_files.pl
 
       - name: Install tools
         run: |
