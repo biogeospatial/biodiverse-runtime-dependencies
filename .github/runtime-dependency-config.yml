@@ -11,7 +11,9 @@ platforms:
 
     # Net::SSLeay 1.96 fails to build against OpenSSL 4.x
     # on GitHub macOS runners.
-    net_ssleay_version: "1.97_01"
+    #net_ssleay_version: "1.97_01"
+
+    openssl_formula: "openssl@3"
 
     system_dependencies:
       openssl: "3"

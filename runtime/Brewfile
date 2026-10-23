@@ -1,2 +1,3 @@
 brew "yq"
 brew "gsl"
+brew "openssl@3"

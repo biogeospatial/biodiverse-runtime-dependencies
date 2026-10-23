@@ -92,7 +92,8 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          echo "NET_SSLEAY_VERSION=$(yq -r '.platforms.macos.net_ssleay_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          #echo "NET_SSLEAY_VERSION=$(yq -r '.platforms.macos.net_ssleay_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+          echo "OPENSSL_FORMULA=$(yq -r '.platforms.macos.openssl_formula' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Cache perlbrew
         uses: actions/cache@v6
@@ -180,8 +181,9 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          "$CPANM" $VERBOSE_FLAG \
-            "https://cpan.metacpan.org/authors/id/C/CH/CHRISN/Net-SSLeay-${NET_SSLEAY_VERSION}.tar.gz"
+          echo "Using OpenSSL from: $(brew --prefix ${OPENSSL_FORMULA})"
+          OPENSSL_PREFIX="$(brew --prefix ${OPENSSL_FORMULA})" \
+            "$CPANM" $VERBOSE_FLAG Net::SSLeay
 
           perl -MNet::SSLeay -e 'print $Net::SSLeay::VERSION,"\n"'
 
