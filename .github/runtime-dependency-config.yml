@@ -4,17 +4,14 @@ globals:
   # Runtime cache generation.
   # Incremented automatically when a cache reset is performed.
   # Forms part of all runtime cache keys
-  cache_generation: 7
+  cache_generation: 8
 platforms:
   macos:
     perl_version: "5.38.4"
-
     # Net::SSLeay 1.96 fails to build against OpenSSL 4.x
     # on GitHub macOS runners.
     #net_ssleay_version: "1.97_01"
-
     openssl_formula: "openssl@3"
-
     system_dependencies:
       openssl: "3"
       gsl: "gsl"
