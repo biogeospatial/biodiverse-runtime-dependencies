@@ -184,23 +184,6 @@ jobs:
 
           perl -MNet::SSLeay -e 'print $Net::SSLeay::VERSION,"\n"'
 
-      - name: Install forked Alien::geos::af
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          "$CPANM" $VERBOSE_FLAG \
-            ExtUtils::MakeMaker \
-            Alien::Build \
-            Alien::Build::MM \
-            File::Find::Rule \
-            PkgConfig \
-            Sort::Versions
-
-          "$CPANM" $VERBOSE_FLAG \
-            https://github.com/jmumbulla/perl-alien-geos/archive/refs/heads/test-cmake4-support.tar.gz
-
       - name: Install Perl Dependencies
         shell: bash
         run: |
