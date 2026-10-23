@@ -77,7 +77,7 @@ jobs:
 
       - name: Generate dependency files
         run: |
-          perl scripts/generate_dependency_files.pl
+          python scripts/generate_dependency_files.py
 
       - name: Install tools
         run: |
