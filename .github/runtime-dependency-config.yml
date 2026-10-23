@@ -10,6 +10,11 @@ globals:
 platforms:
   macos:
     perl_version: "5.38.4"
+
+    # Net::SSLeay 1.96 fails to build against OpenSSL 4.x
+    # on GitHub macOS runners.
+    net_ssleay_version: "1.97_01"
+
     system_dependencies:
       openssl: "3"
       gsl: "gsl"
