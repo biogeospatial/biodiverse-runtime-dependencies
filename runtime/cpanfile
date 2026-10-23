@@ -1,3 +1,7 @@
 requires 'App::cpanminus';
 requires 'PDL';
 requires 'PDL::GSL::CDF';
+
+requires 'Alien::geos::af';
+requires 'Alien::gdal';
+requires 'Geo::GDAL::FFI';
