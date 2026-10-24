@@ -90,11 +90,11 @@ Push Branch
     ↓
 📦 Build: Runtime Packages
     ↓
-Validate Linux Runtime
+Validate 🔧 Internal: Linux Package Build
     ↓
-Validate macOS Runtime
+Validate 🔧 Internal: macOS Package Build
     ↓
-Validate Windows Runtime
+Validate 🔧 Internal: Windows Package Build
     ↓
 Pull Request Review
     ↓
