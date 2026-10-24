@@ -75,6 +75,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install PyYAML
+        run: |
+          python -m pip install pyyaml
+
+      - name: Generate dependency files
+        run: |
+          python scripts/generate_dependency_files.py
+
       - name: Install tools
         run: |
           sudo apt-get update

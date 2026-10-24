@@ -55,6 +55,80 @@ Examples:
 - GDAL upgrades.
 - Platform-specific fixes.
 
+#### Updating Dependencies
+
+Runtime dependency updates are validated using the:
+
+```text
+📦 Build: Runtime Packages
+```
+
+workflow.
+
+When introducing a dependency update:
+
+1. Create an issue describing the proposed change.
+2. Create a feature branch from `development`.
+3. Update `.github/runtime-dependency-config.yml`.
+4. Commit and push the feature branch.
+5. Run the **📦 Build: Runtime Packages** workflow.
+6. Review workflow results and generated dependency files.
+7. Confirm successful runtime builds on all supported platforms.
+8. Create and review a pull request.
+9. Merge the pull request into `development` after validation.
+
+Workflow:
+
+```text
+Issue
+    ↓
+Feature Branch
+    ↓
+Update runtime-dependency-config.yml
+    ↓
+Push Branch
+    ↓
+📦 Build: Runtime Packages
+    ↓
+Validate Linux Runtime
+    ↓
+Validate macOS Runtime
+    ↓
+Validate Windows Runtime
+    ↓
+Pull Request Review
+    ↓
+Merge Into Development
+```
+
+The runtime build workflow automatically generates dependency
+definition files from:
+
+```text
+.github/runtime-dependency-config.yml
+```
+
+including:
+
+```text
+runtime/Brewfile
+runtime/cpanfile
+runtime/GENERATED-BASELINE-linux.md
+runtime/GENERATED-BASELINE-macos.md
+runtime/GENERATED-BASELINE-windows.md
+```
+
+These generated files should not be edited directly.
+
+All dependency definition changes should be made in:
+
+```text
+.github/runtime-dependency-config.yml
+```
+
+which is the authoritative source for runtime dependency intent.
+
+
 ### 3. Validate Changes
 
 Confirm that:

@@ -73,6 +73,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install PyYAML
+        run: |
+          python -m pip install pyyaml
+
+      - name: Generate dependency files
+        run: |
+          python scripts/generate_dependency_files.py
+
       - name: Install tools
         run: |
           brew bundle --file runtime/Brewfile
@@ -99,7 +107,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml') }}
 
       - name: Configure verbosity
         shell: bash
@@ -246,7 +254,7 @@ jobs:
           Workflow: ${GITHUB_WORKFLOW}
           Runner: ${RUNNER_OS}
 
-          Baseline File: BASELINE-macos.md
+          Baseline File: GENERATED-BASELINE-macos.md
           EOF
 
           cat build/BUILDINFO.txt
@@ -266,7 +274,7 @@ jobs:
           mkdir -p "${PACKAGE_DIR}"
 
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
-          cp runtime/BASELINE-macos.md "${PACKAGE_DIR}/"
+          cp runtime/GENERATED-BASELINE-macos.md "${PACKAGE_DIR}/"
           cp runtime/cpanfile "${PACKAGE_DIR}/"
 
           mkdir -p "${PACKAGE_DIR}/perl"
