@@ -124,7 +124,7 @@ jobs:
           scripts/setup-perl-environment.sh
 
       - name: Validate cpanminus
-       shell: bash
+        shell: bash
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
