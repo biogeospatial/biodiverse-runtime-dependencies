@@ -66,45 +66,6 @@ jobs:
 
           echo "generation=$NEXT" >> "$GITHUB_OUTPUT"
 
-  windows:
-    needs: prepare-build
-    if: ${{ github.event_name != 'workflow_dispatch' ||
-            inputs.platform == 'all' ||
-            inputs.platform == 'windows' }}
-    uses: ./.github/workflows/windows-runtime.yml
-    with:
-      build_type: development
-      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
-      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
-      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
-      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
-
-  macos:
-    needs: prepare-build
-    if: ${{ github.event_name != 'workflow_dispatch' ||
-            inputs.platform == 'all' ||
-            inputs.platform == 'macos' }}
-    uses: ./.github/workflows/macos-runtime.yml
-    with:
-      build_type: development
-      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
-      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
-      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
-      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
-
-  linux:
-    needs: prepare-build
-    if: ${{ github.event_name != 'workflow_dispatch' ||
-            inputs.platform == 'all' ||
-            inputs.platform == 'linux' }}
-    uses: ./.github/workflows/linux-runtime.yml
-    with:
-      build_type: development
-      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
-      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
-      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
-      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
-
   resolve-dependencies:
     needs: prepare-build
     runs-on: ubuntu-24.04
@@ -114,9 +75,15 @@ jobs:
         with:
           ref: ${{ github.ref_name }}
 
-      - name: Install Carton
+      - name: Install cpanminus and Carton
+        shell: bash
         run: |
+          curl -L https://cpanmin.us | perl - App::cpanminus
+
           cpanm Carton
+
+          cpanm --version
+          carton --version
 
       - name: Resolve Dependencies
         shell: bash
@@ -140,13 +107,70 @@ jobs:
             git push
           fi
 
-  persist-cache-generation:
-    if: ${{ inputs.reset_cache }}
+  windows:
     needs:
       - prepare-build
+      - resolve-dependencies
+
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'windows' }}
+
+    uses: ./.github/workflows/windows-runtime.yml
+
+    with:
+      build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
+      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+
+  macos:
+    needs:
+      - prepare-build
+      - resolve-dependencies
+
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'macos' }}
+
+    uses: ./.github/workflows/macos-runtime.yml
+
+    with:
+      build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
+      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+
+  linux:
+    needs:
+      - prepare-build
+      - resolve-dependencies
+
+    if: ${{ github.event_name != 'workflow_dispatch' ||
+            inputs.platform == 'all' ||
+            inputs.platform == 'linux' }}
+
+    uses: ./.github/workflows/linux-runtime.yml
+
+    with:
+      build_type: development
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
+      verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
+      save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+
+  persist-cache-generation:
+    if: ${{ inputs.reset_cache }}
+
+    needs:
+      - prepare-build
+      - resolve-dependencies
       - windows
       - macos
       - linux
+
     runs-on: ubuntu-24.04
 
     steps:
