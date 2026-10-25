@@ -209,6 +209,16 @@ jobs:
 
           Write-Host "CPANM=$env:CPANM"
 
+      - name: Install Carton
+        shell: pwsh
+        run: |
+          cpanm Carton
+
+      - name: Validate Carton
+        shell: pwsh
+        run: |
+          carton --version
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
