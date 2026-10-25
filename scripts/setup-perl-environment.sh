@@ -38,7 +38,7 @@ echo "Using cpanm:"
 
 # Install Carton if necessary.
 if ! command -v carton >/dev/null 2>&1; then
-    "${CPANM}" Carton
+    "${CPANM}" ${VERBOSE_FLAG:-} Carton
 fi
 
 echo "Using Carton:"

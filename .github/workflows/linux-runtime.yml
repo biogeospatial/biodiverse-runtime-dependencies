@@ -138,7 +138,6 @@ jobs:
           chmod +x scripts/setup-perl-environment.sh
           scripts/setup-perl-environment.sh
 
-
       - name: Validate cpanminus
         shell: bash
         run: |

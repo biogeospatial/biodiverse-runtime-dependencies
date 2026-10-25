@@ -100,7 +100,6 @@ jobs:
         shell: bash
         run: |
           echo "PERL_VERSION=$(yq -r '.platforms.macos.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
-          #echo "NET_SSLEAY_VERSION=$(yq -r '.platforms.macos.net_ssleay_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
           echo "OPENSSL_FORMULA=$(yq -r '.platforms.macos.openssl_formula' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
 
       - name: Cache perlbrew
@@ -118,50 +117,14 @@ jobs:
             echo "VERBOSE_FLAG=" >> "$GITHUB_ENV"
           fi
 
-      - name: Install perlbrew
+      - name: Setup Perl Environment
         shell: bash
         run: |
-          curl -L https://install.perlbrew.pl | bash
-
-      - name: Build Perl
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-
-          if ! perlbrew list | grep -q "perl-${PERL_VERSION}"; then
-            perlbrew install --notest perl-${PERL_VERSION}
-          fi
-
-          perlbrew use perl-${PERL_VERSION}
-          perl -v
-
-      - name: Verify Perl Installation
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          perl -e 'print "$^V\n"'
-
-      - name: Install cpanminus
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          curl -L https://cpanmin.us | perl - App::cpanminus
-
-          CPANM=$(command -v cpanm)
-
-          echo "CPANM=$CPANM" >> "$GITHUB_ENV"
-
-          CPANM_HOME="$HOME/.cpanm"
-          echo "CPANM_HOME=$CPANM_HOME" >> "$GITHUB_ENV"
-
-          "$CPANM" --version
+          chmod +x scripts/setup-perl-environment.sh
+          scripts/setup-perl-environment.sh
 
       - name: Validate cpanminus
-        shell: bash
+       shell: bash
         run: |
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
