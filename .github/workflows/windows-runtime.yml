@@ -219,6 +219,13 @@ jobs:
         run: |
           carton --version
 
+- name: Resolve Dependencies with Carton
+        shell: pwsh
+        run: |
+          Set-Location runtime
+
+          carton install
+
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
