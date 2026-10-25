@@ -183,6 +183,22 @@ jobs:
               echo "Directory missing"
           fi
 
+      - name: Install Carton
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          "$CPANM" Carton
+
+      - name: Validate Carton
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          carton --version
+
       - name: Install Net::SSLeay
         shell: bash
         run: |
