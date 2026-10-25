@@ -139,7 +139,7 @@ jobs:
           if [ -d "$CPANM_HOME" ]; then
               echo "Directory exists"
 
-              find "$CPANM_HOME" | head -100
+              find "$CPANM_HOME" | head -100 || true
 
               du -sh "$CPANM_HOME"
           else
