@@ -207,6 +207,15 @@ jobs:
 
           carton --version
 
+      - name: Resolve Dependencies with Carton
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cd runtime
+
+          carton install
 
       - name: Install Perl Dependencies
         shell: bash
