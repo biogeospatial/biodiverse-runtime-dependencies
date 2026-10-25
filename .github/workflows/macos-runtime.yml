@@ -183,16 +183,6 @@ jobs:
               echo "Directory missing"
           fi
 
-      - name: Resolve Dependencies with Carton
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          cd runtime
-
-          carton install
-
       - name: Install Net::SSLeay
         shell: bash
         run: |
