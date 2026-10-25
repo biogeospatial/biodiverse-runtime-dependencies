@@ -105,6 +105,41 @@ jobs:
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
 
+  resolve-dependencies:
+    needs: prepare-build
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.ref_name }}
+
+      - name: Install Carton
+        run: |
+          cpanm Carton
+
+      - name: Resolve Dependencies
+        shell: bash
+        run: |
+          cd runtime
+
+          carton install
+
+      - name: Commit lockfile
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add runtime/cpanfile.snapshot
+
+          if git diff --cached --quiet; then
+            echo "No lockfile changes"
+          else
+            git commit -m "Update Carton lockfile"
+            git push
+          fi
+
   persist-cache-generation:
     if: ${{ inputs.reset_cache }}
     needs:
