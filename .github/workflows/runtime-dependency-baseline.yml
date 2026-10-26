@@ -68,7 +68,58 @@ jobs:
 
           carton install
 
-      - name: Verify Baseline
+      - name: Verify snapshot exists
         shell: bash
         run: |
           ls -lah runtime
+
+          if [ -f runtime/cpanfile.snapshot ]; then
+            echo "Snapshot exists"
+          else
+            echo "Snapshot missing"
+            exit 1
+          fi
+
+      - name: Check for baseline changes
+        id: changes
+        shell: bash
+        run: |
+          echo "=== git status ==="
+          git status --porcelain
+
+          echo "=== snapshot status ==="
+          git status --porcelain runtime/cpanfile.snapshot
+
+          if [ -n "$(git status --porcelain runtime/cpanfile.snapshot)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Detected changes to runtime/cpanfile.snapshot"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected"
+          fi
+
+      - name: Show baseline status
+        run: |
+          git status
+
+      - name: Commit updated baseline
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add runtime/cpanfile.snapshot
+
+          git commit -m "update dependency baseline"
+
+      - name: Show recent commit
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git log -1 --stat
+
+      - name: Push updated baseline
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git push
+          git rev-parse HEAD
