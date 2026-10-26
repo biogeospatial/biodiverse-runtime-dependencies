@@ -170,7 +170,13 @@ jobs:
 
           cd runtime
 
-          "$CPANM" $VERBOSE_FLAG --installdeps .
+          carton install --deployment
+
+          echo "=== runtime contents ==="
+          ls -lah
+
+          echo "=== local contents ==="
+          find local | head -100 || true
 
           if [ $? -ne 0 ]; then
             find "$HOME/.cpanm/work" -name build.log -exec sh -c '
