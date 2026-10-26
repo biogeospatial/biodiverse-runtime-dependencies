@@ -57,3 +57,18 @@ jobs:
           "$CPANM" --version
 
           carton --version
+
+      - name: Generate Runtime Dependency Baseline
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          cd runtime
+
+          carton install
+
+      - name: Verify Baseline
+        shell: bash
+        run: |
+          ls -lah runtime
