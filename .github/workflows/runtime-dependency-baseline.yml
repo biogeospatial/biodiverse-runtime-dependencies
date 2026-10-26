@@ -68,6 +68,20 @@ jobs:
 
           carton install
 
+      - name: Check for baseline changes
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- runtime/cpanfile.snapshot; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show baseline status
+        run: |
+          git status
+
       - name: Verify Baseline
         shell: bash
         run: |
