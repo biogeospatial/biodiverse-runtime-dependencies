@@ -168,10 +168,12 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
+          mkdir -p build
+
           cd runtime
 
-          carton install --deployment
-          CARTON_EXIT_CODE=$?
+          carton install --deployment 2>&1 | tee ../build/carton-install.log
+          CARTON_EXIT_CODE=${PIPESTATUS[0]}
 
           echo "=== runtime contents ==="
           ls -lah
@@ -225,6 +227,14 @@ jobs:
           CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
           PDL_VERSION=$(perl -MPDL -e 'print $PDL::VERSION')
 
+          CARTON_VERSION=$(carton --version)
+
+          if [ -f runtime/cpanfile.snapshot ]; then
+            SNAPSHOT_SHA=$(sha256sum runtime/cpanfile.snapshot | cut -d' ' -f1)
+          else
+            SNAPSHOT_SHA="Not Present"
+          fi
+
           cat > build/BUILDINFO.txt <<EOF
           Platform: Linux
           Architecture: $(uname -m)
@@ -235,7 +245,13 @@ jobs:
 
           Perl Version: $(perl -e 'print $^V')
           cpanm Version: ${CPANM_VERSION}
-          Dependency Definition File: cpanfile
+          Carton Version: ${CARTON_VERSION}
+
+          Dependency Installation Method: Carton
+          Dependency Installation Mode: Deployment
+          Dependency Definition File: runtime/cpanfile
+          Dependency Snapshot File: runtime/cpanfile.snapshot
+          Snapshot SHA256: ${SNAPSHOT_SHA}
 
           PDL Version: ${PDL_VERSION}
 
@@ -243,18 +259,21 @@ jobs:
           Runner: ${RUNNER_OS}
 
           Baseline File: BASELINE-linux.md
-          EOF
 
+          EOF
           cat build/BUILDINFO.txt
 
-      - name: Upload cpanm diagnostics
+      - name: Upload dependency diagnostics
         if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
-          name: cpanm-diagnostics-linux
+          name: dependency-diagnostics-linux
           path: |
+            build/carton-install.log
+            runtime/cpanfile
+            runtime/cpanfile.snapshot
             /home/runner/.cpanm/build.log
-            /home/runner.cpanm/work/**/build.log
+            /home/runner/.cpanm/work/**/build.log
 
       - name: Create runtime package
         shell: bash
@@ -266,6 +285,7 @@ jobs:
           cp build/BUILDINFO.txt "${PACKAGE_DIR}/"
           cp runtime/BASELINE-linux.md "${PACKAGE_DIR}/"
           cp runtime/cpanfile "${PACKAGE_DIR}/"
+          cp runtime/cpanfile.snapshot "${PACKAGE_DIR}/"
 
           mkdir -p "${PACKAGE_DIR}/perl"
 
