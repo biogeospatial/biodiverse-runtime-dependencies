@@ -75,6 +75,14 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
+      - name: Install PyYAML
+        run: |
+          python -m pip install pyyaml
+
+      - name: Generate dependency files
+        run: |
+          python scripts/generate_dependency_files.py
+
       - name: Install tools
         run: |
           sudo apt-get update
@@ -115,7 +123,8 @@ jobs:
             curl \
             patch \
             perl \
-            zlib1g-dev
+            zlib1g-dev \
+            libgsl-dev
 
       - name: Cache perlbrew
         uses: actions/cache@v6
@@ -123,40 +132,11 @@ jobs:
           path: ~/perl5/perlbrew
           key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
 
-      - name: Install perlbrew
+      - name: Setup Perl Environment
         shell: bash
         run: |
-          curl -L https://install.perlbrew.pl | bash
-
-      - name: Build Perl
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-
-          if ! perlbrew list | grep -q "perl-${PERL_VERSION}"; then
-            perlbrew install --notest perl-${PERL_VERSION}
-          fi
-
-          perlbrew use perl-${PERL_VERSION}
-
-          perl -v
-
-      - name: Install cpanminus
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          curl -L https://cpanmin.us | perl - App::cpanminus
-
-          CPANM=$(command -v cpanm)
-
-          echo "CPANM=$CPANM" >> "$GITHUB_ENV"
-
-          CPANM_HOME="$HOME/.cpanm"
-          echo "CPANM_HOME=$CPANM_HOME" >> "$GITHUB_ENV"
-
-          "$CPANM" --version
+          chmod +x scripts/setup-perl-environment.sh
+          scripts/setup-perl-environment.sh
 
       - name: Validate cpanminus
         shell: bash
@@ -175,7 +155,7 @@ jobs:
           if [ -d "$CPANM_HOME" ]; then
               echo "Directory exists"
 
-              find "$CPANM_HOME" | head -100
+              find "$CPANM_HOME" | head -100 || true
 
               du -sh "$CPANM_HOME"
           else
@@ -189,7 +169,16 @@ jobs:
           perlbrew use perl-${PERL_VERSION}
 
           cd runtime
+
           "$CPANM" $VERBOSE_FLAG --installdeps .
+
+          if [ $? -ne 0 ]; then
+            find "$HOME/.cpanm/work" -name build.log -exec sh -c '
+              echo "==== $1 ===="
+              cat "$1"
+            ' _ {} \;
+            exit 1
+          fi
 
       - name: Validate PDL
         shell: bash
@@ -200,6 +189,10 @@ jobs:
           perl -MPDL -e 1
 
           perl -MPDL -e 'print "$PDL::VERSION\n"'
+
+          perl -MPDL::GSL::CDF -e 1
+
+          perl -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION\n"'
 
       - name: Generate BUILDINFO.txt
         shell: bash
@@ -238,7 +231,9 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: cpanm-diagnostics-linux
-          path: /home/runner/.cpanm/build.log
+          path: |
+            /home/runner/.cpanm/build.log
+            /home/runner.cpanm/work/**/build.log
 
       - name: Create runtime package
         shell: bash
