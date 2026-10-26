@@ -287,6 +287,8 @@ jobs:
           cp runtime/cpanfile "${PACKAGE_DIR}/"
           cp runtime/cpanfile.snapshot "${PACKAGE_DIR}/"
 
+          cp -a runtime/local "${PACKAGE_DIR}/"
+
           mkdir -p "${PACKAGE_DIR}/perl"
 
           cp -a ~/perl5/perlbrew/perls/perl-${PERL_VERSION} \
