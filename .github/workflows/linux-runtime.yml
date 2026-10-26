@@ -209,12 +209,12 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          perl -MPDL -e 1
+          export PERL5LIB="${GITHUB_WORKSPACE}/runtime/local/lib/perl5:${GITHUB_WORKSPACE}/runtime/local/lib/perl5/x86_64-linux"
 
+          perl -MPDL -e 1
           perl -MPDL -e 'print "$PDL::VERSION\n"'
 
           perl -MPDL::GSL::CDF -e 1
-
           perl -MPDL::GSL::CDF -e 'print "$PDL::GSL::CDF::VERSION\n"'
 
       - name: Generate BUILDINFO.txt
