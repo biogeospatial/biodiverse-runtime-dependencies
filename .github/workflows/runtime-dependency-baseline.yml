@@ -70,12 +70,14 @@ jobs:
 
       - name: Check for baseline changes
         id: changes
-        shell: bash
         run: |
-          if git diff --quiet -- runtime/cpanfile.snapshot; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
+          echo "Status:"
+          git status --porcelain
+
+          if git status --porcelain runtime/cpanfile.snapshot | grep -q .; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Show baseline status
