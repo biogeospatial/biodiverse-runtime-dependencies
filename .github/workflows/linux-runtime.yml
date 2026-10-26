@@ -171,19 +171,34 @@ jobs:
           cd runtime
 
           carton install --deployment
+          CARTON_EXIT_CODE=$?
 
           echo "=== runtime contents ==="
           ls -lah
 
-          echo "=== local contents ==="
-          find local | head -100 || true
+          if [ -d local ]; then
+            echo "=== local structure ==="
+            find local -maxdepth 4 | sort | head -200 || true
 
-          if [ $? -ne 0 ]; then
+            echo "=== local size ==="
+            du -sh local
+
+            echo "=== Perl modules ==="
+            find local -name '*.pm' | head -50 || true
+
+            echo "=== Shared libraries ==="
+            find local \( -name '*.so' -o -name '*.bundle' -o -name '*.dll' \) | head -50 || true
+          else
+            echo "No local directory generated"
+          fi
+
+          if [ $CARTON_EXIT_CODE -ne 0 ]; then
             find "$HOME/.cpanm/work" -name build.log -exec sh -c '
               echo "==== $1 ===="
               cat "$1"
             ' _ {} \;
-            exit 1
+
+            exit $CARTON_EXIT_CODE
           fi
 
       - name: Validate PDL
