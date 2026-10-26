@@ -13,6 +13,47 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Placeholder
+      - name: Install PyYAML
         run: |
-          echo "Runtime Dependency Baseline"
+          python -m pip install pyyaml
+
+      - name: Generate dependency files
+        run: |
+          python scripts/generate_dependency_files.py
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yq
+
+      - name: Load runtime configuration
+        run: |
+          echo "PERL_VERSION=$(yq -r '.platforms.linux.perl_version' .github/runtime-dependency-config.yml)" >> "$GITHUB_ENV"
+
+      - name: Install Linux build prerequisites
+        run: |
+          sudo apt-get update
+
+          sudo apt-get install -y \
+            build-essential \
+            curl \
+            patch \
+            perl \
+            zlib1g-dev \
+            libgsl-dev
+
+      - name: Setup Perl Environment
+        run: |
+          chmod +x scripts/setup-perl-environment.sh
+          scripts/setup-perl-environment.sh
+
+      - name: Verify Tooling
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          perl -v
+
+          "$CPANM" --version
+
+          carton --version
