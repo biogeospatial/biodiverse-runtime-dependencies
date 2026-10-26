@@ -68,16 +68,34 @@ jobs:
 
           carton install
 
+      - name: Verify snapshot exists
+        shell: bash
+        run: |
+          ls -lah runtime
+
+          if [ -f runtime/cpanfile.snapshot ]; then
+            echo "Snapshot exists"
+          else
+            echo "Snapshot missing"
+            exit 1
+          fi
+
       - name: Check for baseline changes
         id: changes
+        shell: bash
         run: |
-          echo "Status:"
+          echo "=== git status ==="
           git status --porcelain
 
-          if git status --porcelain runtime/cpanfile.snapshot | grep -q .; then
+          echo "=== snapshot status ==="
+          git status --porcelain runtime/cpanfile.snapshot
+
+          if [ -n "$(git status --porcelain runtime/cpanfile.snapshot)" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Detected changes to runtime/cpanfile.snapshot"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No changes detected"
           fi
 
       - name: Show baseline status
