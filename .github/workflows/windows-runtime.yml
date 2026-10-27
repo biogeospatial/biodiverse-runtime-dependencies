@@ -201,27 +201,49 @@ jobs:
 
           & $cpanmPath --version
 
+
       - name: Install Carton
         shell: pwsh
         run: |
+          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
+
+          Write-Host "=== Portable Perl ==="
+          Write-Host "PERL_ROOT=$env:PERL_ROOT"
+          Write-Host "PERL_EXE=$env:PERL_EXE"
+          Write-Host "CPANM=$env:CPANM"
+
+          Write-Host "=== cpanm on PATH ==="
+          Get-Command cpanm -ErrorAction SilentlyContinue
+
           & $env:CPANM Carton
 
-          Write-Host "=== carton on PATH ==="
+          Write-Host "=== Searching portable perl/bin ==="
 
-          Get-Command carton -ErrorAction SilentlyContinue
-
-          Write-Host "=== searching installation ==="
-
-          Get-ChildItem `
-            -Path $env:PERL_ROOT `
-            -Recurse `
+          $cartonPath = Get-ChildItem `
+            "$env:PERL_ROOT\perl\bin" `
+            -Filter "carton*" `
             -ErrorAction SilentlyContinue |
-              Where-Object {
-                $_.Name -like 'carton*'
-              } |
-              Select-Object FullName
+              Select-Object -First 1 -ExpandProperty FullName
 
-          throw "Locate Carton executable"
+          if (-not $cartonPath) {
+              Write-Host "=== Carton not found in portable perl/bin, checking PATH ==="
+
+              $cartonCommand = Get-Command carton -ErrorAction SilentlyContinue
+
+              if ($cartonCommand) {
+                  $cartonPath = $cartonCommand.Source
+              }
+          }
+
+          if (-not $cartonPath) {
+              throw "Unable to locate Carton executable"
+          }
+
+          Write-Host "Carton executable: $cartonPath"
+
+          "CARTON=$cartonPath" >> $env:GITHUB_ENV
+
+          & $cartonPath --version
 
       - name: Validate cpanminus
         shell: pwsh
