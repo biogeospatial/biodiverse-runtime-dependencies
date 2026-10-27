@@ -180,7 +180,6 @@ jobs:
       - name: Install cpanminus
         shell: pwsh
         run: |
-
           Invoke-WebRequest `
             -Uri "https://cpanmin.us" `
             -OutFile cpanm-installer
@@ -198,12 +197,9 @@ jobs:
 
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          
-          Write-Host "CPANM=$env:CPANM"
-          & $env:CPANM --version
+          Write-Host "CPANM PATH=$cpanmPath"
 
-          Write-Host "CARTON=$env:CARTON"
-          & $env:CARTON --version
+          & $cpanmPath --version
 
       - name: Install Carton
         shell: pwsh
