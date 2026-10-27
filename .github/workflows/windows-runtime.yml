@@ -206,25 +206,22 @@ jobs:
         run: |
           & $env:CPANM Carton
 
-          Write-Host "=== perl/bin contents ==="
-          Get-ChildItem "$env:PERL_ROOT\perl\bin" |
-            Select-Object Name
+          Write-Host "=== carton on PATH ==="
 
-          $cartonPath = Get-ChildItem `
-            "$env:PERL_ROOT\perl\bin" `
-            -Filter "carton*" `
+          Get-Command carton -ErrorAction SilentlyContinue
+
+          Write-Host "=== searching installation ==="
+
+          Get-ChildItem `
+            -Path $env:PERL_ROOT `
+            -Recurse `
             -ErrorAction SilentlyContinue |
-              Select-Object -First 1 -ExpandProperty FullName
+              Where-Object {
+                $_.Name -like 'carton*'
+              } |
+              Select-Object FullName
 
-          if (-not $cartonPath) {
-              throw "Unable to locate Carton executable"
-          }
-
-          Write-Host "Carton executable: $cartonPath"
-
-          "CARTON=$cartonPath" >> $env:GITHUB_ENV
-
-          & $cartonPath --version
+          throw "Locate Carton executable"
 
       - name: Validate cpanminus
         shell: pwsh
