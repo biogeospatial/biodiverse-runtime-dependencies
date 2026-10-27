@@ -146,18 +146,6 @@ jobs:
               echo "Directory missing"
           fi
 
-      - name: Install Net::SSLeay
-        shell: bash
-        run: |
-          source ~/perl5/perlbrew/etc/bashrc
-          perlbrew use perl-${PERL_VERSION}
-
-          echo "Using OpenSSL from: $(brew --prefix ${OPENSSL_FORMULA})"
-          OPENSSL_PREFIX="$(brew --prefix ${OPENSSL_FORMULA})" \
-            "$CPANM" $VERBOSE_FLAG Net::SSLeay
-
-          perl -MNet::SSLeay -e 'print $Net::SSLeay::VERSION,"\n"'
-
       - name: Install Perl Dependencies
         shell: bash
         run: |
@@ -168,7 +156,8 @@ jobs:
 
           cd runtime
 
-          carton install --deployment 2>&1 | tee ../build/carton-install.log
+          OPENSSL_PREFIX="$(brew --prefix ${OPENSSL_FORMULA})" \
+            carton install --deployment 2>&1 | tee ../build/carton-install.log
           CARTON_EXIT_CODE=${PIPESTATUS[0]}
 
           echo "=== runtime contents ==="
@@ -266,7 +255,7 @@ jobs:
 
       - name: Upload dependency diagnostics
         if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-diagnostics-macos
           path: |
