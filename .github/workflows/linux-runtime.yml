@@ -268,7 +268,7 @@ jobs:
 
       - name: Upload dependency diagnostics
         if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dependency-diagnostics-linux
           path: |
