@@ -225,11 +225,24 @@ jobs:
         run: |
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          Write-Host "CPANM=$env:CPANM"
+          Write-Host "PERL_ROOT=[$env:PERL_ROOT]"
+          Write-Host "CPANM=[$env:CPANM]"
+
+          Write-Host "=== perl/bin contents ==="
+          Get-ChildItem "$env:PERL_ROOT\perl\bin" |
+            Select-Object Name
+
+          if ([string]::IsNullOrWhiteSpace($env:CPANM)) {
+            throw "CPANM environment variable is empty"
+          }
+
+          if (-not (Test-Path $env:CPANM)) {
+            throw "CPANM executable not found at $env:CPANM"
+          }
 
           & $env:CPANM --version
 
-          Write-Host "CPANM=$env:CPANM"
+          Write-Host "=== CPANM validation successful ==="
 
       - name: Install Perl Dependencies
         shell: pwsh
