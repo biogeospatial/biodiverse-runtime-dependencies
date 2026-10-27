@@ -221,8 +221,7 @@ jobs:
           source ~/perl5/perlbrew/etc/bashrc
           perlbrew use perl-${PERL_VERSION}
 
-          export PERL5LIB="${GITHUB_WORKSPACE}/runtime/local/lib/perl5:${GITHUB_WORKSPACE}/runtime/lo
-cal/lib/perl5/x86_64-linux"
+          export PERL5LIB="${GITHUB_WORKSPACE}/runtime/local/lib/perl5:${GITHUB_WORKSPACE}/runtime/local/lib/perl5/x86_64-linux"
 
           CPANM_VERSION=$(perl -MApp::cpanminus -e 'print $App::cpanminus::VERSION')
           PDL_VERSION=$(perl -MPDL -e 'print $PDL::VERSION')
