@@ -206,11 +206,21 @@ jobs:
         run: |
           & $env:CPANM Carton
 
-          $cartonPath = Join-Path $env:PERL_ROOT "perl\bin\carton.bat"
+          Write-Host "=== perl/bin contents ==="
+          Get-ChildItem "$env:PERL_ROOT\perl\bin" |
+            Select-Object Name
 
-          if (-not (Test-Path $cartonPath)) {
-              throw "Unable to locate Carton at $cartonPath"
+          $cartonPath = Get-ChildItem `
+            "$env:PERL_ROOT\perl\bin" `
+            -Filter "carton*" `
+            -ErrorAction SilentlyContinue |
+              Select-Object -First 1 -ExpandProperty FullName
+
+          if (-not $cartonPath) {
+              throw "Unable to locate Carton executable"
           }
+
+          Write-Host "Carton executable: $cartonPath"
 
           "CARTON=$cartonPath" >> $env:GITHUB_ENV
 
@@ -400,7 +410,6 @@ jobs:
             build/carton-install.log
             runtime/cpanfile
             runtime/cpanfile.snapshot
-            C:\Users\runneradmin\.cpanm\build.log
 
       - name: Create runtime package
         shell: pwsh
