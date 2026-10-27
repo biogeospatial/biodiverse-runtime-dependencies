@@ -204,20 +204,20 @@ jobs:
       - name: Install Carton
         shell: pwsh
         run: |
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PATH"
-
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
           & $env:CPANM Carton
 
-          Write-Host "=== perl/bin contents ==="
-          Get-ChildItem "$env:PERL_ROOT\perl\bin"
+          $cartonPath = Join-Path $env:PERL_ROOT "perl\site\bin\carton.bat"
 
-          Write-Host "=== site/bin contents ==="
-          Get-ChildItem "$env:PERL_ROOT\perl\site\bin" -ErrorAction SilentlyContinue
+          if (-not (Test-Path $cartonPath)) {
+              throw "Unable to locate Carton at $cartonPath"
+          }
 
-          Get-Command carton -All -ErrorAction SilentlyContinue
+          Write-Host "Carton executable: $cartonPath"
 
-          throw "Locate Carton"
+          "CARTON=$cartonPath" >> $env:GITHUB_ENV
 
+          & $cartonPath --version
 
       - name: Validate cpanminus
         shell: pwsh
