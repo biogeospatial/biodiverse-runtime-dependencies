@@ -106,7 +106,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/perl5/perlbrew
-          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml') }}
+          key: perlbrew-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile.snapshot') }}
 
       - name: Configure verbosity
         shell: bash
@@ -230,7 +230,7 @@ cal/lib/perl5/x86_64-linux"
           CARTON_VERSION=$(carton --version)
 
           if [ -f runtime/cpanfile.snapshot ]; then
-            SNAPSHOT_SHA=$(sha256sum runtime/cpanfile.snapshot | cut -d' ' -f1)
+            SNAPSHOT_SHA=$(shasum -a 256 runtime/cpanfile.snapshot | awk '{print $1}')
           else
             SNAPSHOT_SHA="Not Present"
           fi
@@ -269,13 +269,13 @@ cal/lib/perl5/x86_64-linux"
         if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-diagnostics-linux
+          name: dependency-diagnostics-macos
           path: |
             build/carton-install.log
             runtime/cpanfile
             runtime/cpanfile.snapshot
-            /home/runner/.cpanm/build.log
-            /home/runner/.cpanm/work/**/build.log
+            /Users/runner/.cpanm/build.log
+            /Users/runner/.cpanm/work/**/build.log
 
       - name: Create runtime package
         shell: bash
