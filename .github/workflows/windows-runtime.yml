@@ -288,7 +288,7 @@ jobs:
           }
 
           if ($cartonExitCode -ne 0) {
-              Get-ChildItem "$HOME\.cpanm\work" `
+              Get-ChildItem "$env:PERL_ROOT\data\.cpanm\work" `
                 -Recurse `
                 -Filter build.log `
                 -ErrorAction SilentlyContinue |
