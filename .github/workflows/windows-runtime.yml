@@ -287,21 +287,26 @@ jobs:
               Write-Host "No local directory generated"
           }
 
-          Get-ChildItem "$HOME\.cpanm\work" `
-            -Recurse `
-            -Filter build.log `
-            -ErrorAction SilentlyContinue |
-              ForEach-Object {
-                  Write-Host "==== $($_.FullName) ===="
-                  Write-Host "==== LAST 200 LINES ===="
-                  Get-Content $_.FullName -Tail 200
-              }
+          if ($cartonExitCode -ne 0) {
+              Get-ChildItem "$HOME\.cpanm\work" `
+                -Recurse `
+                -Filter build.log `
+                -ErrorAction SilentlyContinue |
+                  ForEach-Object {
+                      Write-Host "==== $($_.FullName) ===="
+
+                      if ("${{ inputs.verbose_logging }}" -eq "true") {
+                          Get-Content $_.FullName
+                      }
+                      else {
+                          Write-Host "==== LAST 200 LINES ===="
+                          Get-Content $_.FullName -Tail 200
+                      }
+                  }
 
               Pop-Location
               exit $cartonExitCode
           }
-
-          Pop-Location
 
       - name: Validate PDL
         shell: pwsh
