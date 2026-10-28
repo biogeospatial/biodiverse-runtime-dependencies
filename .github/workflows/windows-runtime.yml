@@ -313,8 +313,6 @@ jobs:
               exit $cartonExitCode
           }
 
-          }
-
       - name: Validate PDL
         shell: pwsh
         run: |
