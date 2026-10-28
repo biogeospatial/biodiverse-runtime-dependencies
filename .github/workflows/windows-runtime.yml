@@ -246,7 +246,7 @@ jobs:
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
@@ -287,15 +287,15 @@ jobs:
               Write-Host "No local directory generated"
           }
 
-          if ($cartonExitCode -ne 0) {
-              Get-ChildItem "$HOME\.cpanm\work" `
-                -Recurse `
-                -Filter build.log `
-                -ErrorAction SilentlyContinue |
-                  ForEach-Object {
-                      Write-Host "==== $($_.FullName) ===="
-                      Get-Content $_.FullName
-                  }
+          Get-ChildItem "$HOME\.cpanm\work" `
+            -Recurse `
+            -Filter build.log `
+            -ErrorAction SilentlyContinue |
+              ForEach-Object {
+                  Write-Host "==== $($_.FullName) ===="
+                  Write-Host "==== LAST 200 LINES ===="
+                  Get-Content $_.FullName -Tail 200
+              }
 
               Pop-Location
               exit $cartonExitCode
@@ -306,7 +306,7 @@ jobs:
       - name: Validate PDL
         shell: pwsh
         run: |
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
           Write-Host "=== Carton library structure ==="
 
@@ -339,7 +339,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
           $perlVersion = (
             & $env:PERL_EXE -e 'print $^V'
