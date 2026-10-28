@@ -309,11 +309,11 @@ jobs:
                   }
               }
 
-              New-Item -ItemType Directory -Force build\cpanm-work | Out-Null
+              New-Item -ItemType Directory -Force ..\build\cpanm-work | Out-Null
 
               Copy-Item `
                 "$env:PERL_ROOT\data\.cpanm\work" `
-                build\cpanm-work `
+                ..\build\cpanm-work `
                 -Recurse `
                 -Force
 
