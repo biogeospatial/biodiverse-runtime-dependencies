@@ -309,6 +309,14 @@ jobs:
                   }
               }
 
+              New-Item -ItemType Directory -Force build\cpanm-work | Out-Null
+
+              Copy-Item `
+                "$env:PERL_ROOT\data\.cpanm\work" `
+                build\cpanm-work `
+                -Recurse `
+                -Force
+
               Pop-Location
               exit $cartonExitCode
           }
@@ -411,6 +419,7 @@ jobs:
           name: dependency-diagnostics-windows
           path: |
             build/carton-install.log
+            build/cpanm-work
             runtime/cpanfile
             runtime/cpanfile.snapshot
 
