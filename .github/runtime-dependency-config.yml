@@ -63,6 +63,8 @@ perl_dependencies:
   - Alien::geos::af
   - Alien::gdal
   - Geo::GDAL::FFI
+  - Mojolicious
+  - Archive::Zip
 
 platforms:
 
