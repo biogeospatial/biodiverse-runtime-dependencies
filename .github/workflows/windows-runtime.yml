@@ -248,6 +248,11 @@ jobs:
         run: |
           $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
+          New-Item -ItemType Directory -Force C:\c | Out-Null
+          $env:PERL_CPANM_HOME = 'C:\c'
+
+          Write-Host "PERL_CPANM_HOME=$env:PERL_CPANM_HOME"
+
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
 
@@ -259,6 +264,7 @@ jobs:
 
           cmd /c """$env:CARTON"" install --deployment > ..\build\carton-install.log 2>&1"
           $cartonExitCode = $LASTEXITCODE
+
 
           Write-Host "=== runtime contents ==="
           Get-ChildItem
