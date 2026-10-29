@@ -30,6 +30,10 @@ on:
         default: false
         type: boolean
 
+      runner_image:
+        required: true
+        type: string
+
     outputs:
       macos_filename:
         value: ${{ jobs.runtime.outputs.macos_filename }}

@@ -32,6 +32,10 @@ on:
         default: false
         type: boolean
 
+      runner_image:
+        required: true
+        type: string
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
