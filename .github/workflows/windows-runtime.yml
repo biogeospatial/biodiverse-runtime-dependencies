@@ -98,12 +98,15 @@ jobs:
         shell: pwsh
         run: |
           choco install yq -y
+          $yqPath = (Get-Command yq).Source
+          "YQ_PATH=$yqPath" >> $env:GITHUB_ENV
+          refreshenv
 
       - name: Load runtime configuration
         shell: pwsh
         run: |
-          $perlVersion = yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml
-          $perlPortableUrl = yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml
+          $perlVersion = & $env:YQ_PATH -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml
+          $perlPortableUrl = & $env:YQ_PATH -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml
 
           "PERL_VERSION=$perlVersion" >> $env:GITHUB_ENV
           "PERL_PORTABLE_URL=$perlPortableUrl" >> $env:GITHUB_ENV
