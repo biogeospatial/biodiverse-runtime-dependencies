@@ -73,7 +73,7 @@ jobs:
           echo "macos_runner_image=$(yq -r '.platforms.macos.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
           echo "windows_runner_image=$(yq -r '.platforms.windows.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
 
-  test-runner-image:
+  runner-configuration:
     needs: prepare-build
 
     strategy:
