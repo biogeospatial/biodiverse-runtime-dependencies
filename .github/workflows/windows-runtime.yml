@@ -70,7 +70,7 @@ permissions:
 
 jobs:
   runtime:
-    runs-on: windows-2025
+    runs-on: ${{ inputs.runner_image }}
 
     outputs:
       windows_filename: ${{ steps.metadata.outputs.filename }}
