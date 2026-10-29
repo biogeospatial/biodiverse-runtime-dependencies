@@ -40,9 +40,9 @@ jobs:
 
     outputs:
       cache_generation: ${{ steps.cache.outputs.generation }}
-      linux_runner_image: ${{ steps.config.outputs.linux_runner_image }}
-      macos_runner_image: ${{ steps.config.outputs.macos_runner_image }}
-      windows_runner_image: ${{ steps.config.outputs.windows_runner_image }}
+      linux_runner_image: ${{ steps.cache.outputs.linux_runner_image }}
+      macos_runner_image: ${{ steps.cache.outputs.macos_runner_image }}
+      windows_runner_image: ${{ steps.cache.outputs.windows_runner_image }}
 
     steps:
       - uses: actions/checkout@v7
@@ -79,7 +79,7 @@ jobs:
     strategy:
       matrix:
         runner:
-          - ${{ needs.prepare-build.outputs.windows_runner_image }}
+          - ${{ needs.prepare-build.outputs.linux_runner_image }}
 
     runs-on: ${{ matrix.runner }}
 
