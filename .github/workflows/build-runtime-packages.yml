@@ -100,6 +100,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.windows_runner_image }}
 
   macos:
     needs: prepare-build
@@ -113,6 +114,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.macos_runner_image }}
 
   linux:
     needs: prepare-build
@@ -126,6 +128,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.linux_runner_image }}
 
   persist-cache-generation:
     if: ${{ inputs.reset_cache }}
