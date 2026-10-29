@@ -64,7 +64,7 @@ permissions:
 
 jobs:
   runtime:
-    runs-on: macos-latest
+    runs-on: macos-26
 
     outputs:
       macos_filename: ${{ steps.metadata.outputs.filename }}
