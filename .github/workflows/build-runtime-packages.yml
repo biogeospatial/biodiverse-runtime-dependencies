@@ -73,6 +73,21 @@ jobs:
           echo "macos_runner_image=$(yq -r '.platforms.macos.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
           echo "windows_runner_image=$(yq -r '.platforms.windows.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
 
+  test-runner-image:
+    needs: prepare-build
+
+    strategy:
+      matrix:
+        runner:
+          - ${{ needs.prepare-build.outputs.windows_runner_image }}
+
+    runs-on: ${{ matrix.runner }}
+
+    steps:
+      - name: Verify dynamic runner
+        run: |
+          echo "Runner: ${{ matrix.runner }}"
+
   windows:
     needs: prepare-build
     if: ${{ github.event_name != 'workflow_dispatch' ||
