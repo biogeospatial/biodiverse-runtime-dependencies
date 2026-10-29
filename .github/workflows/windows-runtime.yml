@@ -262,8 +262,24 @@ jobs:
 
           Push-Location runtime
 
-          cmd /c """$env:CARTON"" install --deployment > ..\build\carton-install.log 2>&1"
-          $cartonExitCode = $LASTEXITCODE
+          $logFile = "..\build\carton-install.log"
+
+          $process = Start-Process `
+            -FilePath "cmd.exe" `
+            -ArgumentList "/c `"$env:CARTON install --deployment > $logFile 2>&1`"" `
+            -PassThru
+
+          while (-not $process.HasExited) {
+              Start-Sleep -Seconds 30
+
+              Write-Host "=== Carton still running ($(Get-Date -Format T)) ==="
+
+              if (Test-Path $logFile) {
+                  Get-Content $logFile -Tail 10
+              }
+          }
+
+          $cartonExitCode = $process.ExitCode
 
 
           Write-Host "=== runtime contents ==="
