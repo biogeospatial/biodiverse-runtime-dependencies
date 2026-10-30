@@ -150,6 +150,18 @@ jobs:
               echo "Directory missing"
           fi
 
+      - name: Install Net::SSLeay
+        shell: bash
+        run: |
+          source ~/perl5/perlbrew/etc/bashrc
+          perlbrew use perl-${PERL_VERSION}
+
+          echo "Using OpenSSL from: $(brew --prefix ${OPENSSL_FORMULA})"
+          OPENSSL_PREFIX="$(brew --prefix ${OPENSSL_FORMULA})" \
+            "$CPANM" $VERBOSE_FLAG Net::SSLeay
+
+          perl -MNet::SSLeay -e 'print $Net::SSLeay::VERSION,"\n"'
+
       - name: Install Perl Dependencies
         shell: bash
         run: |
@@ -190,6 +202,14 @@ jobs:
             ' _ {} \;
 
             exit $CARTON_EXIT_CODE
+          fi
+
+          if [ $? -ne 0 ]; then
+            find "$HOME/.cpanm/work" -name build.log -exec sh -c '
+              echo "==== $1 ===="
+              cat "$1"
+            ' _ {} \;
+            exit 1
           fi
 
       - name: Validate PDL
