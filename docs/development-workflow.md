@@ -128,6 +128,47 @@ All dependency definition changes should be made in:
 
 which is the authoritative source for runtime dependency intent.
 
+##### Updating Runner Images
+
+GitHub Actions runner images form part of the runtime dependency baseline and are managed through:
+
+```text
+.github/runtime-dependency-config.yml
+```
+
+Current runner image versions are defined per platform:
+
+```yaml
+platforms:
+  linux:
+    runner_image: ubuntu-24.04
+
+  macos:
+    runner_image: macos-26
+
+  windows:
+    runner_image: windows-2025
+```
+
+Runner image upgrades must follow the same process as other runtime dependency changes:
+
+```text
+Issue
+    ↓
+Feature Branch
+    ↓
+Update runtime-dependency-config.yml
+    ↓
+Validate Runtime Builds
+    ↓
+Pull Request Review
+    ↓
+Merge Into Development
+```
+
+Runner image updates require validation on all supported platforms before promotion to production releases.
+
+Automatic use of `*-latest` runner aliases is avoided to ensure that build environment changes remain explicit, reviewable and reproducible.
 
 ### 3. Validate Changes
 
