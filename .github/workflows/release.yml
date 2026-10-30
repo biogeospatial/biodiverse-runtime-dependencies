@@ -33,16 +33,20 @@ prepare-build:
         echo "windows_runner_image=$(yq -r '.platforms.windows.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
 
   build-windows:
+    needs: prepare-build
+
     uses: ./.github/workflows/windows-runtime.yml
     with:
       build_type: release
 
   build-macos:
+    needs: prepare-build
     uses: ./.github/workflows/macos-runtime.yml
     with:
       build_type: release
 
   build-linux:
+    needs: prepare-build
     uses: ./.github/workflows/linux-runtime.yml
     with:
       build_type: release
