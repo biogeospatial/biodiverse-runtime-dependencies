@@ -1,0 +1,1071 @@
+# carton snapshot format: version 1.0
+DISTRIBUTIONS
+  Alien-Build-2.88
+    pathname: P/PL/PLICEASE/Alien-Build-2.88.tar.gz
+    provides:
+      Alien::Base 2.88
+      Alien::Base::PkgConfig 2.88
+      Alien::Base::Wrapper 2.88
+      Alien::Build 2.88
+      Alien::Build::CommandSequence 2.88
+      Alien::Build::Helper 2.88
+      Alien::Build::Interpolate 2.88
+      Alien::Build::Interpolate::Default 2.88
+      Alien::Build::Interpolate::Helper 2.88
+      Alien::Build::Log 2.88
+      Alien::Build::Log::Abbreviate 2.88
+      Alien::Build::Log::Default 2.88
+      Alien::Build::MM 2.88
+      Alien::Build::Meta 2.88
+      Alien::Build::Plugin 2.88
+      Alien::Build::Plugin::Build::Autoconf 2.88
+      Alien::Build::Plugin::Build::CMake 2.88
+      Alien::Build::Plugin::Build::Copy 2.88
+      Alien::Build::Plugin::Build::MSYS 2.88
+      Alien::Build::Plugin::Build::Make 2.88
+      Alien::Build::Plugin::Build::SearchDep 2.88
+      Alien::Build::Plugin::Core::CleanInstall 2.88
+      Alien::Build::Plugin::Core::Download 2.88
+      Alien::Build::Plugin::Core::FFI 2.88
+      Alien::Build::Plugin::Core::Gather 2.88
+      Alien::Build::Plugin::Core::Legacy 2.88
+      Alien::Build::Plugin::Core::Override 2.88
+      Alien::Build::Plugin::Core::Setup 2.88
+      Alien::Build::Plugin::Core::Tail 2.88
+      Alien::Build::Plugin::Decode::DirListing 2.88
+      Alien::Build::Plugin::Decode::DirListingFtpcopy 2.88
+      Alien::Build::Plugin::Decode::HTML 2.88
+      Alien::Build::Plugin::Decode::Mojo 2.88
+      Alien::Build::Plugin::Digest::Negotiate 2.88
+      Alien::Build::Plugin::Digest::SHA 2.88
+      Alien::Build::Plugin::Digest::SHAPP 2.88
+      Alien::Build::Plugin::Download::Negotiate 2.88
+      Alien::Build::Plugin::Extract::ArchiveTar 2.88
+      Alien::Build::Plugin::Extract::ArchiveZip 2.88
+      Alien::Build::Plugin::Extract::CommandLine 2.88
+      Alien::Build::Plugin::Extract::Directory 2.88
+      Alien::Build::Plugin::Extract::File 2.88
+      Alien::Build::Plugin::Extract::Negotiate 2.88
+      Alien::Build::Plugin::Fetch::CurlCommand 2.88
+      Alien::Build::Plugin::Fetch::HTTPTiny 2.88
+      Alien::Build::Plugin::Fetch::LWP 2.88
+      Alien::Build::Plugin::Fetch::Local 2.88
+      Alien::Build::Plugin::Fetch::LocalDir 2.88
+      Alien::Build::Plugin::Fetch::NetFTP 2.88
+      Alien::Build::Plugin::Fetch::Wget 2.88
+      Alien::Build::Plugin::Gather::IsolateDynamic 2.88
+      Alien::Build::Plugin::PkgConfig::CommandLine 2.88
+      Alien::Build::Plugin::PkgConfig::LibPkgConf 2.88
+      Alien::Build::Plugin::PkgConfig::MakeStatic 2.88
+      Alien::Build::Plugin::PkgConfig::Negotiate 2.88
+      Alien::Build::Plugin::PkgConfig::PP 2.88
+      Alien::Build::Plugin::Prefer::BadVersion 2.88
+      Alien::Build::Plugin::Prefer::GoodVersion 2.88
+      Alien::Build::Plugin::Prefer::SortVersions 2.88
+      Alien::Build::Plugin::Probe::CBuilder 2.88
+      Alien::Build::Plugin::Probe::CommandLine 2.88
+      Alien::Build::Plugin::Probe::Vcpkg 2.88
+      Alien::Build::Plugin::Test::Mock 2.88
+      Alien::Build::PluginMeta 2.88
+      Alien::Build::Temp 2.88
+      Alien::Build::TempDir 2.88
+      Alien::Build::Util 2.88
+      Alien::Build::Version::Basic 2.88
+      Alien::Build::rc 2.88
+      Alien::Role 2.88
+      Alien::Util 2.88
+      Test::Alien 2.88
+      Test::Alien::Build 2.88
+      Test::Alien::CanCompile 2.88
+      Test::Alien::CanPlatypus 2.88
+      Test::Alien::Diag 2.88
+      Test::Alien::Run 2.88
+      Test::Alien::Synthetic 2.88
+      alienfile 2.88
+    requirements:
+      Capture::Tiny 0.17
+      Digest::SHA 0
+      ExtUtils::CBuilder 0
+      ExtUtils::MakeMaker 6.64
+      ExtUtils::ParseXS 3.30
+      FFI::CheckLib 0.11
+      File::Which 1.10
+      File::chdir 0
+      JSON::PP 0
+      List::Util 1.33
+      Path::Tiny 0.130
+      Test2::API 1.302096
+      Text::ParseWords 3.26
+      parent 0
+      perl 5.008004
+  Alien-Build-Git-0.10
+    pathname: P/PL/PLICEASE/Alien-Build-Git-0.10.tar.gz
+    provides:
+      Alien::Build::Git 0.10
+      Alien::Build::Plugin::Download::Git 0.10
+      Alien::Build::Plugin::Fetch::Git 0.10
+      Alien::git 0.10
+    requirements:
+      Alien::Build 0.65
+      Alien::Build::Plugin 0
+      Alien::Build::Plugin::Extract::Directory 0
+      Alien::Build::Plugin::Prefer::SortVersions 0
+      Alien::Util 0
+      Capture::Tiny 0
+      ExtUtils::MakeMaker 0
+      File::Temp 0
+      File::Which 0
+      File::chdir 0
+      Path::Tiny 0
+      PerlX::Maybe 0.003
+      URI 0
+      URI::file 0
+      URI::git 0
+      perl 5.008001
+  Alien-Build-Plugin-Cleanse-BuildDir-0.06
+    pathname: S/SL/SLAFFAN/Alien-Build-Plugin-Cleanse-BuildDir-0.06.tar.gz
+    provides:
+      Alien::Build::Plugin::Cleanse::BuildDir 0.06
+    requirements:
+      Alien::Build 0.62
+      Cwd 0
+      ExtUtils::MakeMaker 0
+      File::Path 0
+      Path::Tiny 0
+      perl 5.008001
+  Alien-Build-Plugin-Decode-SourceForge-0.02
+    pathname: P/PL/PLICEASE/Alien-Build-Plugin-Decode-SourceForge-0.02.tar.gz
+    provides:
+      Alien::Build::Plugin::Decode::SourceForge 0.02
+    requirements:
+      Alien::Build 1.74
+      Alien::Build::Plugin 0
+      Alien::Build::Plugin::Decode::Mojo 1.74
+      ExtUtils::MakeMaker 0
+      URI 0
+      perl 5.008001
+  Alien-Build-Plugin-PkgConfig-PPWrapper-0.03
+    pathname: S/SL/SLAFFAN/Alien-Build-Plugin-PkgConfig-PPWrapper-0.03.tar.gz
+    provides:
+      Alien::Build::Plugin::PkgConfig::PPWrapper 0.03
+    requirements:
+      Alien::Build 0.62
+      Cwd 0
+      ExtUtils::MakeMaker 0
+      File::Which 0
+      Path::Tiny 0
+      perl 5.008001
+  Alien-MSYS-0.17
+    pathname: P/PL/PLICEASE/Alien-MSYS-0.17.tar.gz
+    provides:
+      Alien::MSYS 0.17
+    requirements:
+      Alien::Base 0.038
+      Alien::Build 0.99
+      Alien::Build::MM 0.32
+      Alien::Build::Plugin::Decode::SourceForge 0
+      Env 0
+      ExtUtils::MakeMaker 7.38
+      File::Glob 0
+      Path::Tiny 0
+      perl 5.008001
+  Alien-cmake3-0.10
+    pathname: P/PL/PLICEASE/Alien-cmake3-0.10.tar.gz
+    provides:
+      Alien::cmake3 0.10
+    requirements:
+      Alien::Base 0.92
+      Alien::Build 1.19
+      Alien::Build::MM 0.32
+      Capture::Tiny 0
+      ExtUtils::MakeMaker 6.52
+      File::Which 0
+      Path::Tiny 0
+      perl 5.008001
+  Alien-gdal-1.44
+    pathname: S/SL/SLAFFAN/Alien-gdal-1.44.tar.gz
+    provides:
+      Alien::gdal 1.44
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.25
+      Alien::Build::MM 1.74
+      Alien::Build::Plugin::Build::CMake 0.99
+      Alien::Build::Plugin::Build::SearchDep 0.53
+      Alien::Build::Plugin::Cleanse::BuildDir 0
+      Alien::Build::Plugin::PkgConfig::PPWrapper 0
+      Alien::cmake3 0.02
+      Alien::geos::af 1.010
+      Alien::libtiff 0
+      Alien::patch 0
+      Alien::patchelf 0
+      Alien::proj 1.24
+      Alien::sqlite 1.02
+      Archive::Tar 0
+      Capture::Tiny 0
+      Config 0
+      Env::ShellWords 0.01
+      ExtUtils::MakeMaker 6.52
+      FFI::CheckLib 0.23
+      File::Find::Rule 0
+      HTTP::Tiny 0.044
+      IO::Socket::SSL 1.56
+      IO::Zlib 0
+      List::Util 0
+      Mojo::DOM58 1.00
+      Mozilla::CA 0
+      Net::SSLeay 1.49
+      Path::Tiny 0
+      PkgConfig 0.19026
+      Sort::Versions 0
+      URI 0
+      URI::Escape 0
+      parent 0
+  Alien-geos-af-1.012
+    pathname: S/SL/SLAFFAN/Alien-geos-af-1.012.tar.gz
+    provides:
+      Alien::geos::af 1.012
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.48
+      Alien::Build::MM 1.74
+      Alien::Build::Plugin::Build::CMake 0.99
+      Alien::Build::Plugin::Cleanse::BuildDir 0
+      Alien::Build::Plugin::PkgConfig::Negotiate 1.53
+      Alien::cmake3 0.05
+      Archive::Tar 0
+      Capture::Tiny 0
+      Config 0
+      ExtUtils::MakeMaker 6.52
+      FFI::CheckLib 0.23
+      File::Copy 0
+      File::Find::Rule 0
+      HTTP::Tiny 0.044
+      IO::Compress::Bzip2 0
+      IO::Socket::SSL 1.56
+      IO::Uncompress::Bunzip2 0
+      Mojo::DOM58 1.00
+      Mozilla::CA 0
+      Net::SSLeay 1.49
+      Path::Tiny 0
+      PkgConfig 0.19026
+      Sort::Versions 0
+      URI 0
+      URI::Escape 0
+  Alien-libtiff-1.02
+    pathname: S/SL/SLAFFAN/Alien-libtiff-1.02.tar.gz
+    provides:
+      Alien::libtiff 1.02
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.25
+      Alien::Build::MM 1.74
+      Alien::Build::Plugin::Cleanse::BuildDir 0
+      Archive::Tar 0
+      Config 0
+      ExtUtils::MakeMaker 6.52
+      FFI::CheckLib 0.23
+      File::Find::Rule 0
+      HTTP::Tiny 0.044
+      IO::Socket::SSL 1.56
+      IO::Zlib 0
+      Mojo::DOM58 1.00
+      Mozilla::CA 0
+      Net::SSLeay 1.49
+      PkgConfig 0.19026
+      Sort::Versions 0
+      URI 0
+      URI::Escape 0
+  Alien-patch-0.15
+    pathname: P/PL/PLICEASE/Alien-patch-0.15.tar.gz
+    provides:
+      Alien::patch 0.15
+    requirements:
+      Alien::Base 0.038
+      Alien::Build 0.32
+      Alien::Build::MM 0.32
+      Capture::Tiny 0
+      ExtUtils::MakeMaker 6.52
+      File::chdir 0
+      perl 5.006
+  Alien-patchelf-0.08
+    pathname: S/SL/SLAFFAN/Alien-patchelf-0.08.tar.gz
+    provides:
+      Alien::patchelf 0.08
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.25
+      Alien::Build::MM 1.41
+      Alien::Build::Plugin::Download::Git 0.01
+      Alien::Build::Plugin::Extract::Directory 0.65
+      Alien::Build::Plugin::Fetch::Git 0.01
+      Alien::Build::Plugin::Prefer::SortVersions 0.65
+      Capture::Tiny 0
+      ExtUtils::CppGuess 0.25
+      ExtUtils::MakeMaker 6.52
+  Alien-proj-1.31
+    pathname: S/SL/SLAFFAN/Alien-proj-1.31.tar.gz
+    provides:
+      Alien::proj 1.31
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.48
+      Alien::Build::MM 1.74
+      Alien::Build::Plugin::Build::CMake 0.99
+      Alien::Build::Plugin::Build::SearchDep 0.53
+      Alien::Build::Plugin::Cleanse::BuildDir 0
+      Alien::Build::Plugin::PkgConfig::PPWrapper 0
+      Alien::cmake3 0.02
+      Alien::sqlite 1.06
+      Archive::Tar 0
+      Config 0
+      Env::ShellWords 0.01
+      ExtUtils::MakeMaker 6.52
+      FFI::CheckLib 0.28
+      File::Find::Rule 0
+      File::Which 0
+      HTTP::Tiny 0.044
+      IO::Socket::SSL 1.56
+      IO::Zlib 0
+      List::Util 1.45
+      Mojo::DOM58 1.00
+      Mozilla::CA 0
+      Net::SSLeay 1.49
+      Path::Tiny 0
+      PkgConfig 0.19026
+      Sort::Versions 0
+      URI 0
+      URI::Escape 0
+  Alien-sqlite-1.07
+    pathname: S/SL/SLAFFAN/Alien-sqlite-1.07.tar.gz
+    provides:
+      Alien::sqlite 1.07
+    requirements:
+      Alien::Base 1.41
+      Alien::Build 2.25
+      Alien::Build::MM 1.74
+      Alien::Build::Plugin::Cleanse::BuildDir 0
+      ExtUtils::MakeMaker 6.52
+      FFI::CheckLib 0.23
+      File::Find::Rule 0
+      PkgConfig 0.19026
+      Sort::Versions 0
+  App-cpanminus-1.7049
+    pathname: M/MI/MIYAGAWA/App-cpanminus-1.7049.tar.gz
+    provides:
+      App::cpanminus 1.7049
+    requirements:
+      ExtUtils::MakeMaker 0
+      perl 5.008001
+  Archive-Zip-1.68
+    pathname: P/PH/PHRED/Archive-Zip-1.68.tar.gz
+    provides:
+      Archive::Zip 1.68
+      Archive::Zip::Archive 1.68
+      Archive::Zip::BufferedFileHandle 1.68
+      Archive::Zip::DirectoryMember 1.68
+      Archive::Zip::FileMember 1.68
+      Archive::Zip::Member 1.68
+      Archive::Zip::MemberRead 1.68
+      Archive::Zip::MockFileHandle 1.68
+      Archive::Zip::NewFileMember 1.68
+      Archive::Zip::StringMember 1.68
+      Archive::Zip::Tree 1.68
+      Archive::Zip::ZipFileMember 1.68
+    requirements:
+      Compress::Raw::Zlib 2.017
+      Encode 0
+      ExtUtils::MakeMaker 0
+      File::Basename 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.80
+      File::Temp 0
+      IO::File 0
+      IO::Handle 0
+      IO::Seekable 0
+      Time::Local 0
+      perl 5.006
+  Capture-Tiny-0.50
+    pathname: D/DA/DAGOLDEN/Capture-Tiny-0.50.tar.gz
+    provides:
+      Capture::Tiny 0.50
+    requirements:
+      Carp 0
+      Exporter 0
+      ExtUtils::MakeMaker 6.17
+      File::Spec 0
+      File::Temp 0
+      IO::Handle 0
+      Scalar::Util 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Devel-CheckLib-1.16
+    pathname: M/MA/MATTN/Devel-CheckLib-1.16.tar.gz
+    provides:
+      Devel::CheckLib 1.16
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      File::Spec 0
+      File::Temp 0.16
+      perl 5.004050
+  Env-ShellWords-0.02
+    pathname: P/PL/PLICEASE/Env-ShellWords-0.02.tar.gz
+    provides:
+      Env::ShellWords 0.02
+    requirements:
+      Carp 0
+      ExtUtils::MakeMaker 0
+      perl 5.006
+  ExtUtils-CppGuess-0.271
+    pathname: E/ET/ETJ/ExtUtils-CppGuess-0.271.tar.gz
+    provides:
+      ExtUtils::CppGuess 0.271
+    requirements:
+      Capture::Tiny 0
+      ExtUtils::MakeMaker 0
+      ExtUtils::ParseXS 3.35
+      File::Basename 0
+      File::Spec 0
+      File::Temp 0
+  FFI-CheckLib-0.31
+    pathname: P/PL/PLICEASE/FFI-CheckLib-0.31.tar.gz
+    provides:
+      FFI::CheckLib 0.31
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Which 0
+      List::Util 1.33
+      perl 5.006
+  FFI-Platypus-2.12
+    pathname: P/PL/PLICEASE/FFI-Platypus-2.12.tar.gz
+    provides:
+      FFI::Build 2.12
+      FFI::Build::File::Base 2.12
+      FFI::Build::File::C 2.12
+      FFI::Build::File::CXX 2.12
+      FFI::Build::File::Library 2.12
+      FFI::Build::File::Object 2.12
+      FFI::Build::MM 2.12
+      FFI::Build::MM::FBX 2.12
+      FFI::Build::Platform 2.12
+      FFI::Build::Plugin 2.12
+      FFI::Build::Plugin::Foo1 undef
+      FFI::Build::Plugin::Foo2 undef
+      FFI::Build::PluginData 2.12
+      FFI::Platypus 2.12
+      FFI::Platypus::API 2.12
+      FFI::Platypus::Buffer 2.12
+      FFI::Platypus::Bundle 2.12
+      FFI::Platypus::Closure 2.12
+      FFI::Platypus::ClosureData 2.12
+      FFI::Platypus::Constant 2.12
+      FFI::Platypus::DL 2.12
+      FFI::Platypus::Function 2.12
+      FFI::Platypus::Function::Function 2.12
+      FFI::Platypus::Function::Wrapper 2.12
+      FFI::Platypus::Internal 2.12
+      FFI::Platypus::Lang 2.12
+      FFI::Platypus::Lang::ASM 2.12
+      FFI::Platypus::Lang::C 2.12
+      FFI::Platypus::Lang::Win32 2.12
+      FFI::Platypus::Legacy 2.12
+      FFI::Platypus::Memory 2.12
+      FFI::Platypus::Record 2.12
+      FFI::Platypus::Record::Meta 2.12
+      FFI::Platypus::Record::TieArray 2.12
+      FFI::Platypus::ShareConfig 2.12
+      FFI::Platypus::Type 2.12
+      FFI::Platypus::Type::PointerSizeBuffer 2.12
+      FFI::Platypus::Type::StringArray 2.12
+      FFI::Platypus::Type::StringPointer 2.12
+      FFI::Platypus::Type::WideString 2.12
+      FFI::Platypus::TypeParser 2.12
+      FFI::Platypus::TypeParser::Version0 2.12
+      FFI::Platypus::TypeParser::Version1 2.12
+      FFI::Platypus::TypeParser::Version2 2.12
+      FFI::Probe 2.12
+      FFI::Probe::Runner 2.12
+      FFI::Probe::Runner::Builder 2.12
+      FFI::Probe::Runner::Result 2.12
+      FFI::Temp 2.12
+    requirements:
+      Capture::Tiny 0
+      ExtUtils::CBuilder 0
+      ExtUtils::MakeMaker 7.12
+      ExtUtils::ParseXS 3.30
+      FFI::CheckLib 0.05
+      File::Spec::Functions 0
+      IPC::Cmd 0
+      JSON::PP 0
+      List::Util 1.45
+      autodie 0
+      constant 1.32
+      parent 0
+      perl 5.008004
+  File-Find-Rule-0.35
+    pathname: R/RC/RCLAMP/File-Find-Rule-0.35.tar.gz
+    provides:
+      File::Find::Rule 0.35
+      File::Find::Rule::Test::ATeam undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      File::Find 0
+      File::Spec 0
+      Number::Compare 0
+      Test::More 0
+      Text::Glob 0.07
+  File-Map-0.71
+    pathname: L/LE/LEONT/File-Map-0.71.tar.gz
+    provides:
+      File::Map 0.71
+    requirements:
+      ExtUtils::CBuilder 0
+      Module::Build 0.28
+      Sub::Exporter::Progressive 0.001005
+      XSLoader 0
+      perl 5.008001
+      strict 0
+      warnings 0
+  File-Which-1.27
+    pathname: P/PL/PLICEASE/File-Which-1.27.tar.gz
+    provides:
+      File::Which 1.27
+    requirements:
+      ExtUtils::MakeMaker 0
+      base 0
+      perl 5.006
+  File-chdir-0.1011
+    pathname: D/DA/DAGOLDEN/File-chdir-0.1011.tar.gz
+    provides:
+      File::chdir 0.1011
+      File::chdir::ARRAY 0.1011
+      File::chdir::SCALAR 0.1011
+    requirements:
+      Carp 0
+      Cwd 3.16
+      Exporter 0
+      ExtUtils::MakeMaker 6.17
+      File::Spec::Functions 3.27
+      perl 5.006
+      strict 0
+      vars 0
+  Geo-GDAL-FFI-0.16
+    pathname: S/SL/SLAFFAN/Geo-GDAL-FFI-0.16.tar.gz
+    provides:
+      Geo::GDAL::FFI 0.16
+      Geo::GDAL::FFI::Band 0.16
+      Geo::GDAL::FFI::Dataset 0.16
+      Geo::GDAL::FFI::Driver 0.16
+      Geo::GDAL::FFI::Feature 0.16
+      Geo::GDAL::FFI::FeatureDefn 0.16
+      Geo::GDAL::FFI::FieldDefn 0.16
+      Geo::GDAL::FFI::GeomFieldDefn 0.16
+      Geo::GDAL::FFI::Geometry 0.16
+      Geo::GDAL::FFI::Layer 0.16
+      Geo::GDAL::FFI::Layer::ResultSet 0.16
+      Geo::GDAL::FFI::Object 0.16
+      Geo::GDAL::FFI::SpatialReference 0.16
+      Geo::GDAL::FFI::VSI 0.16
+      Geo::GDAL::FFI::VSI::File 0.16
+    requirements:
+      Alien::gdal 0
+      ExtUtils::MakeMaker 0
+      FFI::Platypus 0
+      PDL 0
+      PkgConfig 0.23026
+      Sort::Versions 0
+      perl 5.010
+  IO-Socket-SSL-2.099
+    pathname: S/SU/SULLR/IO-Socket-SSL-2.099.tar.gz
+    provides:
+      IO::Socket::SSL 2.099
+      IO::Socket::SSL::Intercept 2.056
+      IO::Socket::SSL::OCSP_Cache 2.099
+      IO::Socket::SSL::OCSP_Resolver 2.099
+      IO::Socket::SSL::PublicSuffix undef
+      IO::Socket::SSL::SSL_Context 2.099
+      IO::Socket::SSL::SSL_HANDLE 2.099
+      IO::Socket::SSL::Session_Cache 2.099
+      IO::Socket::SSL::Trace 2.099
+      IO::Socket::SSL::Utils 2.015
+    requirements:
+      ExtUtils::MakeMaker 0
+      Net::SSLeay 1.46
+      Scalar::Util 0
+  MIME-Base32-1.303
+    pathname: R/RE/REHSACK/MIME-Base32-1.303.tar.gz
+    provides:
+      MIME::Base32 1.303
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      perl 5.008001
+      utf8 0
+  Module-Build-0.4234
+    pathname: L/LE/LEONT/Module-Build-0.4234.tar.gz
+    provides:
+      Module::Build 0.4234
+      Module::Build::Base 0.4234
+      Module::Build::Compat 0.4234
+      Module::Build::Config 0.4234
+      Module::Build::Cookbook 0.4234
+      Module::Build::Dumper 0.4234
+      Module::Build::Notes 0.4234
+      Module::Build::PPMMaker 0.4234
+      Module::Build::Platform::Default 0.4234
+      Module::Build::Platform::MacOS 0.4234
+      Module::Build::Platform::Unix 0.4234
+      Module::Build::Platform::VMS 0.4234
+      Module::Build::Platform::VOS 0.4234
+      Module::Build::Platform::Windows 0.4234
+      Module::Build::Platform::aix 0.4234
+      Module::Build::Platform::cygwin 0.4234
+      Module::Build::Platform::darwin 0.4234
+      Module::Build::Platform::os2 0.4234
+      Module::Build::PodParser 0.4234
+    requirements:
+      CPAN::Meta 2.142060
+      Cwd 0
+      Data::Dumper 0
+      ExtUtils::CBuilder 0.27
+      ExtUtils::Install 0
+      ExtUtils::Manifest 0
+      ExtUtils::Mkbootstrap 0
+      ExtUtils::ParseXS 2.21
+      File::Basename 0
+      File::Compare 0
+      File::Copy 0
+      File::Find 0
+      File::Path 0
+      File::Spec 0.82
+      Getopt::Long 0
+      Module::Metadata 1.000002
+      Perl::OSType 1
+      TAP::Harness 3.29
+      Text::Abbrev 0
+      Text::ParseWords 0
+      perl 5.006001
+      version 0.87
+  Mojo-DOM58-3.003
+    pathname: D/DB/DBOOK/Mojo-DOM58-3.003.tar.gz
+    provides:
+      Mojo::DOM58 3.003
+      Mojo::DOM58::Entities 3.003
+    requirements:
+      Carp 0
+      Data::Dumper 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      List::Util 0
+      Scalar::Util 0
+      constant 0
+      perl 5.008001
+  Mojolicious-9.53
+    pathname: S/SR/SRI/Mojolicious-9.53.tar.gz
+    provides:
+      Mojo undef
+      Mojo::Asset undef
+      Mojo::Asset::File undef
+      Mojo::Asset::Memory undef
+      Mojo::Base undef
+      Mojo::BaseUtil undef
+      Mojo::ByteStream undef
+      Mojo::Cache undef
+      Mojo::Collection undef
+      Mojo::Content undef
+      Mojo::Content::MultiPart undef
+      Mojo::Content::Single undef
+      Mojo::Cookie undef
+      Mojo::Cookie::Request undef
+      Mojo::Cookie::Response undef
+      Mojo::DOM undef
+      Mojo::DOM::CSS undef
+      Mojo::DOM::HTML undef
+      Mojo::Date undef
+      Mojo::DynamicMethods undef
+      Mojo::EventEmitter undef
+      Mojo::Exception undef
+      Mojo::File undef
+      Mojo::Headers undef
+      Mojo::HelloWorld undef
+      Mojo::Home undef
+      Mojo::IOLoop undef
+      Mojo::IOLoop::Client undef
+      Mojo::IOLoop::Server undef
+      Mojo::IOLoop::Stream undef
+      Mojo::IOLoop::Subprocess undef
+      Mojo::IOLoop::TLS undef
+      Mojo::JSON undef
+      Mojo::JSON::Pointer undef
+      Mojo::Loader undef
+      Mojo::Log undef
+      Mojo::Message undef
+      Mojo::Message::Request undef
+      Mojo::Message::Response undef
+      Mojo::Parameters undef
+      Mojo::Path undef
+      Mojo::Promise undef
+      Mojo::Reactor undef
+      Mojo::Reactor::EV undef
+      Mojo::Reactor::Poll undef
+      Mojo::SSE undef
+      Mojo::Server undef
+      Mojo::Server::CGI undef
+      Mojo::Server::Daemon undef
+      Mojo::Server::Hypnotoad undef
+      Mojo::Server::Morbo undef
+      Mojo::Server::Morbo::Backend undef
+      Mojo::Server::Morbo::Backend::Poll undef
+      Mojo::Server::PSGI undef
+      Mojo::Server::Prefork undef
+      Mojo::Template undef
+      Mojo::Transaction undef
+      Mojo::Transaction::HTTP undef
+      Mojo::Transaction::WebSocket undef
+      Mojo::URL undef
+      Mojo::Upload undef
+      Mojo::UserAgent undef
+      Mojo::UserAgent::CookieJar undef
+      Mojo::UserAgent::Proxy undef
+      Mojo::UserAgent::Server undef
+      Mojo::UserAgent::Transactor undef
+      Mojo::Util undef
+      Mojo::WebSocket undef
+      Mojolicious 9.53
+      Mojolicious::Command undef
+      Mojolicious::Command::Author::cpanify undef
+      Mojolicious::Command::Author::generate undef
+      Mojolicious::Command::Author::generate::app undef
+      Mojolicious::Command::Author::generate::dockerfile undef
+      Mojolicious::Command::Author::generate::lite_app undef
+      Mojolicious::Command::Author::generate::makefile undef
+      Mojolicious::Command::Author::generate::plugin undef
+      Mojolicious::Command::Author::inflate undef
+      Mojolicious::Command::cgi undef
+      Mojolicious::Command::daemon undef
+      Mojolicious::Command::eval undef
+      Mojolicious::Command::get undef
+      Mojolicious::Command::prefork undef
+      Mojolicious::Command::psgi undef
+      Mojolicious::Command::routes undef
+      Mojolicious::Command::version undef
+      Mojolicious::Commands undef
+      Mojolicious::Controller undef
+      Mojolicious::Lite undef
+      Mojolicious::Plugin undef
+      Mojolicious::Plugin::Config undef
+      Mojolicious::Plugin::DefaultHelpers undef
+      Mojolicious::Plugin::EPLRenderer undef
+      Mojolicious::Plugin::EPRenderer undef
+      Mojolicious::Plugin::HeaderCondition undef
+      Mojolicious::Plugin::JSONConfig undef
+      Mojolicious::Plugin::Mount undef
+      Mojolicious::Plugin::NotYAMLConfig undef
+      Mojolicious::Plugin::TagHelpers undef
+      Mojolicious::Plugins undef
+      Mojolicious::Renderer undef
+      Mojolicious::Routes undef
+      Mojolicious::Routes::Match undef
+      Mojolicious::Routes::Pattern undef
+      Mojolicious::Routes::Route undef
+      Mojolicious::Sessions undef
+      Mojolicious::Static undef
+      Mojolicious::Types undef
+      Mojolicious::Validator undef
+      Mojolicious::Validator::Validation undef
+      Test::Mojo undef
+      ojo undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      IO::Socket::IP 0.37
+      Sub::Util 1.41
+      perl 5.016
+  Mozilla-CA-20261020
+    pathname: L/LW/LWP/Mozilla-CA-20261020.tar.gz
+    provides:
+      Mozilla::CA 20261020
+    requirements:
+      ExtUtils::MakeMaker 0
+  Net-SSLeay-1.96
+    pathname: C/CH/CHRISN/Net-SSLeay-1.96.tar.gz
+    provides:
+      Net::SSLeay 1.96
+      Net::SSLeay::Handle 1.96
+    requirements:
+      English 0
+      ExtUtils::MakeMaker 0
+      File::Spec::Functions 0
+      MIME::Base64 0
+      Text::Wrap 0
+      constant 0
+      perl 5.008001
+  Number-Compare-0.03
+    pathname: R/RC/RCLAMP/Number-Compare-0.03.tar.gz
+    provides:
+      Number::Compare 0.03
+    requirements:
+      ExtUtils::MakeMaker 0
+      Test::More 0
+  PDL-2.106
+    pathname: E/ET/ETJ/PDL-2.106.tar.gz
+    provides:
+      Inline::Pdlpp 0.4
+      PDL 2.106
+      PDL::Bad undef
+      PDL::Basic undef
+      PDL::Bench undef
+      PDL::Char undef
+      PDL::Complex::Overloads undef
+      PDL::Compression undef
+      PDL::Config undef
+      PDL::Constants 0.02
+      PDL::Core 2.096
+      PDL::Core::Dev undef
+      PDL::Dbg undef
+      PDL::Demos undef
+      PDL::Demos::BAD_demo undef
+      PDL::Demos::Cartography_demo undef
+      PDL::Demos::Func_demo undef
+      PDL::Demos::General undef
+      PDL::Demos::Sound undef
+      PDL::Demos::Transform_demo undef
+      PDL::DiskCache 1.1
+      PDL::Doc undef
+      PDL::Doc::Perldl undef
+      PDL::Exporter undef
+      PDL::FFT undef
+      PDL::Func undef
+      PDL::IO::Dumper 1.003002
+      PDL::IO::FITS 0.92
+      PDL::IO::FastRaw 0.000003
+      PDL::IO::FlexRaw undef
+      PDL::IO::Misc undef
+      PDL::IO::Pic undef
+      PDL::IO::Pnm undef
+      PDL::IO::STL 0.001
+      PDL::IO::Storable 2.096
+      PDL::Image2D undef
+      PDL::ImageND undef
+      PDL::ImageRGB undef
+      PDL::Install::Files 2.009
+      PDL::Lite undef
+      PDL::LiteF undef
+      PDL::Math undef
+      PDL::Matrix 0.5
+      PDL::MatrixOps undef
+      PDL::NiceSlice 1.001
+      PDL::Ops undef
+      PDL::Options 0.92
+      PDL::PP 2.3
+      PDL::Parallel::threads 0.07
+      PDL::Parallel::threads::SIMD 0.02
+      PDL::Primitive undef
+      PDL::Reduce undef
+      PDL::Slices undef
+      PDL::Transform undef
+      PDL::Transform::Cartography 0.6
+      PDL::Transform::Composition undef
+      PDL::Transform::Linear undef
+      PDL::Type undef
+      PDL::Types undef
+      PDL::Ufunc undef
+      Test::Deep::PDL 0.22
+      Test::PDL 0.22
+    requirements:
+      Data::Dumper 2.121
+      Devel::CheckLib 1.01
+      ExtUtils::MakeMaker 7.12
+      ExtUtils::ParseXS 3.21
+      File::Map 0.57
+      File::Path 0
+      File::Which 0
+      Filter::Simple 0.88
+      Filter::Util::Call 0
+      List::Util 1.33
+      Math::Complex 0
+      Pod::Simple 3.40
+      Scalar::Util 0
+      Storable 1.03
+      Text::Balanced 2.05
+      perl 5.016
+  PDL-GSL-2.103
+    pathname: E/ET/ETJ/PDL-GSL-2.103.tar.gz
+    provides:
+      PDL::Demos::GSL_CDF undef
+      PDL::Demos::GSL_RNG undef
+      PDL::GSL 2.103
+      PDL::GSL::CDF undef
+      PDL::GSL::DIFF undef
+      PDL::GSL::INTEG undef
+      PDL::GSL::INTERP undef
+      PDL::GSL::LINALG undef
+      PDL::GSL::MROOT undef
+      PDL::GSL::RNG undef
+      PDL::GSL::SF undef
+      PDL::Stats::Distr undef
+    requirements:
+      ExtUtils::MakeMaker 0
+      PDL 2.096
+      perl 5.016
+  Path-Tiny-0.150
+    pathname: D/DA/DAGOLDEN/Path-Tiny-0.150.tar.gz
+    provides:
+      Path::Tiny 0.150
+      Path::Tiny::Error 0.150
+    requirements:
+      Carp 0
+      Cwd 0
+      Digest 1.03
+      Digest::SHA 5.45
+      Encode 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 6.17
+      Fcntl 0
+      File::Compare 0
+      File::Copy 0
+      File::Glob 0
+      File::Path 2.07
+      File::Spec 0.86
+      File::Temp 0.19
+      File::stat 0
+      constant 0
+      overload 0
+      perl 5.008001
+      strict 0
+      warnings 0
+      warnings::register 0
+  PerlX-Maybe-1.202
+    pathname: T/TO/TOBYINK/PerlX-Maybe-1.202.tar.gz
+    provides:
+      PerlX::Maybe 1.202
+      Syntax::Feature::Maybe 1.202
+    requirements:
+      ExtUtils::MakeMaker 6.17
+      Scalar::Util 0
+      perl 5.006
+  PkgConfig-0.26026
+    pathname: P/PL/PLICEASE/PkgConfig-0.26026.tar.gz
+    provides:
+      PkgConfig 0.26026
+    requirements:
+      ExtUtils::MakeMaker 6.56
+      Test::More 0.94
+      perl 5.006000
+  Sort-Versions-1.62
+    pathname: N/NE/NEILB/Sort-Versions-1.62.tar.gz
+    provides:
+      Sort::Versions 1.62
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      perl 5.006
+      strict 0
+      warnings 0
+  Sub-Exporter-Progressive-0.001013
+    pathname: F/FR/FREW/Sub-Exporter-Progressive-0.001013.tar.gz
+    provides:
+      Sub::Exporter::Progressive 0.001013
+    requirements:
+      ExtUtils::MakeMaker 0
+  Text-Glob-0.11
+    pathname: R/RC/RCLAMP/Text-Glob-0.11.tar.gz
+    provides:
+      Text::Glob 0.11
+    requirements:
+      Exporter 0
+      ExtUtils::MakeMaker 0
+      constant 0
+      perl 5.005030
+  URI-5.40
+    pathname: O/OA/OALDERS/URI-5.40.tar.gz
+    provides:
+      URI 5.40
+      URI::Escape 5.40
+      URI::Heuristic 5.40
+      URI::IRI 5.40
+      URI::QueryParam 5.40
+      URI::Split 5.40
+      URI::URL 5.40
+      URI::WithBase 5.40
+      URI::data 5.40
+      URI::file 5.40
+      URI::file::Base 5.40
+      URI::file::FAT 5.40
+      URI::file::Mac 5.40
+      URI::file::OS2 5.40
+      URI::file::QNX 5.40
+      URI::file::Unix 5.40
+      URI::file::Win32 5.40
+      URI::ftp 5.40
+      URI::ftpes 5.40
+      URI::ftps 5.40
+      URI::geo 5.40
+      URI::gopher 5.40
+      URI::http 5.40
+      URI::https 5.40
+      URI::icap 5.40
+      URI::icaps 5.40
+      URI::irc 5.40
+      URI::ircs 5.40
+      URI::ldap 5.40
+      URI::ldapi 5.40
+      URI::ldaps 5.40
+      URI::mailto 5.40
+      URI::mms 5.40
+      URI::news 5.40
+      URI::nntp 5.40
+      URI::nntps 5.40
+      URI::otpauth 5.40
+      URI::pop 5.40
+      URI::rlogin 5.40
+      URI::rsync 5.40
+      URI::rtsp 5.40
+      URI::rtspu 5.40
+      URI::scp 5.40
+      URI::sftp 5.40
+      URI::sip 5.40
+      URI::sips 5.40
+      URI::smb 5.40
+      URI::smtp 5.40
+      URI::snews 5.40
+      URI::ssh 5.40
+      URI::telnet 5.40
+      URI::tn3270 5.40
+      URI::urn 5.40
+      URI::urn::isbn 5.40
+      URI::urn::oid 5.40
+      URI::ws 5.40
+      URI::wss 5.40
+    requirements:
+      Carp 0
+      Cwd 0
+      Data::Dumper 0
+      Encode 0
+      Exporter 5.57
+      ExtUtils::MakeMaker 0
+      MIME::Base32 0
+      MIME::Base64 2
+      Net::Domain 0
+      Scalar::Util 0
+      Unicode::Normalize 0
+      constant 0
+      integer 0
+      overload 0
+      parent 0
+      perl 5.008001
+      strict 0
+      utf8 0
+      warnings 0
+  URI-git-0.02
+    pathname: M/MI/MIYAGAWA/URI-git-0.02.tar.gz
+    provides:
+      URI::git 0.02
+    requirements:
+      ExtUtils::MakeMaker 6.42
+      Filter::Util::Call 0
+      Test::More 0
+      URI 0

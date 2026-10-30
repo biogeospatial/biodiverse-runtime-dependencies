@@ -63,12 +63,18 @@ perl_dependencies:
   - Alien::geos::af
   - Alien::gdal
   - Geo::GDAL::FFI
+  - Mojolicious
+  - Archive::Zip
 
 platforms:
 
   macos:
 
     # macOS ARM64 runtime dependency baseline.
+
+    # GitHub Actions runner image used for
+    # runtime dependency builds.
+    runner_image: "macos-26"
 
     # Perl version used for runtime dependency builds.
     perl_version: "5.38.4"
@@ -99,6 +105,10 @@ platforms:
 
     # Windows x64 runtime dependency baseline.
 
+    # GitHub Actions runner image used for
+    # runtime dependency builds.
+    runner_image: "windows-2025"
+
     # Perl version used for runtime dependency builds.
     perl_version: "5.38.4"
 
@@ -108,6 +118,10 @@ platforms:
   linux:
 
     # Linux x64 runtime dependency baseline.
+
+    # GitHub Actions runner image used for
+    # runtime dependency builds.
+    runner_image: "ubuntu-24.04"
 
     # Perl version used for runtime dependency builds.
     perl_version: "5.38.4"

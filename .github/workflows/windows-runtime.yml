@@ -32,6 +32,10 @@ on:
         default: false
         type: boolean
 
+      runner_image:
+        required: true
+        type: string
+
     outputs:
       windows_filename:
         value: ${{ jobs.runtime.outputs.windows_filename }}
@@ -66,7 +70,7 @@ permissions:
 
 jobs:
   runtime:
-    runs-on: windows-latest
+    runs-on: ${{ inputs.runner_image }}
 
     outputs:
       windows_filename: ${{ steps.metadata.outputs.filename }}
@@ -98,12 +102,15 @@ jobs:
         shell: pwsh
         run: |
           choco install yq -y
+          $yqPath = (Get-Command yq).Source
+          "YQ_PATH=$yqPath" >> $env:GITHUB_ENV
+          refreshenv
 
       - name: Load runtime configuration
         shell: pwsh
         run: |
-          $perlVersion = yq -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml
-          $perlPortableUrl = yq -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml
+          $perlVersion = & $env:YQ_PATH -r '.platforms.windows.perl_version' .github/runtime-dependency-config.yml
+          $perlPortableUrl = & $env:YQ_PATH -r '.platforms.windows.perl_portable_url' .github/runtime-dependency-config.yml
 
           "PERL_VERSION=$perlVersion" >> $env:GITHUB_ENV
           "PERL_PORTABLE_URL=$perlPortableUrl" >> $env:GITHUB_ENV
@@ -123,7 +130,7 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ${{ runner.temp }}\strawberry-perl
-          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile') }}
+          key: strawberry-perl-${{ runner.os }}-${{ env.PERL_VERSION }}-gen${{ inputs.cache_generation }}-${{ hashFiles('.github/runtime-dependency-config.yml', 'runtime/cpanfile', 'runtime/cpanfile.snapshot') }}
 
       - name: Install Strawberry Perl
         if: steps.runtime-cache.outputs.cache-hit != 'true'
@@ -180,7 +187,6 @@ jobs:
       - name: Install cpanminus
         shell: pwsh
         run: |
-
           Invoke-WebRequest `
             -Uri "https://cpanmin.us" `
             -OutFile cpanm-installer
@@ -198,59 +204,171 @@ jobs:
 
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
+          Write-Host "CPANM PATH=$cpanmPath"
+
+          & $cpanmPath --version
+
+      - name: Install Carton
+        shell: pwsh
+        run: |
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          & $env:CPANM Carton
+
+          $cartonPath = Join-Path $env:PERL_ROOT "perl\site\bin\carton.bat"
+
+          if (-not (Test-Path $cartonPath)) {
+              throw "Unable to locate Carton at $cartonPath"
+          }
+
+          Write-Host "Carton executable: $cartonPath"
+
+          "CARTON=$cartonPath" >> $env:GITHUB_ENV
+
+          & $cartonPath --version
+
       - name: Validate cpanminus
         shell: pwsh
         run: |
           & $env:PERL_EXE -MApp::cpanminus -e "print qq(cpanminus installed`n)"
 
-          Write-Host "CPANM=$env:CPANM"
+          Write-Host "PERL_ROOT=[$env:PERL_ROOT]"
+          Write-Host "CPANM=[$env:CPANM]"
+
+          Write-Host "=== perl/bin contents ==="
+          Get-ChildItem "$env:PERL_ROOT\perl\bin" |
+            Select-Object Name
+
+          if ([string]::IsNullOrWhiteSpace($env:CPANM)) {
+            throw "CPANM environment variable is empty"
+          }
+
+          if (-not (Test-Path $env:CPANM)) {
+            throw "CPANM executable not found at $env:CPANM"
+          }
 
           & $env:CPANM --version
 
-          Write-Host "CPANM=$env:CPANM"
+          Write-Host "=== CPANM validation successful ==="
 
       - name: Install Perl Dependencies
         shell: pwsh
         run: |
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          New-Item -ItemType Directory -Force C:\c | Out-Null
+          $env:PERL_CPANM_HOME = 'C:\c'
+
+          Write-Host "PERL_CPANM_HOME=$env:PERL_CPANM_HOME"
 
           & "$env:PERL_ROOT\c\bin\gcc.exe" --version
           & "$env:PERL_ROOT\c\bin\g++.exe" --version
 
           & $env:PERL_EXE -e "print qq(Using: $^X`n)"
 
+          New-Item -ItemType Directory -Force build | Out-Null
+
           Push-Location runtime
 
-          & $env:CPANM $env:VERBOSE_FLAG --installdeps .
+          $logFile = "..\build\carton-install.log"
 
-          if ($LASTEXITCODE -ne 0) {
-              Get-ChildItem "$HOME\.cpanm\work" -Recurse -Filter build.log |
-                  ForEach-Object {
-                      Write-Host "==== $($_.FullName) ===="
-                      Get-Content $_.FullName
-                  }
-              exit 1
+          $process = Start-Process `
+            -FilePath "cmd.exe" `
+            -ArgumentList "/c `"$env:CARTON install --deployment > $logFile 2>&1`"" `
+            -PassThru
+
+          while (-not $process.HasExited) {
+              Start-Sleep -Seconds 30
+
+              Write-Host "=== Carton still running ($(Get-Date -Format T)) ==="
+
+              if (Test-Path $logFile) {
+                  Get-Content $logFile -Tail 10
+              }
           }
 
-          Pop-Location
+          $cartonExitCode = $process.ExitCode
+
+
+          Write-Host "=== runtime contents ==="
+          Get-ChildItem
+
+          if (Test-Path local) {
+              Write-Host "=== local structure ==="
+              Get-ChildItem local -Recurse |
+                Select-Object -First 200 FullName
+
+              Write-Host "=== local size ==="
+              $localFiles = Get-ChildItem local -Recurse -File
+              Write-Host "Files: $($localFiles.Count)"
+
+              Write-Host "=== Perl modules ==="
+              Get-ChildItem local -Recurse -Filter *.pm |
+                Select-Object -First 50 FullName
+
+              Write-Host "=== Shared libraries ==="
+              Get-ChildItem local -Recurse |
+                Where-Object {
+                  $_.Name -match '\.(dll|bundle|so)$'
+                } |
+                Select-Object -First 50 FullName
+          }
+          else {
+              Write-Host "No local directory generated"
+          }
+
+          if ($cartonExitCode -ne 0) {
+              $latestLog = Get-ChildItem `
+                "$env:PERL_ROOT\data\.cpanm\work" `
+                -Recurse `
+                -Filter build.log `
+                -ErrorAction SilentlyContinue |
+                  Sort-Object LastWriteTime |
+                  Select-Object -Last 1
+
+              if ($latestLog) {
+                  Write-Host "==== Latest build log ===="
+                  Write-Host $latestLog.FullName
+
+                  if ("${{ inputs.verbose_logging }}" -eq "true") {
+                      Get-Content $latestLog.FullName
+                  }
+                  else {
+                      Write-Host "==== LAST 200 LINES ===="
+                      Get-Content $latestLog.FullName -Tail 200
+                  }
+              }
+
+              New-Item -ItemType Directory -Force ..\build\cpanm-work | Out-Null
+
+              Copy-Item `
+                "$env:PERL_ROOT\data\.cpanm\work" `
+                ..\build\cpanm-work `
+                -Recurse `
+                -Force
+
+              Pop-Location
+              exit $cartonExitCode
+          }
 
       - name: Validate PDL
         shell: pwsh
         run: |
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
 
-          $env:PATH = "$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+          Write-Host "=== Carton library structure ==="
+
+          Get-ChildItem `
+            runtime\local\lib\perl5 `
+            -Recurse `
+            -Directory `
+            -ErrorAction SilentlyContinue |
+              Select-Object -First 100 FullName
 
           & $env:PERL_EXE -MPDL -e 1
           & $env:PERL_EXE -MPDL -e 'print "$PDL::VERSION`n"'
 
           Get-ChildItem `
-            "$env:PERL_ROOT\perl\vendor\lib\auto\PDL\GSL\CDF"
-
-          Get-ChildItem `
-            "$env:PERL_ROOT" `
-            -Recurse `
-            -Filter "*gsl*.dll" `
+            "$env:PERL_ROOT\perl\vendor\lib\auto\PDL\GSL\CDF" `
             -ErrorAction SilentlyContinue
 
           Get-ChildItem `
@@ -268,6 +386,8 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force build | Out-Null
 
+          $env:PATH = "$env:PERL_ROOT\perl\site\bin;$env:PERL_ROOT\perl\bin;$env:PERL_ROOT\c\bin;$env:PERL_ROOT\c\x86_64-w64-mingw32\bin;$env:PATH"
+
           $perlVersion = (
             & $env:PERL_EXE -e 'print $^V'
           ).Trim()
@@ -280,6 +400,19 @@ jobs:
             & $env:PERL_EXE -MPDL -e 'print $PDL::VERSION'
           ).Trim()
 
+          $cartonVersion = (& $env:CARTON --version).Trim()
+
+          if (Test-Path runtime/cpanfile.snapshot) {
+            $snapshotSha = (
+              Get-FileHash `
+                -Path runtime/cpanfile.snapshot `
+                -Algorithm SHA256
+            ).Hash.ToLower()
+          }
+          else {
+            $snapshotSha = "Not Present"
+          }
+
           @(
             "Platform: Windows"
             "Architecture: x64"
@@ -290,7 +423,13 @@ jobs:
             ""
             "Perl Version: $perlVersion"
             "cpanm Version: $cpanmVersion"
-            "Dependency Definition File: cpanfile"
+            "Carton Version: $cartonVersion"
+            ""
+            "Dependency Installation Method: Carton"
+            "Dependency Installation Mode: Deployment"
+            "Dependency Definition File: runtime/cpanfile"
+            "Dependency Snapshot File: runtime/cpanfile.snapshot"
+            "Snapshot SHA256: $snapshotSha"
             ""
             "PDL Version: $pdlVersion"
             ""
@@ -302,13 +441,16 @@ jobs:
 
           Get-Content build/BUILDINFO.txt
 
-      - name: Upload cpanm diagnostics
+      - name: Upload dependency diagnostics
         if: ${{ always() && (failure() || inputs.save_debug_artifacts) }}
         uses: actions/upload-artifact@v7
         with:
-          name: cpanm-diagnostics-windows
-          path: C:\Users\runneradmin\.cpanm\build.log
-          
+          name: dependency-diagnostics-windows
+          path: |
+            build/carton-install.log
+            build/cpanm-work
+            runtime/cpanfile
+            runtime/cpanfile.snapshot
 
       - name: Create runtime package
         shell: pwsh
@@ -318,6 +460,12 @@ jobs:
           Copy-Item build/BUILDINFO.txt runtime-package/
           Copy-Item runtime/BASELINE-windows.md runtime-package/
           Copy-Item runtime/cpanfile runtime-package/
+          Copy-Item runtime/cpanfile.snapshot runtime-package/
+
+          Copy-Item `
+            -Path runtime/local `
+            -Destination runtime-package/local `
+            -Recurse
 
           Copy-Item `
             -Path $env:PERL_ROOT `

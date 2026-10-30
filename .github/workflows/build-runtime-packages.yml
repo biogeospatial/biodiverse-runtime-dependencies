@@ -40,6 +40,9 @@ jobs:
 
     outputs:
       cache_generation: ${{ steps.cache.outputs.generation }}
+      linux_runner_image: ${{ steps.cache.outputs.linux_runner_image }}
+      macos_runner_image: ${{ steps.cache.outputs.macos_runner_image }}
+      windows_runner_image: ${{ steps.cache.outputs.windows_runner_image }}
 
     steps:
       - uses: actions/checkout@v7
@@ -66,6 +69,10 @@ jobs:
 
           echo "generation=$NEXT" >> "$GITHUB_OUTPUT"
 
+          echo "linux_runner_image=$(yq -r '.platforms.linux.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
+          echo "macos_runner_image=$(yq -r '.platforms.macos.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
+          echo "windows_runner_image=$(yq -r '.platforms.windows.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
+
   windows:
     needs: prepare-build
     if: ${{ github.event_name != 'workflow_dispatch' ||
@@ -78,6 +85,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.windows_runner_image }}
 
   macos:
     needs: prepare-build
@@ -91,6 +99,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.macos_runner_image }}
 
   linux:
     needs: prepare-build
@@ -104,6 +113,7 @@ jobs:
       reset_cache: ${{ github.event_name == 'workflow_dispatch' && inputs.reset_cache || false }}
       verbose_logging: ${{ github.event_name == 'workflow_dispatch' && inputs.verbose_logging || false }}
       save_debug_artifacts: ${{ github.event_name == 'workflow_dispatch' && inputs.save_debug_artifacts || false }}
+      runner_image: ${{ needs.prepare-build.outputs.linux_runner_image }}
 
   persist-cache-generation:
     if: ${{ inputs.reset_cache }}
