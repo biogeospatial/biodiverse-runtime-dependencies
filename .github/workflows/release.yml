@@ -34,22 +34,27 @@ jobs:
 
   build-windows:
     needs: prepare-build
-
     uses: ./.github/workflows/windows-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.windows_runner_image }}
 
   build-macos:
     needs: prepare-build
     uses: ./.github/workflows/macos-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.macos_runner_image }}
 
   build-linux:
     needs: prepare-build
     uses: ./.github/workflows/linux-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.linux_runner_image }}
 
   update-releases-json:
     needs:
