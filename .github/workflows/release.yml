@@ -9,21 +9,52 @@ permissions:
   contents: write
 
 jobs:
+  prepare-build:
+    runs-on: ubuntu-24.04
+
+    outputs:
+      cache_generation: ${{ steps.cache.outputs.generation }}
+      linux_runner_image: ${{ steps.cache.outputs.linux_runner_image }}
+      macos_runner_image: ${{ steps.cache.outputs.macos_runner_image }}
+      windows_runner_image: ${{ steps.cache.outputs.windows_runner_image }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - id: cache
+        shell: bash
+        run: |
+          CURRENT=$(yq -r '.globals.cache_generation' .github/runtime-dependency-config.yml)
+
+          echo "generation=$CURRENT" >> "$GITHUB_OUTPUT"
+
+          echo "linux_runner_image=$(yq -r '.platforms.linux.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
+          echo "macos_runner_image=$(yq -r '.platforms.macos.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
+          echo "windows_runner_image=$(yq -r '.platforms.windows.runner_image' .github/runtime-dependency-config.yml)" >> "$GITHUB_OUTPUT"
 
   build-windows:
+    needs: prepare-build
     uses: ./.github/workflows/windows-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.windows_runner_image }}
 
   build-macos:
+    needs: prepare-build
     uses: ./.github/workflows/macos-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.macos_runner_image }}
 
   build-linux:
+    needs: prepare-build
     uses: ./.github/workflows/linux-runtime.yml
     with:
       build_type: release
+      cache_generation: ${{ needs.prepare-build.outputs.cache_generation }}
+      runner_image: ${{ needs.prepare-build.outputs.linux_runner_image }}
 
   update-releases-json:
     needs:
