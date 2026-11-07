@@ -286,8 +286,7 @@ jobs:
             build/carton-install.log
             runtime/cpanfile
             runtime/cpanfile.snapshot
-            /Users/runner/.cpanm/build.log
-            /Users/runner/.cpanm/work/**/build.log
+            /Users/runner/.cpanm
 
       - name: Create runtime package
         shell: bash
