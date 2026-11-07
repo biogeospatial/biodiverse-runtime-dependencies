@@ -58,6 +58,8 @@ jobs:
       runner_image: ${{ needs.prepare-build.outputs.linux_runner_image }}
 
   update-releases-json:
+    if: ${{ startsWith(github.ref_name, 'v') }}
+
     needs:
       - build-windows
       - build-macos
