@@ -2,7 +2,7 @@
   "channels": {
     "stable": "",
     "testing": "",
-    "development": "test-cmake-02"
+    "development": "v0.2.0"
   },
   "releases": {
     "v0.1.0": {
@@ -45,6 +45,20 @@
       "linux": {
         "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-02/biodiverse-runtime-dependencies_linux_x64_test-cmake-02.zip",
         "sha256": "20f6a430a09d7e0060113e7ec588ccb4bec59f25dbbc8c86b6ac69d59079fd65"
+      }
+    },
+    "v0.2.0": {
+      "windows": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.2.0/biodiverse-runtime-dependencies_windows_x64_v0.2.0.zip",
+        "sha256": "02d3848ba7a1cee070cad3a3a22cbdf06914ddbd0211d20f70297d1d77eaa69d"
+      },
+      "macos": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.2.0/biodiverse-runtime-dependencies_macos_arm64_v0.2.0.zip",
+        "sha256": "a6913eaa1fa438343bb00c95da80d698cdf9b9b1d61565477a4ce90187d0ac65"
+      },
+      "linux": {
+        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.2.0/biodiverse-runtime-dependencies_linux_x64_v0.2.0.zip",
+        "sha256": "c8a5ee2b14e6cc49a9896bb2469de06c52b0f2486a54b2b2039d12bd61afde67"
       }
     }
   }
