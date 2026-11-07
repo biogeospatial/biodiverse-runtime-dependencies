@@ -19,34 +19,6 @@
         "sha256": "ce13a3a6465e51b2c0a9ca54e43eb471145bc5268f4f1253a1706faebbdaf59d"
       }
     },
-    "test-cmake-01": {
-      "windows": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-01/biodiverse-runtime-dependencies_windows_x64_test-cmake-01.zip",
-        "sha256": "addfaa1f4a16513b928f250345b453d5c95fa945fa38e711f51a4a11d26bb43e"
-      },
-      "macos": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-01/biodiverse-runtime-dependencies_macos_arm64_test-cmake-01.zip",
-        "sha256": "7db707a05ed246eddaec9c86492f1ae50ad3630f50511811c1f8a1f6de790146"
-      },
-      "linux": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-01/biodiverse-runtime-dependencies_linux_x64_test-cmake-01.zip",
-        "sha256": "76d1c19c0b4b926b40d15045701d1b13360ab608abb14ebf01bc72c9ab0e4532"
-      }
-    },
-    "test-cmake-02": {
-      "windows": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-02/biodiverse-runtime-dependencies_windows_x64_test-cmake-02.zip",
-        "sha256": "c35e24d69bbe1d0fc4cb388839b0c768e8e4b876376c5ca69871124cc3e37c1d"
-      },
-      "macos": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-02/biodiverse-runtime-dependencies_macos_arm64_test-cmake-02.zip",
-        "sha256": "b233d133e6d348f449e2eb23be19c23aaf8f7d8762f1dc5b2080d53011a5bf86"
-      },
-      "linux": {
-        "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/test-cmake-02/biodiverse-runtime-dependencies_linux_x64_test-cmake-02.zip",
-        "sha256": "20f6a430a09d7e0060113e7ec588ccb4bec59f25dbbc8c86b6ac69d59079fd65"
-      }
-    },
     "v0.2.0": {
       "windows": {
         "url": "https://github.com/biogeospatial/biodiverse-runtime-dependencies/releases/download/v0.2.0/biodiverse-runtime-dependencies_windows_x64_v0.2.0.zip",
